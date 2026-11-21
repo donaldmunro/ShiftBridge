@@ -2,7 +2,7 @@
 
 🇫🇷 [Lire en français](README.md)
 
-Use your **Zwift Play, Click, Click v2 and Ride** controllers in other training apps (TrainingPeaks Virtual, MyWhoosh, Rouvy, Incyclist…) through the open [OpenBikeControl](https://openbikecontrol.org) protocol. Free, GPL-3.0 licensed, a single `.exe` for Windows with no installer, plus an **Android** version (see below).
+Use your **Zwift Play, Click, Click v2 and Ride** controllers in other training apps (TrainingPeaks Virtual, Les jeux du cycle…) through the open [OpenBikeControl](https://openbikecontrol.org) protocol. Free, GPL-3.0 licensed, a single `.exe` for Windows with no installer, plus an **Android** version (see below).
 
 > Independent project, not affiliated with Zwift, Inc. The controller protocol comes from public reverse engineering and may change with their firmware updates.
 
