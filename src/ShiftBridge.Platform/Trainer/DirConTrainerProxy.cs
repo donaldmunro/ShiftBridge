@@ -172,7 +172,7 @@ public sealed class DirConTrainerProxy : IAsyncDisposable
         }
         if (_listener is null) throw new IOException(Strings.Err_NoFreePortProxy);
 
-        var (mac, serial) = DirConServer.NicIdentity();
+        var (mac, serial) = DirConServer.NicIdentity(variant: 1);
         var txt = new Dictionary<string, string>(_txtTemplate ?? new Dictionary<string, string>());
         txt["mac-address"] = mac;
         txt["serial-number"] = serial;
@@ -190,6 +190,8 @@ public sealed class DirConTrainerProxy : IAsyncDisposable
 
     /// <summary>Mesures de latence (natif : envoi → confirmation ; FTMS : commande → réponse), résumées dans le journal.</summary>
     public LatencyTracker Latency { get; } = new();
+    /// <summary>Journalise en hexadécimal les requêtes de l'appli et les réponses du proxy (option « trames détaillées »).</summary>
+    public bool LogWire { get; set; }
     /// <summary>Flux de mesures (watts, vitesse, cadence) relayé à l'appli : nombre, plus long silence, dernière puissance.</summary>
     public BikeDataMonitor BikeData { get; } = new();
     public TimeSpan LatencyReportInterval { get; set; } = TimeSpan.FromSeconds(30);
@@ -518,8 +520,14 @@ public sealed class DirConTrainerProxy : IAsyncDisposable
                 {
                     try
                     {
+                        if (LogWire) Log?.Invoke($"Proxy < {Convert.ToHexString(p.Encode())}");
                         var response = await HandleAsync(client, p);
-                        if (response is not null) await client.SendAsync(response.Encode());
+                        if (response is not null)
+                        {
+                            var bytes = response.Encode();
+                            if (LogWire) Log?.Invoke($"Proxy > {Convert.ToHexString(bytes)}");
+                            await client.SendAsync(bytes);
+                        }
                     }
                     finally { client.EndAck(); } // les indications retenues peuvent partir
                 }

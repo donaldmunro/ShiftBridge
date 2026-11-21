@@ -1723,12 +1723,36 @@ public sealed partial class MainViewModel : ObservableObject
     private void AppendLog(string message)
     {
         LineLogged?.Invoke(message);
-        _logLines.Enqueue($"{DateTime.Now:HH:mm:ss.fff}  {message}");
+        var line = $"{DateTime.Now:HH:mm:ss.fff}  {message}";
+        WriteLogFile(line);
+        _logLines.Enqueue(line);
         while (_logLines.Count > 500) _logLines.Dequeue();
         _logStale = true;
         if (_logFlushPending) return;
         _logFlushPending = true;
         _ = FlushLogLaterAsync();
+    }
+
+    private static string? _logFilePath;
+    private static bool _logFileBroken;
+
+    /// <summary>Recopie le journal dans %APPDATA%\ShiftBridge\log.txt (tourne à ~1 Mo) pour diagnostiquer après coup.</summary>
+    private static void WriteLogFile(string line)
+    {
+        if (_logFileBroken) return;
+        try
+        {
+            if (_logFilePath is null)
+            {
+                var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ShiftBridge");
+                Directory.CreateDirectory(dir);
+                _logFilePath = Path.Combine(dir, "log.txt");
+                var fi = new FileInfo(_logFilePath);
+                if (fi.Exists && fi.Length > 1_000_000) File.Move(_logFilePath, _logFilePath + ".old", true);
+            }
+            File.AppendAllText(_logFilePath, line + Environment.NewLine);
+        }
+        catch { _logFileBroken = true; }
     }
 
     private async Task FlushLogLaterAsync()

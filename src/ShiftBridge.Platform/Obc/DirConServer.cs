@@ -20,6 +20,11 @@ public sealed class DirConServer : IObcTransport
     private static readonly Guid Haptic = ObcGattUuids.Haptic;
     private static readonly Guid AppInfo = ObcGattUuids.AppInfo;
 
+    // Device Information (0x180A) : un appareil DirCon qui n'annonce qu'un UUID propriétaire déroute certaines applis de trainer.
+    private static readonly Guid DeviceInfo = Guid.Parse("0000180a-0000-1000-8000-00805f9b34fb");
+    private static readonly Guid ManufacturerName = Guid.Parse("00002a29-0000-1000-8000-00805f9b34fb");
+    private static readonly Guid ModelNumber = Guid.Parse("00002a24-0000-1000-8000-00805f9b34fb");
+
     private readonly MdnsAdvertiser _mdns = new();
     private readonly List<Client> _clients = [];
     private readonly object _lock = new();
@@ -160,10 +165,13 @@ public sealed class DirConServer : IObcTransport
         switch ((DirConId)p.Id)
         {
             case DirConId.DiscoverServices:
-                return DirConPacket.ServicesResponse(p.Sequence, [Service]);
+                return DirConPacket.ServicesResponse(p.Sequence, [Service, DeviceInfo]);
 
             case DirConId.DiscoverCharacteristics:
                 if (p.Payload.Length < 16) return DirConPacket.Error(p.Id, p.Sequence, DirConResponse.UnexpectedError);
+                if (DirConPacket.ReadUuid(p.Payload) == DeviceInfo)
+                    return DirConPacket.CharacteristicsResponse(p.Sequence, DeviceInfo,
+                        [(ManufacturerName, DirConProps.Read), (ModelNumber, DirConProps.Read)]);
                 if (DirConPacket.ReadUuid(p.Payload) != Service)
                     return DirConPacket.Error(p.Id, p.Sequence, DirConResponse.ServiceNotFound);
                 return DirConPacket.CharacteristicsResponse(p.Sequence, Service,
@@ -175,9 +183,13 @@ public sealed class DirConServer : IObcTransport
 
             case DirConId.ReadCharacteristic:
                 if (p.Payload.Length < 16) return DirConPacket.Error(p.Id, p.Sequence, DirConResponse.UnexpectedError);
-                return DirConPacket.ReadUuid(p.Payload) == ButtonState
-                    ? DirConPacket.ReadResponse(p.Sequence, ButtonState, _lastButtonState)
-                    : DirConPacket.Error(p.Id, p.Sequence, DirConResponse.CharacteristicNotFound);
+            {
+                var ch = DirConPacket.ReadUuid(p.Payload);
+                if (ch == ButtonState) return DirConPacket.ReadResponse(p.Sequence, ButtonState, _lastButtonState);
+                if (ch == ManufacturerName) return DirConPacket.ReadResponse(p.Sequence, ch, System.Text.Encoding.UTF8.GetBytes("ShiftBridge"));
+                if (ch == ModelNumber) return DirConPacket.ReadResponse(p.Sequence, ch, System.Text.Encoding.UTF8.GetBytes("OBC"));
+                return DirConPacket.Error(p.Id, p.Sequence, DirConResponse.CharacteristicNotFound);
+            }
 
             case DirConId.WriteCharacteristic:
             {
@@ -219,13 +231,18 @@ public sealed class DirConServer : IObcTransport
         }
     }
 
-    internal static (string Mac, string Serial) NicIdentity()
+    /// <summary>
+    /// Identité (MAC, numéro de série) annoncée en mDNS. <paramref name="variant"/> > 0 dérive une identité distincte :
+    /// le serveur OBC et le proxy trainer sont deux appareils DirCon, une appli ne doit pas les confondre.
+    /// </summary>
+    internal static (string Mac, string Serial) NicIdentity(int variant = 0)
     {
         var nic = NetworkInterface.GetAllNetworkInterfaces()
             .FirstOrDefault(n => n.OperationalStatus == OperationalStatus.Up
                                  && n.NetworkInterfaceType is NetworkInterfaceType.Ethernet or NetworkInterfaceType.Wireless80211
                                  && n.GetPhysicalAddress().GetAddressBytes().Length == 6);
-        var b = nic?.GetPhysicalAddress().GetAddressBytes() ?? [0x02, 0x00, 0x53, 0x42, 0x00, 0x01];
+        var b = (nic?.GetPhysicalAddress().GetAddressBytes() ?? [0x02, 0x00, 0x53, 0x42, 0x00, 0x01]).ToArray();
+        b[^1] ^= (byte)variant;
         return (string.Join("-", b.Select(x => x.ToString("X2"))), Convert.ToHexString(b));
     }
 

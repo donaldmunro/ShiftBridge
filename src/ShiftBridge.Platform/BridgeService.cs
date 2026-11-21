@@ -126,6 +126,7 @@ public sealed class BridgeService : IAsyncDisposable
             _verboseFrames = value;
             foreach (var c in _controllers.Values) c.VerboseFrames = value;
             foreach (var d in TransportsSnapshot().OfType<DirConServer>()) d.LogWire = value;
+            if (_proxy is { } proxy) proxy.LogWire = value;
         }
     }
 
@@ -778,6 +779,7 @@ public sealed class BridgeService : IAsyncDisposable
                 RiderWeightKg = Config.RiderWeightKg,
                 BikeWeightKg = Config.BikeWeightKg,
                 HeartRate = _hrSource,
+                LogWire = _verboseFrames,
             };
             proxy.Log += m => Log?.Invoke($"[Proxy trainer] {m}");
             proxy.ClientsChanged += () => TrainerChanged?.Invoke();
