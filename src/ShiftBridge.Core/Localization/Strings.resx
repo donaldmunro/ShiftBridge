@@ -351,6 +351,7 @@
   <data name="Devices_NotFoundTitle" xml:space="preserve"><value>Controller not found?</value></data>
   <data name="Devices_NotFoundBody" xml:space="preserve"><value>Turn it off and on again, and disconnect it from Zwift, the trainer or the phone: a controller only accepts one connection at a time. Locked Click v2 and Ride v2: unlock them via the Zwift app.</value></data>
   <data name="Devices_AutoReconnect" xml:space="preserve"><value>Reconnect controllers automatically</value></data>
+  <data name="Devices_Vibration" xml:space="preserve"><value>Controller vibration (gear changes, app feedback)</value></data>
   <data name="Devices_LocalTitle" xml:space="preserve"><value>Keyboard and game controllers</value></data>
   <data name="Devices_LocalIntro" xml:space="preserve"><value>You can also use a keyboard, a remote or a game controller (Xbox, joystick) to shift gears. Assign the buttons in the Buttons tab.</value></data>
   <data name="Devices_UseKeyboard" xml:space="preserve"><value>Use the keyboard and HID remotes</value></data>

@@ -93,10 +93,16 @@
             <!-- Avancé -->
             <ctl:CollapsibleSection Title="{x:Static loc:Strings.Common_AdvancedShort}">
                 <Border Style="{StaticResource Card}">
-                    <HorizontalStackLayout Spacing="10">
-                        <Switch IsToggled="{Binding AutoReconnect}" VerticalOptions="Center" />
-                        <Label Text="{x:Static loc:Strings.Devices_AutoReconnect}" VerticalOptions="Center" />
-                    </HorizontalStackLayout>
+                    <VerticalStackLayout Spacing="10">
+                        <HorizontalStackLayout Spacing="10">
+                            <Switch IsToggled="{Binding AutoReconnect}" VerticalOptions="Center" />
+                            <Label Text="{x:Static loc:Strings.Devices_AutoReconnect}" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="10">
+                            <Switch IsToggled="{Binding ControllerVibration}" VerticalOptions="Center" />
+                            <Label Text="{x:Static loc:Strings.Devices_Vibration}" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
                 </Border>
             </ctl:CollapsibleSection>
         </VerticalStackLayout>

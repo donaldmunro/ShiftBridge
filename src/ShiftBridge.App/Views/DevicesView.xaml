@@ -152,7 +152,10 @@
             <!-- Avancé -->
             <Expander Header="{x:Static loc:Strings.Common_AdvancedShort}" Style="{StaticResource AdvancedExpander}" Margin="0,14,0,0">
                 <Border Style="{StaticResource Card}" Padding="20,16">
-                    <CheckBox Content="{x:Static loc:Strings.Devices_AutoReconnect}" IsChecked="{Binding AutoReconnect}" />
+                    <StackPanel>
+                        <CheckBox Content="{x:Static loc:Strings.Devices_AutoReconnect}" IsChecked="{Binding AutoReconnect}" />
+                        <CheckBox Content="{x:Static loc:Strings.Devices_Vibration}" IsChecked="{Binding ControllerVibration}" Margin="0,8,0,0" />
+                    </StackPanel>
                 </Border>
             </Expander>
         </StackPanel>

@@ -68,6 +68,7 @@ public sealed partial class MainViewModel : ObservableObject
         _slopeOnlyMode = _config.SlopeOnlyMode;
         _nativeZwiftMode = _config.NativeZwiftMode;
         _reportGearToApp = _config.ReportGearToApp;
+        _controllerVibration = _config.ControllerVibration;
         _autoStartVirtualShifting = _config.AutoStartVirtualShifting;
         _showOverlay = _config.ShowOverlay;
         _overlayLocked = _config.OverlayLocked;
@@ -143,6 +144,14 @@ public sealed partial class MainViewModel : ObservableObject
     [ObservableProperty] private bool _enableDirCon;
     [ObservableProperty] private string _dirConStatus = "";
     [ObservableProperty] private bool _autoReconnect;
+    [ObservableProperty] private bool _controllerVibration = true;
+
+    partial void OnControllerVibrationChanged(bool value)
+    {
+        if (_loading) return;
+        _config.ControllerVibration = value; // lu à chaque vibration par BridgeService (même objet de config)
+        SaveConfig();
+    }
 
     partial void OnAutoReconnectChanged(bool value)
     {

@@ -496,7 +496,7 @@ public sealed class BridgeService : IAsyncDisposable
 
     private void OnAppHaptic(ObcHaptic h)
     {
-        if (h.Pattern == ObcHapticPattern.Stop) return;
+        if (h.Pattern == ObcHapticPattern.Stop || !Config.ControllerVibration) return;
         foreach (var c in _controllers.Values) _ = c.VibrateAsync();
     }
 
@@ -1014,7 +1014,7 @@ public sealed class BridgeService : IAsyncDisposable
 
     private async Task BuzzAsync(GearChange change)
     {
-        if (change == GearChange.None) return;
+        if (change == GearChange.None || !Config.ControllerVibration) return;
         bool limit = change is GearChange.AtTopLimit or GearChange.AtBottomLimit;
         foreach (var c in _controllers.Values.Where(c => c.CanVibrate))
         {

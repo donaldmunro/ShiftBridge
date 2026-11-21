@@ -140,6 +140,20 @@ public class LocalInputTests
     }
 
     [Fact]
+    public async Task Gear_change_does_not_vibrate_when_controller_vibration_is_off()
+    {
+        var fake = new FakeLocalInputProvider { CanVibrate = true };
+        var cfg = ConfigWith((ButtonKey.Pad("RB"), ObcButtonId.ShiftUp));
+        cfg.ControllerVibration = false;
+        await using var bridge = new BridgeService(cfg, localInput: fake);
+
+        fake.Press(ButtonKey.Pad("RB"), true);
+
+        await Task.Delay(500);
+        Assert.Equal(0, fake.Vibrations);
+    }
+
+    [Fact]
     public async Task Held_local_key_with_repeat_keeps_shifting_until_released()
     {
         var fake = new FakeLocalInputProvider();

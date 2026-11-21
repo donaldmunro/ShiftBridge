@@ -351,6 +351,7 @@
   <data name="Devices_NotFoundTitle" xml:space="preserve"><value>Manette introuvable ?</value></data>
   <data name="Devices_NotFoundBody" xml:space="preserve"><value>Éteignez-la puis rallumez-la, et déconnectez-la de Zwift, du trainer ou du téléphone : une manette n'accepte qu'une connexion à la fois. Click v2 et Ride v2 verrouillés : déverrouillez-les via l'app Zwift.</value></data>
   <data name="Devices_AutoReconnect" xml:space="preserve"><value>Reconnexion automatique des manettes</value></data>
+  <data name="Devices_Vibration" xml:space="preserve"><value>Vibration des manettes (changements de vitesse, retour de l'appli)</value></data>
   <data name="Devices_LocalTitle" xml:space="preserve"><value>Clavier et manettes de jeu</value></data>
   <data name="Devices_LocalIntro" xml:space="preserve"><value>Utilisez aussi un clavier, une télécommande ou une manette (Xbox, joystick) pour passer les vitesses. Assignez les touches dans l'onglet Touches.</value></data>
   <data name="Devices_UseKeyboard" xml:space="preserve"><value>Utiliser le clavier et les télécommandes (HID)</value></data>

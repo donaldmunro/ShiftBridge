@@ -14,6 +14,8 @@ public sealed class AppConfig
     public bool EnableNetwork { get; set; } = true;
     public bool EnableDirCon { get; set; } = true;
     public bool AutoReconnect { get; set; } = true;
+    /// <summary>Les manettes vibrent aux changements de vitesse et quand l'appli le demande (le test manuel « Faire vibrer » marche toujours).</summary>
+    public bool ControllerVibration { get; set; } = true;
     /// <summary>Windows : la fenêtre est cachée au lancement (dans la zone de notification si <see cref="MinimizeToTray"/>, sinon réduite).</summary>
     public bool StartMinimized { get; set; }
     /// <summary>Windows : réduire la fenêtre la cache dans la zone de notification (la croix ferme toujours l'application).</summary>
