@@ -1,5 +1,7 @@
 # ShiftBridge
 
+🇬🇧 [Read in English](README.en.md)
+
 Utilisez vos manettes **Zwift Play, Click, Click v2 et Ride** dans d'autres applications d'entraînement (TrainingPeaks Virtual, MyWhoosh, Rouvy, Incyclist…) grâce au protocole ouvert [OpenBikeControl](https://openbikecontrol.org). Gratuit, licence GPL-3.0, un seul `.exe` Windows sans installation, et une version **Android** (voir plus bas).
 
 > Projet indépendant, non affilié à Zwift, Inc. Le protocole des manettes est issu de rétro-ingénierie publique et peut changer avec leurs mises à jour de firmware.
@@ -29,7 +31,8 @@ ShiftBridge traduit chaque appui en action (vitesse +/−, navigation…). **C'e
    - Manettes Xbox (XInput, vibration comprise) et joysticks HID génériques (boutons, croix, axes) : lues même quand une autre fenêtre a le focus. Une manette ne peut pas être masquée à l'application d'entraînement : si celle-ci la lit aussi, désactivez-la dans ses réglages pour éviter un double déclenchement.
    - Non disponible sur Android pour l'instant.
 8. **Cardio** (page **Appareils**, Windows et Android) : *Rechercher* une ceinture ou une montre cardio Bluetooth (service standard de fréquence cardiaque), puis *Connecter*. Le proxy la republie à l'appli d'entraînement avec le trainer « ShiftBridge Trainer » : puissance, cadence, vitesse et FC arrivent par un seul appareil. Déconnectez d'abord la ceinture de votre téléphone ou de votre montre (beaucoup n'acceptent qu'une ou deux connexions). Connecter ou retirer un capteur redémarre le proxy (l'appli se reconnecte). Le dernier capteur est reconnecté au lancement ; la FC s'affiche aussi dans la superposition (option *Puissance, cadence et vitesse…*).
-9. **Réglages** → *Ouvrir le journal de diagnostic* journalise les trames brutes (utile pour un rapport de bug). Les erreurs inattendues sont écrites dans `%APPDATA%\ShiftBridge\crash.log`.
+9. **Vibration des manettes** : les manettes vibrent à chaque changement de vitesse (deux fois en butée) et quand l'appli le demande. Page **Appareils** → *Avancé* → *Vibration des manettes* la désactive ; le test *Faire vibrer* du menu d'une manette reste disponible.
+10. **Réglages** → *Ouvrir le journal de diagnostic* journalise les trames brutes (utile pour un rapport de bug). Les erreurs inattendues sont écrites dans `%APPDATA%\ShiftBridge\crash.log`.
 
 Une seule instance de ShiftBridge peut tourner à la fois. La recherche des manettes s'arrête d'elle-même une fois toutes les manettes connues connectées (bouton *Rechercher* pour en ajouter une).
 
@@ -64,7 +67,7 @@ Ces manettes se verrouillent environ une minute après la connexion si Zwift ne 
 
 | Fonction | État |
 |---|---|
-| Analyse des trames Play / Click / Ride, mapping, vitesse virtuelle, répétition sur appui long, cycle de vie (déconnexion, arrêt, clients bloqués, configuration) | Testé (392 tests automatisés, trames construites à la main) |
+| Analyse des trames Play / Click / Ride, mapping, vitesse virtuelle, répétition sur appui long, cycle de vie (déconnexion, arrêt, clients bloqués, configuration) | Testé (497 tests automatisés, trames construites à la main) |
 | Langue de l'interface : français si le système est en français (fr-FR, fr-BE, fr-CH, fr-CA…), anglais sinon ; sélecteur Automatique / Français / English dans les options avancées (pris en compte au redémarrage). Les textes sont dans `src/ShiftBridge.Core/Localization/Strings.resx` (anglais) et `Strings.fr.resx` (français). Le journal Diagnostic reste en français | Testé (cohérence des ressources, choix de la langue, rendu des libellés) ; **rendu à l'écran non vérifié** (Windows et Android) |
 | Clavier, télécommandes HID, manettes Xbox et joysticks (Windows) : identité de touche ouverte, fusion multi-périphériques, mapping XInput/HID, chaîne jusqu'à l'OBC | Testé avec un faux fournisseur d'entrées |
 | Manette Nintendo Switch Pro Controller en Bluetooth (rapport complet 0x30, décodage vérifié sur des rapports réels) | Testé sur matériel réel : boutons, croix, sticks, L/R, ZL/ZR |
