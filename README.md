@@ -2,7 +2,7 @@
 
 🇬🇧 [Read in English](README.en.md)
 
-Utilisez vos manettes **Zwift Play, Click, Click v2 et Ride** dans d'autres applications d'entraînement (TrainingPeaks Virtual, MyWhoosh, Rouvy, Incyclist…) grâce au protocole ouvert [OpenBikeControl](https://openbikecontrol.org). Gratuit, licence GPL-3.0, un seul `.exe` Windows sans installation, et une version **Android** (voir plus bas).
+Utilisez vos manettes **Zwift Play, Click, Click v2 et Ride** dans d'autres applications d'entraînement (TrainingPeaks Virtual, Les jeux du cycle…) grâce au protocole ouvert [OpenBikeControl](https://openbikecontrol.org). Gratuit, licence GPL-3.0, un seul `.exe` Windows sans installation, et une version **Android** (voir plus bas).
 
 > Projet indépendant, non affilié à Zwift, Inc. Le protocole des manettes est issu de rétro-ingénierie publique et peut changer avec leurs mises à jour de firmware.
 
