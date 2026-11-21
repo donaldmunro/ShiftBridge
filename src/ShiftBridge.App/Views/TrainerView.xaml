@@ -1,0 +1,177 @@
+<UserControl x:Class="ShiftBridge.App.Views.TrainerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:loc="clr-namespace:ShiftBridge.Core.Localization;assembly=ShiftBridge.Core"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:ShiftBridge.App.Controls">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="36,30,36,30" MaxWidth="860">
+            <TextBlock Text="{x:Static loc:Strings.Nav_Trainer}" Style="{StaticResource PageTitle}" />
+            <TextBlock Style="{StaticResource Caption}" Margin="0,0,0,18"
+                       Text="{x:Static loc:Strings.Trainer_Intro}" />
+
+            <!-- Statut + action principale -->
+            <Border Style="{StaticResource Card}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:StatusBadge State="{Binding TrainerState}" Margin="0,0,14,0" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,16,0">
+                        <TextBlock Text="{Binding TrainerSummary}" FontSize="15" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding TrainerStatus}" Style="{StaticResource Caption}" Margin="0,2,0,0" />
+                    </StackPanel>
+                    <Button Grid.Column="2" Content="{Binding ProxyButtonText}" Command="{Binding ToggleProxyCommand}" Padding="18,10">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ProxyActive}" Value="True">
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="BorderBrush" Value="{StaticResource Danger}" />
+                                        <Setter Property="Foreground" Value="{StaticResource Danger}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- Connexion au trainer -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <TextBlock Style="{StaticResource SectionIcon}" Text="&#xE702;" />
+                        <TextBlock Text="{x:Static loc:Strings.Trainer_ConnTitle}" Style="{StaticResource SectionTitle}" Margin="0" VerticalAlignment="Center" />
+                        <TextBlock Style="{StaticResource InfoIcon}"
+                                   ToolTip="{x:Static loc:Strings.Trainer_ConnTip}" />
+                    </StackPanel>
+
+                    <Border Background="{StaticResource Bg}" CornerRadius="10" Padding="3" HorizontalAlignment="Left" Margin="0,0,0,14">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton Content="Wi-Fi" IsChecked="{Binding UseWifi}" GroupName="transport" Style="{StaticResource SegmentedRadio}" />
+                            <RadioButton Content="Bluetooth" IsChecked="{Binding UseBluetooth}" GroupName="transport" Style="{StaticResource SegmentedRadio}" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Wi-Fi -->
+                    <StackPanel Visibility="{Binding UseWifi, Converter={StaticResource BoolToVis}}">
+                        <Button Content="{x:Static loc:Strings.Trainer_BtnFind}" Command="{Binding FindTrainersCommand}" HorizontalAlignment="Left" Margin="0,0,0,10" />
+                        <ListBox ItemsSource="{Binding FoundTrainers}" SelectedItem="{Binding SelectedTrainer}" MinHeight="56" MaxHeight="140" />
+                    </StackPanel>
+
+                    <!-- Bluetooth -->
+                    <StackPanel Visibility="{Binding UseBluetooth, Converter={StaticResource BoolToVis}}">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <Button Content="{Binding BleScanButtonText}" Command="{Binding ToggleBleScanCommand}" />
+                            <TextBlock Style="{StaticResource InfoIcon}" VerticalAlignment="Center"
+                                       ToolTip="{x:Static loc:Strings.Trainer_BleTip}" />
+                        </StackPanel>
+                        <ListBox ItemsSource="{Binding FoundBleTrainers}" SelectedItem="{Binding SelectedBleTrainer}" MinHeight="56" MaxHeight="160" />
+                    </StackPanel>
+
+                    <CheckBox Content="{x:Static loc:Strings.Trainer_AutoStart}" IsChecked="{Binding AutoStartVirtualShifting}" Margin="0,16,0,0" />
+                </StackPanel>
+            </Border>
+
+            <!-- Braquet -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <TextBlock Style="{StaticResource SectionIcon}" Text="&#xE713;" />
+                        <TextBlock Text="{x:Static loc:Strings.Trainer_Gearing}" Style="{StaticResource SectionTitle}" Margin="0" VerticalAlignment="Center" />
+                        <TextBlock Style="{StaticResource InfoIcon}"
+                                   ToolTip="{x:Static loc:Strings.Trainer_GearingTip}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Margin="0,0,16,0">
+                            <TextBlock Text="{x:Static loc:Strings.Trainer_Chainring}" Style="{StaticResource Caption}" Margin="0,0,0,4" />
+                            <TextBox Text="{Binding ChainringText, UpdateSourceTrigger=PropertyChanged}" Width="80" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="{x:Static loc:Strings.Trainer_Cog}" Style="{StaticResource Caption}" Margin="0,0,0,4" />
+                            <TextBox Text="{Binding CogText, UpdateSourceTrigger=PropertyChanged}" Width="80" />
+                        </StackPanel>
+                    </StackPanel>
+                    <TextBlock Text="{Binding DrivetrainInfo}" Style="{StaticResource Caption}" Margin="0,10,0,0" />
+
+                    <!-- Nombre de vitesses : même plage de rapports, pas plus ou moins serrés -->
+                    <StackPanel Orientation="Horizontal" Margin="0,16,0,4">
+                        <TextBlock Text="{x:Static loc:Strings.Trainer_GearCount}" Style="{StaticResource Caption}" />
+                        <TextBlock Style="{StaticResource InfoIcon}" ToolTip="{x:Static loc:Strings.Trainer_GearCountTip}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Slider Minimum="8" Maximum="24" TickFrequency="1" IsSnapToTickEnabled="True" Width="220" VerticalAlignment="Center"
+                                Value="{Binding GearCountValue}"
+                                AutomationProperties.Name="{x:Static loc:Strings.Trainer_GearCount}" />
+                        <TextBlock Text="{Binding GearCountText}" VerticalAlignment="Center" Margin="12,0,0,0" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Avancé : réglages rarement utiles (le cardio est dans Appareils, la superposition dans Réglages) -->
+            <Expander Header="{x:Static loc:Strings.Common_AdvancedShort}" Style="{StaticResource AdvancedExpander}">
+                <StackPanel>
+                    <!-- Adresse manuelle du trainer Wi-Fi -->
+                    <Border Style="{StaticResource Card}" Visibility="{Binding UseWifi, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="{x:Static loc:Strings.Trainer_Manual}" Style="{StaticResource Caption}" Margin="0,0,0,6" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Text="{Binding TrainerHost, UpdateSourceTrigger=PropertyChanged}" Width="170" ToolTip="{x:Static loc:Strings.Trainer_IpTip}" />
+                                <TextBlock Text=":" VerticalAlignment="Center" Margin="8,0" Foreground="{StaticResource TextMuted}" />
+                                <TextBox Text="{Binding TrainerPortText, UpdateSourceTrigger=PropertyChanged}" Width="80" ToolTip="Port" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Mesure du braquet réel -->
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="{x:Static loc:Strings.Trainer_Measure}" Command="{Binding MeasureDrivetrainCommand}" IsEnabled="{Binding CanMeasure}" Margin="0,0,8,0" />
+                                <Button Content="{x:Static loc:Strings.Trainer_UseMeasure}" Command="{Binding UseMeasuredRatioCommand}" IsEnabled="{Binding CanUseMeasurement}" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding MeasureResult}" Style="{StaticResource Caption}" Margin="0,8,0,0" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox Content="{x:Static loc:Strings.Trainer_Native}" IsChecked="{Binding NativeZwiftMode}" />
+                                <TextBlock Style="{StaticResource InfoIcon}" VerticalAlignment="Center"
+                                           ToolTip="{x:Static loc:Strings.Trainer_NativeTip}" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding NativeStatus}" Style="{StaticResource Caption}" Margin="50,4,0,12" />
+
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <StackPanel Margin="0,0,16,0">
+                                    <TextBlock Text="{x:Static loc:Strings.Trainer_RiderWeight}" Style="{StaticResource Caption}" Margin="0,0,0,4" />
+                                    <TextBox Text="{Binding RiderWeightText, UpdateSourceTrigger=PropertyChanged}" Width="80" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="{x:Static loc:Strings.Trainer_BikeWeight}" Style="{StaticResource Caption}" Margin="0,0,0,4" />
+                                    <TextBox Text="{Binding BikeWeightText, UpdateSourceTrigger=PropertyChanged}" Width="80" />
+                                </StackPanel>
+                            </StackPanel>
+                            <TextBlock Style="{StaticResource Caption}" Margin="0,4,0,16"
+                                       Text="{x:Static loc:Strings.Trainer_WeightsNote}" />
+
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox Content="{x:Static loc:Strings.Trainer_ReportGear}" IsChecked="{Binding ReportGearToApp}" />
+                                <TextBlock Style="{StaticResource InfoIcon}" VerticalAlignment="Center"
+                                           ToolTip="{x:Static loc:Strings.Trainer_ReportGearTip}" />
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                                <CheckBox Content="{x:Static loc:Strings.Trainer_SlopeOnly}" IsChecked="{Binding SlopeOnlyMode}" />
+                                <TextBlock Style="{StaticResource InfoIcon}" VerticalAlignment="Center"
+                                           ToolTip="{x:Static loc:Strings.Trainer_SlopeOnlyTip}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Expander>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

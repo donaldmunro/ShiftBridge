@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView x:Class="ShiftBridge.Mobile.Views.DiagnosticView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:loc="clr-namespace:ShiftBridge.Core.Localization;assembly=ShiftBridge.Core"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ShiftBridge.Presentation;assembly=ShiftBridge.Presentation"
+             x:DataType="vm:MainViewModel">
+    <Grid RowDefinitions="Auto,*" Padding="16,16" RowSpacing="10">
+        <VerticalStackLayout Grid.Row="0" Spacing="10">
+            <Label Style="{StaticResource Caption}"
+                   Text="{x:Static loc:Strings.Diag_Intro}" />
+            <HorizontalStackLayout Spacing="8">
+                <Button Text="{x:Static loc:Strings.Diag_Copy}" Command="{Binding CopyLogCommand}" />
+                <Button Text="{x:Static loc:Strings.Diag_Clear}" Command="{Binding ClearLogCommand}" Style="{StaticResource GhostButton}" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Spacing="10">
+                <Switch IsToggled="{Binding VerboseFrames}" VerticalOptions="Center" />
+                <Label Text="{x:Static loc:Strings.Diag_Verbose}" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <Entry Text="{Binding NoteText}" Placeholder="{x:Static loc:Strings.Diag_NotePlaceholder}"
+                       ReturnCommand="{Binding AddNoteCommand}" />
+                <Button Grid.Column="1" Text="{x:Static loc:Strings.Diag_Add}" Command="{Binding AddNoteCommand}" />
+            </Grid>
+        </VerticalStackLayout>
+
+        <Editor Grid.Row="1" Text="{Binding LogText, Mode=OneWay}" IsReadOnly="True" FontFamily="monospace" FontSize="11"
+                BackgroundColor="{StaticResource Sidebar}" TextColor="{StaticResource TextMuted}" />
+    </Grid>
+</ContentView>

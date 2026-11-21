@@ -1,0 +1,11 @@
+bin/
+obj/
+publish/
+*.user
+.vs/
+publish-*/
+apk/
+*.apk
+*.aab
+*.keystore
+*.jks

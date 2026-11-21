@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShiftBridge — Politique de confidentialité / Privacy Policy</title>
+<style>
+  :root { --bg:#ffffff; --fg:#1b1f24; --muted:#59636e; --line:#d8dee4; --accent:#0b6bcb; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0f1317; --fg:#e6edf3; --muted:#9aa4af; --line:#2b333b; --accent:#58a6ff; } }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:24px 16px 64px; }
+  h1 { font-size:1.7rem; margin:.2em 0; }
+  h2 { font-size:1.35rem; margin-top:2.2em; padding-top:.8em; border-top:1px solid var(--line); }
+  h3 { font-size:1.05rem; margin-top:1.6em; }
+  a { color:var(--accent); }
+  .meta { color:var(--muted); font-size:.92rem; }
+  code { background:rgba(127,127,127,.15); padding:1px 5px; border-radius:4px; font-size:.92em; }
+  li { margin:.3em 0; }
+  nav a { margin-right:14px; }
+</style>
+</head>
+<body>
+<main>
+<h1>Politique de confidentialité / Privacy Policy</h1>
+<p class="meta"><strong>ShiftBridge</strong> (<code>org.shiftbridge.app</code>) — Windows &amp; Android<br>
+Date d'effet / Effective date : 2026-11-21<br>
+Éditeur / Publisher : Antoine Renou — <a href="mailto:renouantoine@gmail.com">renouantoine@gmail.com</a><br>
+Code source / Source code : <a href="https://github.com/renoua/ShiftBridge">github.com/renoua/ShiftBridge</a> (GPL-3.0)</p>
+<nav><a href="#fr">Français</a><a href="#en">English</a></nav>
+
+<h2 id="fr">Français</h2>
+
+<h3>En bref</h3>
+<p>ShiftBridge <strong>ne collecte aucune donnée personnelle et n'envoie rien au développeur ni à un tiers</strong>. Il n'y a ni compte, ni publicité, ni statistiques d'usage, ni rapport d'erreurs automatique. Tout reste sur votre appareil.</p>
+
+<h3>Ce que l'application traite</h3>
+<p>Pour fonctionner, ShiftBridge lit et relaie en temps réel, sur votre appareil :</p>
+<ul>
+  <li>les appuis de touches de vos manettes Zwift Play / Click / Ride, de votre clavier ou de votre manette de jeu (Windows) ;</li>
+  <li>les mesures de votre home-trainer (puissance, cadence, vitesse) ;</li>
+  <li>la fréquence cardiaque d'une ceinture ou d'une montre Bluetooth, si vous en connectez une ;</li>
+  <li>les noms et adresses Bluetooth des appareils que vous choisissez de connecter.</li>
+</ul>
+<p>Ces informations ne sont transmises <strong>qu'à l'application d'entraînement que vous avez choisie</strong> (TrainingPeaks Virtual, MyWhoosh, Rouvy…), par Bluetooth ou sur votre réseau local (OpenBikeControl, DirCon). Elles ne sortent jamais vers Internet. Ce que fait ensuite cette application est régi par sa propre politique.</p>
+
+<h3>Ce qui est enregistré sur votre appareil</h3>
+<ul>
+  <li><code>config.json</code> : vos réglages (affectation des touches, derniers appareils connectés, options d'affichage).</li>
+  <li>Le journal de diagnostic (trames brutes des manettes) et, sous Windows, <code>crash.log</code> (erreurs inattendues). Ils restent locaux ; ils ne sont partagés que si <strong>vous</strong> les joignez vous-même à un rapport de bug.</li>
+</ul>
+<p>Sous Android, la sauvegarde cloud est désactivée (<code>allowBackup=false</code>). La désinstallation (ou l'effacement des données de l'application) supprime ces fichiers ; sous Windows, supprimez le dossier <code>%APPDATA%\ShiftBridge</code>.</p>
+
+<h3>Autorisations Android</h3>
+<ul>
+  <li><strong>Appareils à proximité (Bluetooth scan / connexion / annonce)</strong> : trouver et connecter vos manettes, trainer et capteur cardio, et se présenter comme appareil Bluetooth à votre application d'entraînement. L'autorisation de scan est déclarée « jamais utilisée pour la localisation ».</li>
+  <li><strong>Localisation (Android 11 et antérieur uniquement)</strong> : exigée par ces versions d'Android pour toute recherche Bluetooth. ShiftBridge n'accède pas à votre position.</li>
+  <li><strong>Internet, état du Wi-Fi, multidiffusion Wi-Fi</strong> : serveurs locaux de l'application (OpenBikeControl, DirCon, découverte mDNS) sur votre réseau.</li>
+  <li><strong>Service de premier plan (appareil connecté), notifications, maintien de l'éveil</strong> : garder le pont actif écran éteint et afficher son état dans une notification.</li>
+</ul>
+
+<h3>Partage, enfants, sécurité</h3>
+<p>Aucune donnée n'est vendue, partagée ou transmise au développeur. L'application ne s'adresse pas spécifiquement aux enfants et ne collecte aucune donnée sur eux. Les communications locales avec votre application d'entraînement n'étant pas chiffrées par ces protocoles, utilisez un réseau de confiance.</p>
+
+<h3>Modifications et contact</h3>
+<p>Cette politique peut évoluer ; la version en vigueur est celle du dépôt, avec sa date d'effet. Questions : <a href="mailto:renouantoine@gmail.com">renouantoine@gmail.com</a> ou <a href="https://github.com/renoua/ShiftBridge/issues">GitHub Issues</a>.</p>
+
+<h2 id="en">English</h2>
+
+<h3>In short</h3>
+<p>ShiftBridge <strong>collects no personal data and sends nothing to the developer or to any third party</strong>. There are no accounts, ads, usage analytics or automatic crash reporting. Everything stays on your device.</p>
+
+<h3>What the app processes</h3>
+<p>To work, ShiftBridge reads and relays in real time, on your device:</p>
+<ul>
+  <li>button presses from your Zwift Play / Click / Ride controllers, keyboard or gamepad (Windows);</li>
+  <li>your trainer's readings (power, cadence, speed);</li>
+  <li>heart rate from a Bluetooth strap or watch, if you connect one;</li>
+  <li>the names and Bluetooth addresses of the devices you choose to connect.</li>
+</ul>
+<p>This information is passed <strong>only to the training app you chose</strong> (TrainingPeaks Virtual, MyWhoosh, Rouvy…), over Bluetooth or your local network (OpenBikeControl, DirCon). It never leaves for the Internet. What that app does with it is governed by its own policy.</p>
+
+<h3>What is stored on your device</h3>
+<ul>
+  <li><code>config.json</code>: your settings (key mapping, last connected devices, display options).</li>
+  <li>The diagnostic log (raw controller frames) and, on Windows, <code>crash.log</code> (unexpected errors). They stay local and are shared only if <strong>you</strong> attach them to a bug report yourself.</li>
+</ul>
+<p>On Android, cloud backup is disabled (<code>allowBackup=false</code>). Uninstalling (or clearing the app's data) removes these files; on Windows, delete the <code>%APPDATA%\ShiftBridge</code> folder.</p>
+
+<h3>Android permissions</h3>
+<ul>
+  <li><strong>Nearby devices (Bluetooth scan / connect / advertise)</strong>: find and connect your controllers, trainer and heart-rate sensor, and present itself as a Bluetooth device to your training app. The scan permission is declared as "never used to derive location".</li>
+  <li><strong>Location (Android 11 and earlier only)</strong>: required by those Android versions for any Bluetooth scan. ShiftBridge does not access your location.</li>
+  <li><strong>Internet, Wi-Fi state, Wi-Fi multicast</strong>: the app's local servers (OpenBikeControl, DirCon, mDNS discovery) on your network.</li>
+  <li><strong>Foreground service (connected device), notifications, wake lock</strong>: keep the bridge running with the screen off and show its status in a notification.</li>
+</ul>
+
+<h3>Sharing, children, security</h3>
+<p>No data is sold, shared or sent to the developer. The app is not directed at children and collects no data about them. The local links to your training app are not encrypted by these protocols, so use a trusted network.</p>
+
+<h3>Changes and contact</h3>
+<p>This policy may change; the version in the repository, with its effective date, is the current one. Questions: <a href="mailto:renouantoine@gmail.com">renouantoine@gmail.com</a> or <a href="https://github.com/renoua/ShiftBridge/issues">GitHub Issues</a>.</p>
+</main>
+</body>
+</html>

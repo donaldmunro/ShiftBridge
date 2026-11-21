@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\ShiftBridge.Platform.Windows\ShiftBridge.Platform.Windows.csproj" />
+    <ProjectReference Include="..\ShiftBridge.Presentation\ShiftBridge.Presentation.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <!-- Uniquement pour NotifyIcon (zone de notification) ; voir les Using retirés plus bas -->
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>ShiftBridge</AssemblyName>
+    <Version>0.15.4</Version>
+    <Product>ShiftBridge</Product>
+    <Company>ShiftBridge contributors</Company>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\appicon.ico</ApplicationIcon>
+    <!-- Langues livrées : anglais (neutre) et français ; écarte les satellites NuGet des autres langues. -->
+    <SatelliteResourceLanguages>en;fr</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\appicon.ico" />
+    <!-- WinForms et WPF définissent tous deux Application, MessageBox, Color… : pas d'import implicite de WinForms -->
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+
+</Project>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

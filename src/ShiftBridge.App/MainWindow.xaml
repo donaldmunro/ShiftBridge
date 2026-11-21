@@ -1,0 +1,64 @@
+<Window x:Class="ShiftBridge.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:loc="clr-namespace:ShiftBridge.Core.Localization;assembly=ShiftBridge.Core"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:ShiftBridge.App.Views"
+        xmlns:ctl="clr-namespace:ShiftBridge.App.Controls"
+        Title="ShiftBridge" Icon="/Assets/appicon.ico"
+        Width="1040" Height="740" MinWidth="880" MinHeight="600"
+        WindowStartupLocation="CenterScreen" Background="{StaticResource Bg}"
+        FontFamily="Segoe UI Variable Text, Segoe UI" FontSize="14" Foreground="{StaticResource Text}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Barre latérale : cinq pages à un clic de partout, Réglages en bas -->
+        <Border Background="{StaticResource Sidebar}">
+            <DockPanel Margin="14,22,14,16">
+                <StackPanel DockPanel.Dock="Top" Margin="8,0,0,26">
+                    <TextBlock FontSize="20" FontWeight="Bold">
+                        <Run Text="Shift" /><Run Text="Bridge" Foreground="{StaticResource Accent}" />
+                    </TextBlock>
+                    <TextBlock Text="{x:Static loc:Strings.Main_Subtitle}" Style="{StaticResource Caption}" FontSize="11" />
+                </StackPanel>
+
+                <StackPanel DockPanel.Dock="Bottom">
+                    <Border Height="1" Background="{StaticResource Border}" Margin="0,0,0,10" />
+                    <!-- Réglages reste sélectionné sur sa sous-page Diagnostic -->
+                    <RadioButton Style="{StaticResource NavItem}" GroupName="nav" Content="{x:Static loc:Strings.Nav_Settings}" ctl:Nav.Glyph="&#xE713;"
+                                 Command="{Binding NavigateCommand}" CommandParameter="settings"
+                                 IsChecked="{Binding CurrentPage, Converter={StaticResource EqualsToBool}, ConverterParameter='settings|diagnostic', Mode=TwoWay}" />
+                    <TextBlock x:Name="VersionText" Style="{StaticResource Caption}" Margin="16,8,0,0" />
+                </StackPanel>
+
+                <StackPanel>
+                    <RadioButton Style="{StaticResource NavItem}" GroupName="nav" Content="{x:Static loc:Strings.Nav_Home}" ctl:Nav.Glyph="&#xE80F;"
+                                 IsChecked="{Binding CurrentPage, Converter={StaticResource EqualsToBool}, ConverterParameter=home, Mode=TwoWay}" />
+                    <RadioButton Style="{StaticResource NavItem}" GroupName="nav" Content="{x:Static loc:Strings.Nav_Controllers}" ctl:Nav.Glyph="&#xE772;"
+                                 ctl:Nav.State="{Binding ControllersState}"
+                                 IsChecked="{Binding CurrentPage, Converter={StaticResource EqualsToBool}, ConverterParameter=devices, Mode=TwoWay}" />
+                    <RadioButton Style="{StaticResource NavItem}" GroupName="nav" Content="{x:Static loc:Strings.Nav_Buttons}" ctl:Nav.Glyph="&#xE765;"
+                                 IsChecked="{Binding CurrentPage, Converter={StaticResource EqualsToBool}, ConverterParameter=buttons, Mode=TwoWay}" />
+                    <RadioButton Style="{StaticResource NavItem}" GroupName="nav" Content="{x:Static loc:Strings.Nav_Trainer}" ctl:Nav.Glyph="&#xE945;"
+                                 ctl:Nav.State="{Binding TrainerState}"
+                                 IsChecked="{Binding CurrentPage, Converter={StaticResource EqualsToBool}, ConverterParameter=trainer, Mode=TwoWay}" />
+                    <RadioButton Style="{StaticResource NavItem}" GroupName="nav" Content="{x:Static loc:Strings.Nav_App}" ctl:Nav.Glyph="&#xE7F4;"
+                                 ctl:Nav.State="{Binding AppState}"
+                                 IsChecked="{Binding CurrentPage, Converter={StaticResource EqualsToBool}, ConverterParameter=apps, Mode=TwoWay}" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Contenu : une seule page visible à la fois -->
+        <Grid Grid.Column="1">
+            <views:HomeView Visibility="{Binding CurrentPage, Converter={StaticResource EqualsToVis}, ConverterParameter=home}" />
+            <views:DevicesView Visibility="{Binding CurrentPage, Converter={StaticResource EqualsToVis}, ConverterParameter=devices}" />
+            <views:ButtonsView Visibility="{Binding CurrentPage, Converter={StaticResource EqualsToVis}, ConverterParameter=buttons}" />
+            <views:TrainerView Visibility="{Binding CurrentPage, Converter={StaticResource EqualsToVis}, ConverterParameter=trainer}" />
+            <views:AppsView Visibility="{Binding CurrentPage, Converter={StaticResource EqualsToVis}, ConverterParameter=apps}" />
+            <views:SettingsView Visibility="{Binding CurrentPage, Converter={StaticResource EqualsToVis}, ConverterParameter=settings}" />
+            <views:DiagnosticView Visibility="{Binding CurrentPage, Converter={StaticResource EqualsToVis}, ConverterParameter=diagnostic}" />
+        </Grid>
+    </Grid>
+</Window>

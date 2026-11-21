@@ -1,0 +1,16 @@
+<UserControl x:Class="ShiftBridge.App.Controls.StatusTile"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:ShiftBridge.App.Controls"
+             x:Name="Root" Focusable="False" IsTabStop="False">
+    <!-- Contenu d'une tuile de l'Accueil : pastille d'état + rubrique, résumé en gras, détail discret -->
+    <StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+            <controls:StatusBadge State="{Binding State, ElementName=Root}" />
+            <TextBlock Text="{Binding Title, ElementName=Root}" Style="{StaticResource Caption}" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center" />
+        </StackPanel>
+        <TextBlock Text="{Binding Summary, ElementName=Root}" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding Detail, ElementName=Root}" Style="{StaticResource Caption}" Margin="0,4,0,0"
+                   Visibility="{Binding Detail, ElementName=Root, Converter={StaticResource NullToCollapsed}}" />
+    </StackPanel>
+</UserControl>

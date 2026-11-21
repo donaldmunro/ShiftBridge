@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView x:Class="ShiftBridge.Mobile.Views.HomeView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:loc="clr-namespace:ShiftBridge.Core.Localization;assembly=ShiftBridge.Core"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ShiftBridge.Presentation;assembly=ShiftBridge.Presentation"
+             xmlns:ctl="clr-namespace:ShiftBridge.Mobile"
+             x:DataType="vm:MainViewModel">
+    <ScrollView>
+        <VerticalStackLayout Padding="16,16" Spacing="0">
+            <Label Style="{StaticResource Caption}" Margin="0,0,0,14"
+                   Text="{x:Static loc:Strings.Home_Tagline}" />
+
+            <!-- Permission refusée : sans Bluetooth, aucune manette ne peut être trouvée -->
+            <Border Style="{StaticResource Card}" Stroke="{StaticResource Danger}" IsVisible="{Binding HasPermissionProblem}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{Binding PermissionProblem}" />
+                    <Button Text="{x:Static loc:Strings.Home_OpenSettings}" Command="{Binding OpenAppSettingsCommand}" HorizontalOptions="Start" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Prochaine étape (masquée quand tout est en place) -->
+            <Border Style="{StaticResource Card}" Stroke="{StaticResource Accent}" IsVisible="{Binding HasNextStep}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{Binding NextStepText}" />
+                    <Button Text="{x:Static loc:Strings.Home_Open}" Command="{Binding NavigateCommand}" CommandParameter="{Binding NextStepPage}"
+                            Style="{StaticResource PrimaryButton}" HorizontalOptions="Start" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Vitesse virtuelle, mesures en direct et bouton d'activation -->
+            <Border Style="{StaticResource Card}" Padding="20">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="{x:Static loc:Strings.Home_SecGear}" Style="{StaticResource Caption}" FontAttributes="Bold" />
+                    <!-- Estompée tant que le virtual shifting est arrêté : cette vitesse n'est alors appliquée à rien -->
+                    <Label Text="{Binding GearText}" FontSize="64" FontAttributes="Bold" TextColor="{StaticResource Accent}">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding IsGearApplied}" Value="False">
+                                <Setter Property="Opacity" Value="0.4" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <Label Text="{Binding GearRatioText}" FontSize="14" />
+                    <Label Text="{Binding ShiftModeText}" FontSize="13" TextColor="{StaticResource TextMuted}" />
+                    <!-- Puissance · cadence · cardio · vitesse tant que le virtual shifting tourne -->
+                    <Label Text="{Binding LiveTelemetry}" FontSize="15" FontAttributes="Bold" Margin="0,6,0,0"
+                           IsVisible="{Binding LiveTelemetry, Converter={StaticResource HasText}}" />
+                    <Button Text="{Binding ProxyButtonText}" Command="{Binding ToggleProxyCommand}"
+                            Style="{StaticResource PrimaryButton}" Margin="0,12,0,0">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding ProxyActive}" Value="True">
+                                <Setter Property="BackgroundColor" Value="Transparent" />
+                                <Setter Property="TextColor" Value="{StaticResource Danger}" />
+                                <Setter Property="BorderColor" Value="{StaticResource Danger}" />
+                                <Setter Property="BorderWidth" Value="1" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                    <Label Text="{Binding TrainerStatus}" Style="{StaticResource Caption}" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Tuiles : un appui ouvre la page correspondante (manettes, touches, trainer, cardio, appli) -->
+            <Border Style="{StaticResource Card}">
+                <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="devices" /></Border.GestureRecognizers>
+                <ctl:StatusTile State="{Binding ControllersState}" Heading="{x:Static loc:Strings.Home_SecControllers}"
+                                Summary="{Binding ControllersSummary}" Detail="{Binding ControllersDetail}" />
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="buttons" /></Border.GestureRecognizers>
+                <ctl:StatusTile State="{Binding ButtonsState}" Heading="{x:Static loc:Strings.Home_SecButtons}"
+                                Summary="{Binding ButtonsSummary}" Detail="{Binding ButtonsDetail}" />
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="trainer" /></Border.GestureRecognizers>
+                <ctl:StatusTile State="{Binding TrainerState}" Heading="{x:Static loc:Strings.Home_SecTrainer}"
+                                Summary="{Binding TrainerSummary}" Detail="{Binding TrainerDetail}" />
+            </Border>
+            <!-- Le cardio se règle dans Appareils -->
+            <Border Style="{StaticResource Card}">
+                <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="devices" /></Border.GestureRecognizers>
+                <ctl:StatusTile State="{Binding HeartRateState}" Heading="{x:Static loc:Strings.Home_SecHeartRate}"
+                                Summary="{Binding HeartRateSummary}" Detail="{Binding HeartRateDetail}" />
+            </Border>
+            <Border Style="{StaticResource Card}">
+                <Border.GestureRecognizers><TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="apps" /></Border.GestureRecognizers>
+                <ctl:StatusTile State="{Binding AppState}" Heading="{x:Static loc:Strings.Home_SecApp}"
+                                Summary="{Binding AppSummary}" Detail="{Binding AppDetail}" />
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentView>

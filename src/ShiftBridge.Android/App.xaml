@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Application x:Class="ShiftBridge.Mobile.App"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:ShiftBridge.Mobile">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <local:EqualsToBoolConverter x:Key="EqualsToBool" />
+            <local:EqualsToColorConverter x:Key="EqualsToColor" />
+            <local:UiStateToColorConverter x:Key="StateColor" />
+            <local:HasTextConverter x:Key="HasText" />
+            <local:InverseBoolConverter x:Key="InvBool" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,148 @@
+<UserControl x:Class="ShiftBridge.App.Views.ButtonsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:loc="clr-namespace:ShiftBridge.Core.Localization;assembly=ShiftBridge.Core"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="GroupedButtons" Source="{Binding ButtonRows}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="Group" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="36,30,36,30" MaxWidth="860">
+            <DockPanel Margin="0,0,0,18">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="{x:Static loc:Strings.Buttons_Add}" Command="{Binding AddInputKeyCommand}" Margin="0,0,8,0"
+                            Visibility="{Binding HasLocalInput, Converter={StaticResource BoolToVis}}"
+                            ToolTip="{x:Static loc:Strings.Buttons_AddTip}" />
+                    <Button Content="{x:Static loc:Strings.Buttons_Reset}" Command="{Binding ResetProfileCommand}" Style="{StaticResource GhostButton}" />
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="{x:Static loc:Strings.Nav_Buttons}" Style="{StaticResource PageTitle}" />
+                    <TextBlock Style="{StaticResource Caption}"
+                               Text="{x:Static loc:Strings.Buttons_Intro}" />
+                </StackPanel>
+            </DockPanel>
+
+            <!-- Profils : un par appli d'entraînement, activé à sa connexion -->
+            <Border Style="{StaticResource Card}" Padding="20,12" Margin="0,0,0,12">
+                <StackPanel>
+                    <DockPanel>
+                        <ComboBox DockPanel.Dock="Right" Width="200" ItemsSource="{Binding ProfileOptions}"
+                                  SelectedItem="{Binding SelectedProfileOption}" DisplayMemberPath="Name"
+                                  AutomationProperties.Name="{x:Static loc:Strings.Profile_Label}" />
+                        <TextBlock Text="{x:Static loc:Strings.Profile_Label}" VerticalAlignment="Center" />
+                    </DockPanel>
+                    <TextBlock Text="{Binding ActiveProfileText}" Style="{StaticResource Caption}" Margin="0,8,0,0" />
+                    <TextBlock Text="{Binding ConnectedAppText}" Style="{StaticResource Caption}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                        <Button Content="{Binding CreateAppProfileText}" Command="{Binding CreateAppProfileCommand}" Margin="0,0,8,0"
+                                Visibility="{Binding CanCreateAppProfile, Converter={StaticResource BoolToVis}}" />
+                        <Button Content="{x:Static loc:Strings.Profile_Delete}" Command="{Binding DeleteProfileCommand}"
+                                Style="{StaticResource GhostButton}"
+                                Visibility="{Binding CanDeleteProfile, Converter={StaticResource BoolToVis}}" />
+                    </StackPanel>
+                    <TextBlock Style="{StaticResource Caption}" TextWrapping="Wrap" Margin="0,8,0,0"
+                               Text="{x:Static loc:Strings.Profile_Help}" />
+
+                    <!-- Vitesse de répétition (vitesse + / − tenue), commune à toutes les touches -->
+                    <Border Height="1" Background="{StaticResource Border}" Margin="0,14" />
+                    <DockPanel>
+                        <ComboBox DockPanel.Dock="Right" Width="200" ItemsSource="{Binding RepeatSpeedOptions}"
+                                  SelectedItem="{Binding SelectedRepeatSpeed}" DisplayMemberPath="Name"
+                                  ToolTip="{x:Static loc:Strings.Buttons_RepeatTip}" />
+                        <TextBlock Text="{x:Static loc:Strings.Buttons_RepeatSpeed}" VerticalAlignment="Center" />
+                    </DockPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Capture d'une touche clavier / manette -->
+            <Border Style="{StaticResource Card}" Padding="20,12" Margin="0,0,0,12"
+                    Visibility="{Binding HasLocalInput, Converter={StaticResource BoolToVis}}">
+                <StackPanel>
+                    <DockPanel>
+                        <Button DockPanel.Dock="Right" Content="{x:Static loc:Strings.Buttons_Cancel}" Command="{Binding CancelCaptureCommand}"
+                                Style="{StaticResource GhostButton}"
+                                Visibility="{Binding IsCapturing, Converter={StaticResource BoolToVis}}" />
+                        <TextBlock Text="{Binding InputCaptureStatus}" VerticalAlignment="Center" TextWrapping="Wrap"
+                                   Visibility="{Binding InputCaptureStatus, Converter={StaticResource NullToCollapsed}}" />
+                    </DockPanel>
+                    <TextBlock Style="{StaticResource Caption}" TextWrapping="Wrap"
+                               Text="{x:Static loc:Strings.Buttons_Help}" />
+                </StackPanel>
+            </Border>
+
+            <ItemsControl ItemsSource="{Binding Source={StaticResource GroupedButtons}}" Grid.IsSharedSizeScope="True">
+                <ItemsControl.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.ContainerStyle>
+                            <Style TargetType="GroupItem">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="GroupItem">
+                                            <Border Style="{StaticResource Card}" Padding="20,16">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Name}" Style="{StaticResource SectionTitle}" Margin="0,0,0,8" />
+                                                    <ItemsPresenter />
+                                                </StackPanel>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GroupStyle.ContainerStyle>
+                    </GroupStyle>
+                </ItemsControl.GroupStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,4" Background="Transparent" ToolTip="{Binding Tooltip}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="28" />
+                                <ColumnDefinition Width="*" />
+                                <!-- Largeur partagée entre toutes les lignes, calée sur « Répéter » : rien ne se décale -->
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="Repeat" />
+                                <ColumnDefinition Width="280" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Ellipse Style="{StaticResource Led}" HorizontalAlignment="Left" />
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Label}" />
+                                <TextBlock Style="{StaticResource InfoIcon}"
+                                           Visibility="{Binding Tooltip, Converter={StaticResource NullToCollapsed}}" />
+                            </StackPanel>
+                            <ComboBox Grid.Column="3"
+                                      ItemsSource="{Binding DataContext.Actions, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      SelectedItem="{Binding Selected}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Display}" TextTrimming="CharacterEllipsis" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <!-- Seulement pour « vitesse + » et « vitesse − » -->
+                            <CheckBox Grid.Column="2" Content="{x:Static loc:Strings.Buttons_Repeat}" Margin="0,0,12,0"
+                                      HorizontalAlignment="Right" VerticalAlignment="Center"
+                                      IsChecked="{Binding RepeatOnHold}"
+                                      Visibility="{Binding CanRepeat, Converter={StaticResource BoolToVis}}"
+                                      ToolTip="{x:Static loc:Strings.Buttons_RepeatTip}" />
+                            <!-- Seulement pour « Aller au rapport » : rapport visé (validé en quittant le champ) -->
+                            <TextBox Grid.Column="2" Width="56" Margin="0,0,12,0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                     Text="{Binding GearTargetText}"
+                                     Visibility="{Binding CanTarget, Converter={StaticResource BoolToVis}}"
+                                     ToolTip="{x:Static loc:Strings.Buttons_GearTargetTip}"
+                                     AutomationProperties.Name="{x:Static loc:Strings.Buttons_GearTargetTip}" />
+                            <!-- Seulement pour les touches clavier / manette ajoutées -->
+                            <Button Grid.Column="4" Content="&#xE711;" FontFamily="{StaticResource IconFont}" Padding="8,4" Margin="6,0,0,0"
+                                    Style="{StaticResource GhostButton}" AutomationProperties.Name="{x:Static loc:Strings.Buttons_Remove}"
+                                    ToolTip="{x:Static loc:Strings.Buttons_Remove}"
+                                    Command="{Binding DataContext.RemoveInputKeyCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}"
+                                    Visibility="{Binding CanRemove, Converter={StaticResource BoolToVis}}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView x:Class="ShiftBridge.Mobile.Views.TrainerView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:loc="clr-namespace:ShiftBridge.Core.Localization;assembly=ShiftBridge.Core"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ShiftBridge.Presentation;assembly=ShiftBridge.Presentation"
+             xmlns:trainer="clr-namespace:ShiftBridge.Platform.Trainer;assembly=ShiftBridge.Platform"
+             xmlns:ctl="clr-namespace:ShiftBridge.Mobile"
+             x:DataType="vm:MainViewModel">
+    <ScrollView>
+        <VerticalStackLayout Padding="16,16" Spacing="0">
+            <Label Style="{StaticResource Caption}" Margin="0,0,0,14"
+                   Text="{x:Static loc:Strings.Trainer_Intro}" />
+
+            <!-- Statut + action principale -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="8">
+                    <HorizontalStackLayout Spacing="10">
+                        <ctl:StatusBadge State="{Binding TrainerState}" />
+                        <Label Text="{Binding TrainerSummary}" FontSize="15" FontAttributes="Bold" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <Label Text="{Binding TrainerStatus}" Style="{StaticResource Caption}" />
+                    <Button Text="{Binding ProxyButtonText}" Command="{Binding ToggleProxyCommand}" Style="{StaticResource PrimaryButton}">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding ProxyActive}" Value="True">
+                                <Setter Property="BackgroundColor" Value="Transparent" />
+                                <Setter Property="TextColor" Value="{StaticResource Danger}" />
+                                <Setter Property="BorderColor" Value="{StaticResource Danger}" />
+                                <Setter Property="BorderWidth" Value="1" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Connexion au trainer -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="Auto,Auto,*" ColumnSpacing="8">
+                        <Label Text="{x:Static ctl:Icons.Bluetooth}" FontFamily="MaterialIcons" FontSize="22" TextColor="{StaticResource Accent}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{x:Static loc:Strings.Trainer_ConnTitle}" Style="{StaticResource SectionTitle}" Margin="0" VerticalOptions="Center" />
+                        <ctl:InfoButton Grid.Column="2" HorizontalOptions="Start" Heading="{x:Static loc:Strings.Trainer_ConnTitle}" Message="{x:Static loc:Strings.Trainer_ConnTip}" />
+                    </Grid>
+
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="Wi-Fi" VerticalOptions="Center" />
+                        <Switch IsToggled="{Binding UseBluetooth}" VerticalOptions="Center" />
+                        <Label Text="Bluetooth" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <!-- Wi-Fi -->
+                    <VerticalStackLayout Spacing="10" IsVisible="{Binding UseWifi}">
+                        <Button Text="{x:Static loc:Strings.Trainer_BtnFind}" Command="{Binding FindTrainersCommand}" HorizontalOptions="Start" />
+                        <CollectionView ItemsSource="{Binding FoundTrainers}" SelectedItem="{Binding SelectedTrainer}"
+                                        SelectionMode="Single" HeightRequest="130">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="trainer:DiscoveredTrainer">
+                                    <VerticalStackLayout Padding="8,6">
+                                        <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                        <Label Text="{Binding Host}" Style="{StaticResource Caption}" />
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+
+                    <!-- Bluetooth -->
+                    <VerticalStackLayout Spacing="10" IsVisible="{Binding UseBluetooth}">
+                        <HorizontalStackLayout Spacing="4">
+                            <Button Text="{Binding BleScanButtonText}" Command="{Binding ToggleBleScanCommand}" />
+                            <ctl:InfoButton Heading="{x:Static loc:Strings.Trainer_ConnTitle}" Message="{x:Static loc:Strings.Trainer_BleTipAndroid}" />
+                        </HorizontalStackLayout>
+                        <CollectionView ItemsSource="{Binding FoundBleTrainers}" SelectedItem="{Binding SelectedBleTrainer}"
+                                        SelectionMode="Single" HeightRequest="150">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="trainer:DiscoveredBleTrainer">
+                                    <VerticalStackLayout Padding="8,6">
+                                        <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                        <Label Text="{Binding ProtocolText}" Style="{StaticResource Caption}" />
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+
+                    <HorizontalStackLayout Spacing="10">
+                        <Switch IsToggled="{Binding AutoStartVirtualShifting}" VerticalOptions="Center" SemanticProperties.Description="{x:Static loc:Strings.Trainer_AutoStartShort}" />
+                        <Label Text="{x:Static loc:Strings.Trainer_AutoStartShort}" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Braquet -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="Auto,Auto,*" ColumnSpacing="8">
+                        <Label Text="{x:Static ctl:Icons.Gear}" FontFamily="MaterialIcons" FontSize="22" TextColor="{StaticResource Accent}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{x:Static loc:Strings.Trainer_Gearing}" Style="{StaticResource SectionTitle}" Margin="0" VerticalOptions="Center" />
+                        <ctl:InfoButton Grid.Column="2" HorizontalOptions="Start" Heading="{x:Static loc:Strings.Trainer_Gearing}" Message="{x:Static loc:Strings.Trainer_GearingTipShort}" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout>
+                            <Label Text="{x:Static loc:Strings.Trainer_Chainring}" Style="{StaticResource Caption}" />
+                            <Entry Text="{Binding ChainringText}" Keyboard="Numeric" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="{x:Static loc:Strings.Trainer_Cog}" Style="{StaticResource Caption}" />
+                            <Entry Text="{Binding CogText}" Keyboard="Numeric" />
+                        </VerticalStackLayout>
+                    </Grid>
+                    <Label Text="{Binding DrivetrainInfo}" Style="{StaticResource Caption}" />
+
+                    <!-- Nombre de vitesses : même plage de rapports, pas plus ou moins serrés -->
+                    <HorizontalStackLayout Spacing="0" Margin="0,8,0,0">
+                        <Label Text="{x:Static loc:Strings.Trainer_GearCount}" Style="{StaticResource Caption}" FontAttributes="Bold" VerticalOptions="Center" />
+                        <ctl:InfoButton Heading="{x:Static loc:Strings.Trainer_GearCount}" Message="{x:Static loc:Strings.Trainer_GearCountTip}" />
+                    </HorizontalStackLayout>
+                    <Slider Minimum="8" Maximum="24" Value="{Binding GearCountValue}"
+                            SemanticProperties.Description="{x:Static loc:Strings.Trainer_GearCount}" />
+                    <Label Text="{Binding GearCountText}" FontSize="14" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Avancé : réglages rarement utiles (le cardio est dans Appareils, la notification dans Réglages) -->
+            <ctl:CollapsibleSection Title="{x:Static loc:Strings.Common_AdvancedShort}">
+                <VerticalStackLayout>
+                    <!-- Adresse manuelle du trainer Wi-Fi -->
+                    <Border Style="{StaticResource Card}" IsVisible="{Binding UseWifi}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{x:Static loc:Strings.Trainer_ManualIpPort}" Style="{StaticResource Caption}" />
+                            <Grid ColumnDefinitions="*,90" ColumnSpacing="8">
+                                <Entry Text="{Binding TrainerHost}" Placeholder="192.168.1.50" Keyboard="Url" />
+                                <Entry Grid.Column="1" Text="{Binding TrainerPortText}" Placeholder="36866" Keyboard="Numeric" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Mesure du braquet réel -->
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="8">
+                            <HorizontalStackLayout Spacing="8">
+                                <Button Text="{x:Static loc:Strings.Trainer_Measure}" Command="{Binding MeasureDrivetrainCommand}" IsEnabled="{Binding CanMeasure}" />
+                                <Button Text="{x:Static loc:Strings.Trainer_UseMeasure}" Command="{Binding UseMeasuredRatioCommand}" IsEnabled="{Binding CanUseMeasurement}" />
+                            </HorizontalStackLayout>
+                            <Label Text="{Binding MeasureResult}" Style="{StaticResource Caption}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="10">
+                            <HorizontalStackLayout Spacing="10">
+                                <Switch IsToggled="{Binding NativeZwiftMode}" VerticalOptions="Center" />
+                                <Label Text="{x:Static loc:Strings.Trainer_Native}" VerticalOptions="Center" />
+                                <ctl:InfoButton Heading="{x:Static loc:Strings.Trainer_Native}" Message="{x:Static loc:Strings.Trainer_NativeTip}" />
+                            </HorizontalStackLayout>
+                            <Label Text="{Binding NativeStatus}" Style="{StaticResource Caption}" />
+
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                                <VerticalStackLayout>
+                                    <Label Text="{x:Static loc:Strings.Trainer_RiderWeight}" Style="{StaticResource Caption}" />
+                                    <Entry Text="{Binding RiderWeightText}" Keyboard="Numeric" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1">
+                                    <Label Text="{x:Static loc:Strings.Trainer_BikeWeight}" Style="{StaticResource Caption}" />
+                                    <Entry Text="{Binding BikeWeightText}" Keyboard="Numeric" />
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <HorizontalStackLayout Spacing="10">
+                                <Switch IsToggled="{Binding ReportGearToApp}" VerticalOptions="Center" />
+                                <Label Text="{x:Static loc:Strings.Trainer_ReportGear}" VerticalOptions="Center" />
+                                <ctl:InfoButton Heading="{x:Static loc:Strings.Trainer_ReportGear}" Message="{x:Static loc:Strings.Trainer_ReportGearTipShort}" />
+                            </HorizontalStackLayout>
+
+                            <HorizontalStackLayout Spacing="10">
+                                <Switch IsToggled="{Binding SlopeOnlyMode}" VerticalOptions="Center" />
+                                <Label Text="{x:Static loc:Strings.Trainer_SlopeOnly}" VerticalOptions="Center" />
+                                <ctl:InfoButton Heading="{x:Static loc:Strings.Trainer_SlopeOnly}" Message="{x:Static loc:Strings.Trainer_SlopeOnlyTip}" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </ctl:CollapsibleSection>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentView>

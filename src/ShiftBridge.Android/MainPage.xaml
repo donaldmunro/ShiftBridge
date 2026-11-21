@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage x:Class="ShiftBridge.Mobile.MainPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:loc="clr-namespace:ShiftBridge.Core.Localization;assembly=ShiftBridge.Core"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ShiftBridge.Presentation;assembly=ShiftBridge.Presentation"
+             xmlns:views="clr-namespace:ShiftBridge.Mobile.Views"
+             xmlns:ctl="clr-namespace:ShiftBridge.Mobile"
+             x:DataType="vm:MainViewModel"
+             Title="ShiftBridge"
+             SafeAreaEdges="All">
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Barre du haut : titre de la page, ⚙ Réglages (ou ← Retour sur Réglages et Diagnostic) -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" BackgroundColor="{StaticResource Sidebar}" HeightRequest="56" Padding="4,0">
+            <Button Grid.Column="0" Text="{x:Static ctl:Icons.Back}" FontFamily="MaterialIcons" FontSize="24" Style="{StaticResource GhostButton}"
+                    TextColor="{StaticResource Text}" WidthRequest="52" Padding="0"
+                    Command="{Binding BackCommand}" IsVisible="{Binding ShowBackButton}"
+                    SemanticProperties.Description="{x:Static loc:Strings.Common_Back}" />
+            <Label Grid.Column="1" Text="{Binding CurrentPageTitle}" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" Margin="12,0" LineBreakMode="TailTruncation" />
+            <Button Grid.Column="2" Text="{x:Static ctl:Icons.Settings}" FontFamily="MaterialIcons" FontSize="24" Style="{StaticResource GhostButton}"
+                    WidthRequest="52" Padding="0"
+                    Command="{Binding NavigateCommand}" CommandParameter="settings"
+                    IsVisible="{Binding ShowBackButton, Converter={StaticResource InvBool}}"
+                    SemanticProperties.Description="{x:Static loc:Strings.Nav_Settings}" />
+        </Grid>
+
+        <!-- Une seule page visible à la fois, pilotée par MainViewModel.CurrentPage (comme la version Windows) -->
+        <Grid Grid.Row="1">
+            <views:HomeView IsVisible="{Binding CurrentPage, Converter={StaticResource EqualsToBool}, ConverterParameter=home}" />
+            <views:DevicesView IsVisible="{Binding CurrentPage, Converter={StaticResource EqualsToBool}, ConverterParameter=devices}" />
+            <views:ButtonsView IsVisible="{Binding CurrentPage, Converter={StaticResource EqualsToBool}, ConverterParameter=buttons}" />
+            <views:TrainerView IsVisible="{Binding CurrentPage, Converter={StaticResource EqualsToBool}, ConverterParameter=trainer}" />
+            <views:AppsView IsVisible="{Binding CurrentPage, Converter={StaticResource EqualsToBool}, ConverterParameter=apps}" />
+            <views:SettingsView IsVisible="{Binding CurrentPage, Converter={StaticResource EqualsToBool}, ConverterParameter=settings}" />
+            <views:DiagnosticView IsVisible="{Binding CurrentPage, Converter={StaticResource EqualsToBool}, ConverterParameter=diagnostic}" />
+        </Grid>
+
+        <!-- Barre de navigation : cinq onglets (icône + libellé), la page courante en accent -->
+        <Border Grid.Row="2" BackgroundColor="{StaticResource Sidebar}" Stroke="{StaticResource Line}" StrokeThickness="0" Padding="0">
+            <Grid ColumnDefinitions="*,*,*,*,*" MinimumHeightRequest="60">
+                <VerticalStackLayout Grid.Column="0" Spacing="2" Padding="0,8" BackgroundColor="Transparent" HorizontalOptions="Fill" SemanticProperties.Description="{x:Static loc:Strings.Nav_Home}">
+                    <VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="home" /></VerticalStackLayout.GestureRecognizers>
+                    <Label Text="{x:Static ctl:Icons.Home}" FontFamily="MaterialIcons" FontSize="24" HorizontalOptions="Center"
+                           TextColor="{Binding CurrentPage, Converter={StaticResource EqualsToColor}, ConverterParameter=home}" />
+                    <Label Text="{x:Static loc:Strings.Nav_Home}" FontSize="11" HorizontalOptions="Center" LineBreakMode="NoWrap"
+                           TextColor="{Binding CurrentPage, Converter={StaticResource EqualsToColor}, ConverterParameter=home}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1" Spacing="2" Padding="0,8" BackgroundColor="Transparent" HorizontalOptions="Fill" SemanticProperties.Description="{x:Static loc:Strings.Nav_Controllers}">
+                    <VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="devices" /></VerticalStackLayout.GestureRecognizers>
+                    <Label Text="{x:Static ctl:Icons.Devices}" FontFamily="MaterialIcons" FontSize="24" HorizontalOptions="Center"
+                           TextColor="{Binding CurrentPage, Converter={StaticResource EqualsToColor}, ConverterParameter=devices}" />
+                    <Label Text="{x:Static loc:Strings.Nav_Controllers}" FontSize="11" HorizontalOptions="Center" LineBreakMode="NoWrap"
+                           TextColor="{Binding CurrentPage, Converter={StaticResource EqualsToColor}, ConverterParameter=devices}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="2" Spacing="2" Padding="0,8" BackgroundColor="Transparent" HorizontalOptions="Fill" SemanticProperties.Description="{x:Static loc:Strings.Nav_Buttons}">
+                    <VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="buttons" /></VerticalStackLayout.GestureRecognizers>
+                    <Label Text="{x:Static ctl:Icons.Keyboard}" FontFamily="MaterialIcons" FontSize="24" HorizontalOptions="Center"
+                           TextColor="{Binding CurrentPage, Converter={StaticResource EqualsToColor}, ConverterParameter=buttons}" />
+                    <Label Text="{x:Static loc:Strings.Nav_Buttons}" FontSize="11" HorizontalOptions="Center" LineBreakMode="NoWrap"
+                           TextColor="{Binding CurrentPage, Converter={StaticResource EqualsToColor}, ConverterParameter=buttons}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="3" Spacing="2" Padding="0,8" BackgroundColor="Transparent" HorizontalOptions="Fill" SemanticProperties.Description="{x:Static loc:Strings.Nav_Trainer}">
+                    <VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="trainer" /></VerticalStackLayout.GestureRecognizers>
+                    <Label Text="{x:Static ctl:Icons.Trainer}" FontFamily="MaterialIcons" FontSize="24" HorizontalOptions="Center"
+                           TextColor="{Binding CurrentPage, Converter={StaticResource EqualsToColor}, ConverterParameter=trainer}" />
+                    <Label Text="{x:Static loc:Strings.Nav_Trainer}" FontSize="11" HorizontalOptions="Center" LineBreakMode="NoWrap"
+                           TextColor="{Binding CurrentPage, Converter={StaticResource EqualsToColor}, ConverterParameter=trainer}" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="4" Spacing="2" Padding="0,8" BackgroundColor="Transparent" HorizontalOptions="Fill" SemanticProperties.Description="{x:Static loc:Strings.Nav_App}">
+                    <VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="apps" /></VerticalStackLayout.GestureRecognizers>
+                    <Label Text="{x:Static ctl:Icons.App}" FontFamily="MaterialIcons" FontSize="24" HorizontalOptions="Center"
+                           TextColor="{Binding CurrentPage, Converter={StaticResource EqualsToColor}, ConverterParameter=apps}" />
+                    <Label Text="{x:Static loc:Strings.Nav_AppShort}" FontSize="11" HorizontalOptions="Center" LineBreakMode="NoWrap"
+                           TextColor="{Binding CurrentPage, Converter={StaticResource EqualsToColor}, ConverterParameter=apps}" />
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

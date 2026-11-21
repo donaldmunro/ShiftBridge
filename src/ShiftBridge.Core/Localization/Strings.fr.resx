@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Français. Garder les clés identiques à Strings.resx. -->
+  <data name="App_AlreadyRunning" xml:space="preserve"><value>ShiftBridge est déjà en cours d'exécution (voir la barre des tâches).</value></data>
+  <data name="Cat_None" xml:space="preserve"><value>Aucune</value></data>
+  <data name="Cat_Gears" xml:space="preserve"><value>Vitesses</value></data>
+  <data name="Cat_Navigation" xml:space="preserve"><value>Navigation</value></data>
+  <data name="Cat_Social" xml:space="preserve"><value>Social</value></data>
+  <data name="Cat_Training" xml:space="preserve"><value>Entraînement</value></data>
+  <data name="Cat_View" xml:space="preserve"><value>Vue</value></data>
+  <data name="Cat_PowerUps" xml:space="preserve"><value>Power-ups</value></data>
+  <data name="Action_None" xml:space="preserve"><value>Aucune action</value></data>
+  <data name="Action_ShiftUp" xml:space="preserve"><value>Vitesse supérieure</value></data>
+  <data name="Action_ShiftDown" xml:space="preserve"><value>Vitesse inférieure</value></data>
+  <data name="Action_CenterGear" xml:space="preserve"><value>Vitesse centrale</value></data>
+  <data name="Action_GoToGear" xml:space="preserve"><value>Aller au rapport…</value></data>
+  <data name="Buttons_GearTargetTip" xml:space="preserve"><value>Rapport visé (1 à 24). Appliqué au trainer tant que le virtual shifting est actif ; sinon, seule la vitesse affichée par ShiftBridge change.</value></data>
+  <data name="Profile_Label" xml:space="preserve"><value>Profil modifié</value></data>
+  <data name="Profile_Default" xml:space="preserve"><value>Par défaut</value></data>
+  <data name="Profile_Active" xml:space="preserve"><value>Profil utilisé : {0}</value></data>
+  <data name="Profile_Create" xml:space="preserve"><value>Créer un profil pour {0}</value></data>
+  <data name="Profile_AppConnected" xml:space="preserve"><value>Appli détectée : {0}</value></data>
+  <data name="Profile_AppNone" xml:space="preserve"><value>Aucune appli n'a encore annoncé son nom (certaines ne le font jamais). Connectez l'appli, puis consultez le journal dans Diagnostic.</value></data>
+  <data name="Profile_Delete" xml:space="preserve"><value>Supprimer ce profil</value></data>
+  <data name="Profile_Help" xml:space="preserve"><value>Un profil est utilisé automatiquement tant que son appli d'entraînement est connectée. Les autres applis utilisent le profil par défaut.</value></data>
+  <data name="Action_Up" xml:space="preserve"><value>Haut</value></data>
+  <data name="Action_Down" xml:space="preserve"><value>Bas</value></data>
+  <data name="Action_Left" xml:space="preserve"><value>Gauche</value></data>
+  <data name="Action_Right" xml:space="preserve"><value>Droite</value></data>
+  <data name="Action_Select" xml:space="preserve"><value>Valider</value></data>
+  <data name="Action_Back" xml:space="preserve"><value>Retour</value></data>
+  <data name="Action_Menu" xml:space="preserve"><value>Menu</value></data>
+  <data name="Action_Home" xml:space="preserve"><value>Accueil</value></data>
+  <data name="Action_SteerLeft" xml:space="preserve"><value>Tourner à gauche</value></data>
+  <data name="Action_SteerRight" xml:space="preserve"><value>Tourner à droite</value></data>
+  <data name="Action_Emote" xml:space="preserve"><value>Émote</value></data>
+  <data name="Action_PushToTalk" xml:space="preserve"><value>Push-to-talk</value></data>
+  <data name="Action_Screenshot" xml:space="preserve"><value>Capture d'écran</value></data>
+  <data name="Action_IncreaseDifficulty" xml:space="preserve"><value>Augmenter la difficulté</value></data>
+  <data name="Action_DecreaseDifficulty" xml:space="preserve"><value>Diminuer la difficulté</value></data>
+  <data name="Action_SkipInterval" xml:space="preserve"><value>Passer l'intervalle</value></data>
+  <data name="Action_PreviousInterval" xml:space="preserve"><value>Intervalle précédent</value></data>
+  <data name="Action_Pause" xml:space="preserve"><value>Pause</value></data>
+  <data name="Action_Resume" xml:space="preserve"><value>Reprendre</value></data>
+  <data name="Action_Lap" xml:space="preserve"><value>Tour (lap)</value></data>
+  <data name="Action_UTurn" xml:space="preserve"><value>Demi-tour</value></data>
+  <data name="Action_ChangeMode" xml:space="preserve"><value>Changer de mode</value></data>
+  <data name="Action_CameraView" xml:space="preserve"><value>Changer de caméra</value></data>
+  <data name="Action_HudToggle" xml:space="preserve"><value>Afficher/masquer le HUD</value></data>
+  <data name="Action_MapToggle" xml:space="preserve"><value>Afficher/masquer la carte</value></data>
+  <data name="Action_PowerUp1" xml:space="preserve"><value>Power-up 1</value></data>
+  <data name="Action_PowerUp2" xml:space="preserve"><value>Power-up 2</value></data>
+  <data name="Action_PowerUp3" xml:space="preserve"><value>Power-up 3</value></data>
+  <data name="Kbd_MediaNextTrack" xml:space="preserve"><value>Piste suivante</value></data>
+  <data name="Kbd_MediaPrevTrack" xml:space="preserve"><value>Piste précédente</value></data>
+  <data name="Kbd_MediaStop" xml:space="preserve"><value>Stop</value></data>
+  <data name="Kbd_MediaPlayPause" xml:space="preserve"><value>Lecture / pause</value></data>
+  <data name="Kbd_VolumeMute" xml:space="preserve"><value>Muet</value></data>
+  <data name="Kbd_VolumeDown" xml:space="preserve"><value>Volume −</value></data>
+  <data name="Kbd_VolumeUp" xml:space="preserve"><value>Volume +</value></data>
+  <data name="Kbd_BrowserBack" xml:space="preserve"><value>Navigateur : précédent</value></data>
+  <data name="Kbd_BrowserForward" xml:space="preserve"><value>Navigateur : suivant</value></data>
+  <data name="Kbd_BrowserRefresh" xml:space="preserve"><value>Navigateur : actualiser</value></data>
+  <data name="Kbd_BrowserHome" xml:space="preserve"><value>Navigateur : accueil</value></data>
+  <data name="Kbd_Left" xml:space="preserve"><value>Flèche gauche</value></data>
+  <data name="Kbd_Right" xml:space="preserve"><value>Flèche droite</value></data>
+  <data name="Kbd_Up" xml:space="preserve"><value>Flèche haut</value></data>
+  <data name="Kbd_Down" xml:space="preserve"><value>Flèche bas</value></data>
+  <data name="Kbd_Space" xml:space="preserve"><value>Espace</value></data>
+  <data name="Kbd_Enter" xml:space="preserve"><value>Entrée</value></data>
+  <data name="Kbd_NumEnter" xml:space="preserve"><value>Entrée (pavé num.)</value></data>
+  <data name="Kbd_Escape" xml:space="preserve"><value>Échap</value></data>
+  <data name="Kbd_Backspace" xml:space="preserve"><value>Retour arrière</value></data>
+  <data name="Kbd_PageUp" xml:space="preserve"><value>Page préc.</value></data>
+  <data name="Kbd_PageDown" xml:space="preserve"><value>Page suiv.</value></data>
+  <data name="Kbd_Home" xml:space="preserve"><value>Début</value></data>
+  <data name="Kbd_End" xml:space="preserve"><value>Fin</value></data>
+  <data name="Kbd_Insert" xml:space="preserve"><value>Inser</value></data>
+  <data name="Kbd_Delete" xml:space="preserve"><value>Suppr</value></data>
+  <data name="Kbd_Play" xml:space="preserve"><value>Play</value></data>
+  <data name="Pad_LT" xml:space="preserve"><value>Gâchette gauche (LT)</value></data>
+  <data name="Pad_RT" xml:space="preserve"><value>Gâchette droite (RT)</value></data>
+  <data name="Pad_LB" xml:space="preserve"><value>Bumper gauche (LB)</value></data>
+  <data name="Pad_RB" xml:space="preserve"><value>Bumper droit (RB)</value></data>
+  <data name="Pad_DPadUp" xml:space="preserve"><value>Croix : haut</value></data>
+  <data name="Pad_DPadDown" xml:space="preserve"><value>Croix : bas</value></data>
+  <data name="Pad_DPadLeft" xml:space="preserve"><value>Croix : gauche</value></data>
+  <data name="Pad_DPadRight" xml:space="preserve"><value>Croix : droite</value></data>
+  <data name="Pad_Start" xml:space="preserve"><value>Start</value></data>
+  <data name="Pad_Back" xml:space="preserve"><value>Back / Vue</value></data>
+  <data name="Pad_LStick" xml:space="preserve"><value>Clic stick gauche</value></data>
+  <data name="Pad_RStick" xml:space="preserve"><value>Clic stick droit</value></data>
+  <data name="Pad_LStickUp" xml:space="preserve"><value>Stick gauche : haut</value></data>
+  <data name="Pad_LStickDown" xml:space="preserve"><value>Stick gauche : bas</value></data>
+  <data name="Pad_LStickLeft" xml:space="preserve"><value>Stick gauche : gauche</value></data>
+  <data name="Pad_LStickRight" xml:space="preserve"><value>Stick gauche : droite</value></data>
+  <data name="Pad_RStickUp" xml:space="preserve"><value>Stick droit : haut</value></data>
+  <data name="Pad_RStickDown" xml:space="preserve"><value>Stick droit : bas</value></data>
+  <data name="Pad_RStickLeft" xml:space="preserve"><value>Stick droit : gauche</value></data>
+  <data name="Pad_RStickRight" xml:space="preserve"><value>Stick droit : droite</value></data>
+  <data name="Joy_Plus" xml:space="preserve"><value>+</value></data>
+  <data name="Joy_Minus" xml:space="preserve"><value>−</value></data>
+  <data name="Joy_Home" xml:space="preserve"><value>Home</value></data>
+  <data name="Joy_Capture" xml:space="preserve"><value>Capture</value></data>
+  <data name="Joy_ProController" xml:space="preserve"><value>Pro Controller</value></data>
+  <data name="Joy_JoyConL" xml:space="preserve"><value>Joy-Con (G)</value></data>
+  <data name="Joy_JoyConR" xml:space="preserve"><value>Joy-Con (D)</value></data>
+  <data name="Joy_JoyConGrip" xml:space="preserve"><value>Grip Joy-Con</value></data>
+  <data name="Joy_Generic" xml:space="preserve"><value>Joystick {0}</value></data>
+  <data name="Joy_Button" xml:space="preserve"><value>Bouton {0}</value></data>
+  <data name="Joy_AxisPlus" xml:space="preserve"><value>Axe {0} +</value></data>
+  <data name="Joy_AxisMinus" xml:space="preserve"><value>Axe {0} −</value></data>
+  <data name="Group_Keyboard" xml:space="preserve"><value>Clavier</value></data>
+  <data name="Group_Pad" xml:space="preserve"><value>Manette</value></data>
+  <data name="Group_Joystick" xml:space="preserve"><value>Joystick</value></data>
+  <data name="Group_Zwift" xml:space="preserve"><value>Manette Zwift</value></data>
+  <data name="Fmt_Label" xml:space="preserve"><value>{0} : {1}</value></data>
+  <data name="Drive_RealRatio" xml:space="preserve"><value>Rapport réel {0:0.00} ({1}).</value></data>
+  <data name="Trainer_Last" xml:space="preserve"><value>Dernier trainer</value></data>
+  <data name="App_NoneConnected" xml:space="preserve"><value>Aucune application connectée</value></data>
+  <data name="Ctrl_None" xml:space="preserve"><value>Aucune manette</value></data>
+  <data name="Trainer_NotConfigured" xml:space="preserve"><value>Non configuré</value></data>
+  <data name="App_Waiting" xml:space="preserve"><value>En attente</value></data>
+  <data name="Ctrl_Locked" xml:space="preserve"><value>Manette verrouillée</value></data>
+  <data name="Ctrl_Connected_One" xml:space="preserve"><value>1 manette connectée</value></data>
+  <data name="Ctrl_Connected_Many" xml:space="preserve"><value>{0} manettes connectées</value></data>
+  <data name="Ctrl_Battery" xml:space="preserve"><value>Batterie {0} %</value></data>
+  <data name="Ctrl_AddHint" xml:space="preserve"><value>Page Appareils pour en ajouter</value></data>
+  <data name="Keys_None" xml:space="preserve"><value>Aucune touche configurée</value></data>
+  <data name="Keys_Configured_One" xml:space="preserve"><value>1 touche configurée</value></data>
+  <data name="Keys_Configured_Many" xml:space="preserve"><value>{0} touches configurées</value></data>
+  <data name="Keys_ChooseAction" xml:space="preserve"><value>Choisissez une action par touche</value></data>
+  <data name="Keys_ClickToEdit" xml:space="preserve"><value>Cliquez pour modifier</value></data>
+  <data name="Trainer_Reconnecting" xml:space="preserve"><value>Reconnexion…</value></data>
+  <data name="Trainer_VsActive" xml:space="preserve"><value>Virtual shifting actif</value></data>
+  <data name="Trainer_ReadyToEnable" xml:space="preserve"><value>Prêt à activer</value></data>
+  <data name="Trainer_ChooseOnPage" xml:space="preserve"><value>Page Trainer pour le choisir</value></data>
+  <data name="App_Connected" xml:space="preserve"><value>Application connectée</value></data>
+  <data name="App_ViaTrainer" xml:space="preserve"><value>via ShiftBridge Trainer</value></data>
+  <data name="App_ChooseShiftBridge" xml:space="preserve"><value>Choisissez ShiftBridge dans votre appli</value></data>
+  <data name="Step_1" xml:space="preserve"><value>Étape 1 sur 3 : allumez vos manettes Zwift et connectez-les.</value></data>
+  <data name="Step_2Trainer" xml:space="preserve"><value>Étape 2 sur 3 : choisissez votre trainer pour appliquer les vitesses virtuelles.</value></data>
+  <data name="Step_2Enable" xml:space="preserve"><value>Étape 2 sur 3 : activez le virtual shifting (bouton ci-dessus).</value></data>
+  <data name="Step_3" xml:space="preserve"><value>Étape 3 sur 3 : dans votre application d'entraînement, choisissez « ShiftBridge Trainer » et « ShiftBridge ».</value></data>
+  <data name="Log_AutoStarting" xml:space="preserve"><value>Démarrage automatique du virtual shifting…</value></data>
+  <data name="Log_AutoStartOff" xml:space="preserve"><value>Démarrage automatique impossible : le trainer est-il allumé ? Utilisez « Activer le virtual shifting » quand il est prêt.</value></data>
+  <data name="Log_AutoStartFailed" xml:space="preserve"><value>Démarrage automatique impossible : {0}</value></data>
+  <data name="Log_VibrationTest" xml:space="preserve"><value>Test vibration : {0}</value></data>
+  <data name="Log_SaveFailed" xml:space="preserve"><value>Sauvegarde de la configuration impossible : {0}</value></data>
+  <data name="BtnGroup_Click" xml:space="preserve"><value>Zwift Click</value></data>
+  <data name="BtnGroup_Right" xml:space="preserve"><value>Manette droite</value></data>
+  <data name="BtnGroup_Left" xml:space="preserve"><value>Manette gauche</value></data>
+  <data name="Btn_GroupLocal" xml:space="preserve"><value>Clavier &amp; manettes</value></data>
+  <data name="Btn_Plus" xml:space="preserve"><value>Bouton +</value></data>
+  <data name="Btn_Minus" xml:space="preserve"><value>Bouton −</value></data>
+  <data name="Btn_SideOrShiftUp" xml:space="preserve"><value>Bouton latéral / Vitesse +</value></data>
+  <data name="Btn_SideOrShiftDown" xml:space="preserve"><value>Bouton latéral / Vitesse −</value></data>
+  <data name="Btn_ShiftUp" xml:space="preserve"><value>Vitesse +</value></data>
+  <data name="Btn_ShiftDown" xml:space="preserve"><value>Vitesse −</value></data>
+  <data name="Btn_Paddle" xml:space="preserve"><value>Palette</value></data>
+  <data name="Btn_Y" xml:space="preserve"><value>Y (haut)</value></data>
+  <data name="Btn_Z" xml:space="preserve"><value>Z (gauche)</value></data>
+  <data name="Btn_A" xml:space="preserve"><value>A (droite)</value></data>
+  <data name="Btn_B" xml:space="preserve"><value>B (bas)</value></data>
+  <data name="Btn_PowerUp" xml:space="preserve"><value>Power-up</value></data>
+  <data name="Btn_OnOff" xml:space="preserve"><value>On/Off</value></data>
+  <data name="Tip_RightShiftUp" xml:space="preserve"><value>Zwift Play : bouton latéral. Zwift Ride et Click v2 : vitesse +.</value></data>
+  <data name="Tip_LeftShiftDown" xml:space="preserve"><value>Zwift Play : bouton latéral. Zwift Ride et Click v2 : vitesse −.</value></data>
+  <data name="Tip_ClickV2" xml:space="preserve"><value>Zwift Ride et Click v2.</value></data>
+  <data name="Input_KindKeyboard" xml:space="preserve"><value>Clavier et télécommandes HID</value></data>
+  <data name="Input_KindGamepad" xml:space="preserve"><value>Manette Xbox</value></data>
+  <data name="Input_KindJoystick" xml:space="preserve"><value>Joystick / manette HID</value></data>
+  <data name="Capture_EnableFirst" xml:space="preserve"><value>Activez d'abord le clavier ou les manettes de jeu (page Appareils).</value></data>
+  <data name="Capture_PressKey" xml:space="preserve"><value>Appuyez sur une touche ou un bouton… (le clavier est suspendu pendant la capture)</value></data>
+  <data name="Capture_PressPad" xml:space="preserve"><value>Appuyez sur un bouton de la manette…</value></data>
+  <data name="Capture_Timeout" xml:space="preserve"><value>Aucune touche détectée.</value></data>
+  <data name="Capture_AlreadyAssigned" xml:space="preserve"><value>{0} est déjà assignée.</value></data>
+  <data name="Capture_Added" xml:space="preserve"><value>{0} ajoutée : choisissez son action.</value></data>
+  <data name="Ble_Unavailable" xml:space="preserve"><value>Non disponible : cet adaptateur Bluetooth ne peut pas être périphérique. Utilisez « Réseau ».</value></data>
+  <data name="Status_ConnectedTo" xml:space="preserve"><value>Connecté à {0}</value></data>
+  <data name="Status_Off" xml:space="preserve"><value>Désactivé</value></data>
+  <data name="Status_WaitingApp" xml:space="preserve"><value>En attente d'une application…</value></data>
+  <data name="Status_WaitingPort" xml:space="preserve"><value>En attente (port {0})…</value></data>
+  <data name="Net_ObcNetwork" xml:space="preserve"><value>OBC réseau</value></data>
+  <data name="Trainer_Stopped" xml:space="preserve"><value>Proxy arrêté</value></data>
+  <data name="Native_Off" xml:space="preserve"><value>Mode natif désactivé : mise à l'échelle FTMS.</value></data>
+  <data name="Native_Pending" xml:space="preserve"><value>Le mode natif sera tenté à l'activation du virtual shifting.</value></data>
+  <data name="Native_Active" xml:space="preserve"><value>Mode natif actif : le trainer applique lui-même la vitesse.</value></data>
+  <data name="Native_Fallback" xml:space="preserve"><value>Repli FTMS : le trainer n'expose pas le service Zwift ou n'a pas répondu (voir le journal).</value></data>
+  <data name="Drive_Range" xml:space="preserve"><value>Plateau de {0} à {1} dents et pignon de {2} à {3} dents.</value></data>
+  <data name="Drive_RealAndVirtual" xml:space="preserve"><value>Rapport réel {0:0.00} ({1}). Rapport virtuel actuel {2}/{3} : ×{4:0.00}.</value></data>
+  <data name="Measure_Running" xml:space="preserve"><value>Mesure en cours… pédalez à 60–110 tr/min, régulièrement, sans changer de braquet (15 s maximum).</value></data>
+  <data name="Measure_Result" xml:space="preserve"><value>{0} Votre saisie ({1}) donne {2:0.00} : écart {3:+0.0%;-0.0%}. {4}</value></data>
+  <data name="Measure_Notable" xml:space="preserve"><value>Écart notable : vérifiez le plateau et le pignon, ou utilisez la mesure.</value></data>
+  <data name="Measure_Consistent" xml:space="preserve"><value>Cohérent avec votre saisie.</value></data>
+  <data name="Measure_Failed" xml:space="preserve"><value>Mesure impossible : {0}</value></data>
+  <data name="Measure_Adjusted" xml:space="preserve"><value>Plateau ajusté à {0} dents (pignon {1}).</value></data>
+  <data name="Ble_Searching" xml:space="preserve"><value>Recherche des trainers Bluetooth… (allumez le trainer et pédalez un peu pour le réveiller)</value></data>
+  <data name="Ble_SearchingShort" xml:space="preserve"><value>Recherche des trainers Bluetooth…</value></data>
+  <data name="Ble_Found_One" xml:space="preserve"><value>{0} trainer(s) Bluetooth trouvé(s). Sélectionnez le vôtre.</value></data>
+  <data name="Ble_Found_Many" xml:space="preserve"><value>{0} trainer(s) Bluetooth trouvé(s). Sélectionnez le vôtre.</value></data>
+  <data name="Wifi_Searching" xml:space="preserve"><value>Recherche des trainers sur le réseau…</value></data>
+  <data name="Wifi_NoneFound" xml:space="preserve"><value>Aucun trainer trouvé. Il doit être allumé et sur le même réseau Wi-Fi ; en mode avancé, vous pouvez saisir son adresse IP.</value></data>
+  <data name="Wifi_Found_One" xml:space="preserve"><value>{0} trainer(s) trouvé(s). Sélectionnez le vôtre.</value></data>
+  <data name="Wifi_Found_Many" xml:space="preserve"><value>{0} trainer(s) trouvé(s). Sélectionnez le vôtre.</value></data>
+  <data name="Wifi_SearchFailed" xml:space="preserve"><value>Recherche impossible : {0}</value></data>
+  <data name="Trainer_ChooseBle" xml:space="preserve"><value>Choisissez un trainer Bluetooth dans la liste (bouton « Rechercher en Bluetooth »).</value></data>
+  <data name="Trainer_ChooseWifi" xml:space="preserve"><value>Choisissez un trainer dans la liste (bouton « Rechercher le trainer »).</value></data>
+  <data name="Trainer_Connecting" xml:space="preserve"><value>Connexion au trainer…</value></data>
+  <data name="Trainer_ConnectFailed" xml:space="preserve"><value>Échec de connexion au trainer : {0}</value></data>
+  <data name="Proxy_Connecting" xml:space="preserve"><value>Connexion…</value></data>
+  <data name="Proxy_Stop" xml:space="preserve"><value>Arrêter le virtual shifting</value></data>
+  <data name="Proxy_Enable" xml:space="preserve"><value>Activer le virtual shifting</value></data>
+  <data name="Ble_BtnStop" xml:space="preserve"><value>Arrêter la recherche</value></data>
+  <data name="Ble_BtnSearch" xml:space="preserve"><value>Rechercher en Bluetooth</value></data>
+  <data name="Trainer_GearLine" xml:space="preserve"><value>Vitesse {0}/{1} (×{2:0.00}).</value></data>
+  <data name="Trainer_Reconnects_One" xml:space="preserve"><value>{0} reconnexion(s) du trainer.</value></data>
+  <data name="Trainer_Reconnects_Many" xml:space="preserve"><value>{0} reconnexion(s) du trainer.</value></data>
+  <data name="Trainer_ReconnectingWarn" xml:space="preserve"><value>⚠ Trainer déconnecté, reconnexion en cours… Votre appli reste connectée à ShiftBridge.</value></data>
+  <data name="Trainer_ActiveApp" xml:space="preserve"><value>Actif, appli connectée. {0}{1}</value></data>
+  <data name="Trainer_ActiveNoApp" xml:space="preserve"><value>Actif (port {0}). Dans votre appli, choisissez le trainer « ShiftBridge Trainer ». {1}{2}</value></data>
+  <data name="Unit_Rpm" xml:space="preserve"><value>{0:0} tr/min</value></data>
+  <data name="Unit_Bpm" xml:space="preserve"><value>{0} bpm</value></data>
+  <data name="Hr_Title" xml:space="preserve"><value>Cardio</value></data>
+  <data name="Hr_Help" xml:space="preserve"><value>Connectez une ceinture ou une montre cardio Bluetooth (mode diffusion). ShiftBridge la republie à votre appli d'entraînement via le trainer « ShiftBridge Trainer ».</value></data>
+  <data name="Hr_Tip" xml:space="preserve"><value>Beaucoup de ceintures n'acceptent qu'une ou deux connexions Bluetooth : déconnectez-la d'abord de votre téléphone ou de votre montre. Connecter ou retirer un capteur redémarre le proxy trainer (votre appli se reconnecte).</value></data>
+  <data name="Hr_Connect" xml:space="preserve"><value>Connecter</value></data>
+  <data name="Hr_Disconnect" xml:space="preserve"><value>Déconnecter</value></data>
+  <data name="Hr_None" xml:space="preserve"><value>Aucun capteur cardio connecté.</value></data>
+  <data name="Hr_Searching" xml:space="preserve"><value>Recherche de capteurs cardio…</value></data>
+  <data name="Hr_Found_One" xml:space="preserve"><value>{0} capteur trouvé.</value></data>
+  <data name="Hr_Found_Many" xml:space="preserve"><value>{0} capteurs trouvés.</value></data>
+  <data name="Hr_Connecting" xml:space="preserve"><value>Connexion…</value></data>
+  <data name="Hr_ChooseSensor" xml:space="preserve"><value>Lancez la recherche, puis choisissez un capteur cardio.</value></data>
+  <data name="Hr_ConnectFailed" xml:space="preserve"><value>Capteur cardio : {0}</value></data>
+  <data name="Hr_Connected" xml:space="preserve"><value>{0} — connecté</value></data>
+  <data name="Hr_ConnectedBpm" xml:space="preserve"><value>{0} — {1} bpm</value></data>
+  <data name="Hr_Reconnecting" xml:space="preserve"><value>{0} — reconnexion…</value></data>
+  <data name="Overlay_ProxyStopped" xml:space="preserve"><value>proxy arrêté</value></data>
+  <data name="Overlay_Native" xml:space="preserve"><value>natif</value></data>
+  <data name="Gear_Ratio" xml:space="preserve"><value>Rapport {0:0.00}</value></data>
+  <data name="Mode_Stopped" xml:space="preserve"><value>Virtual shifting arrêté : vitesse non appliquée</value></data>
+  <data name="Mode_ByTrainer" xml:space="preserve"><value>Appliquée par le trainer</value></data>
+  <data name="Mode_ByApp" xml:space="preserve"><value>Pente adaptée par ShiftBridge</value></data>
+  <data name="Dev_Disconnect" xml:space="preserve"><value>Déconnecter</value></data>
+  <data name="Dev_Connect" xml:space="preserve"><value>Connecter</value></data>
+  <data name="Dev_NotConnected" xml:space="preserve"><value>Non connectée</value></data>
+  <data name="Dev_Connecting" xml:space="preserve"><value>Connexion…</value></data>
+  <data name="Dev_Connected" xml:space="preserve"><value>Connectée</value></data>
+  <data name="Dev_Locked" xml:space="preserve"><value>Verrouillée : à déverrouiller via l'app Zwift</value></data>
+  <data name="Dev_Error" xml:space="preserve"><value>Erreur, nouvelle tentative…</value></data>
+  <data name="Dev_Disconnected" xml:space="preserve"><value>Déconnectée, reconnexion…</value></data>
+  <data name="Dev_BatteryPct" xml:space="preserve"><value>{0} %</value></data>
+  <data name="Dev_SideLeft" xml:space="preserve"><value>(gauche)</value></data>
+  <data name="Dev_SideRight" xml:space="preserve"><value>(droite)</value></data>
+  <data name="Net_FromOtherDevice" xml:space="preserve"><value>{0} (depuis un autre appareil)</value></data>
+  <data name="Net_ThisDevice" xml:space="preserve"><value>127.0.0.1 (cet appareil)</value></data>
+  <data name="Net_Summary" xml:space="preserve"><value>Adresses : {0}. Ports : {1}.</value></data>
+  <data name="Err_BleUnavailablePlatform" xml:space="preserve"><value>Bluetooth indisponible sur cette plateforme.</value></data>
+  <data name="Err_EnableVsFirst" xml:space="preserve"><value>Activez d'abord le virtual shifting : la mesure utilise les données du trainer.</value></data>
+  <data name="Err_ControllerNotFound" xml:space="preserve"><value>Manette introuvable (éteinte ou déjà connectée ailleurs ?)</value></data>
+  <data name="Err_ZwiftCharsMissing" xml:space="preserve"><value>Caractéristiques Zwift manquantes</value></data>
+  <data name="Err_NoFreePortDirCon" xml:space="preserve"><value>Aucun port TCP libre pour DirCon.</value></data>
+  <data name="Err_NoFreePortObc" xml:space="preserve"><value>Aucun port TCP libre pour OpenBikeControl.</value></data>
+  <data name="Err_NoFreePortProxy" xml:space="preserve"><value>Aucun port TCP libre pour le proxy trainer.</value></data>
+  <data name="Measure_NoData" xml:space="preserve"><value>Aucune mesure reçue du trainer : pédalez, et vérifiez que le trainer est connecté.</value></data>
+  <data name="Measure_NoCadence" xml:space="preserve"><value>Ce trainer n'envoie pas la cadence : la mesure est impossible, saisissez votre braquet.</value></data>
+  <data name="Measure_OutOfRange" xml:space="preserve"><value>Pédalez entre {0:0} et {1:0} tr/min, à vitesse régulière (dernière cadence reçue : {2:0} tr/min).</value></data>
+  <data name="Measure_TooShort" xml:space="preserve"><value>Mesure trop courte : gardez la cadence régulière plus longtemps.</value></data>
+  <data name="Measure_Irregular" xml:space="preserve"><value>Cadence ou vitesse trop irrégulières (dispersion {0:P0}) : pédalez régulièrement, sans changer de braquet.</value></data>
+  <data name="Measure_Ok" xml:space="preserve"><value>Rapport mesuré : {0:0.00} ({1} mesures, dispersion {2:P1}).</value></data>
+  <data name="Err_TrainerNotFound" xml:space="preserve"><value>Trainer introuvable (éteint, hors de portée ou déjà connecté à une autre application ?)</value></data>
+  <data name="Err_NoNotify" xml:space="preserve"><value>{0} ne notifie pas</value></data>
+  <data name="Err_DirConNotConnected" xml:space="preserve"><value>DirCon non connecté.</value></data>
+  <data name="Err_DirConRefused" xml:space="preserve"><value>DirCon {0} refusé (code {1})</value></data>
+  <data name="Err_DirConTimeout" xml:space="preserve"><value>DirCon {0} : pas de réponse en {1:0} s</value></data>
+  <data name="Err_DirConLost" xml:space="preserve"><value>Connexion DirCon perdue.</value></data>
+  <data name="Err_TrainerNotConnected" xml:space="preserve"><value>Trainer non connecté (reconnexion en cours).</value></data>
+  <data name="Err_NoPeripheralRole" xml:space="preserve"><value>Cet adaptateur Bluetooth ne peut pas jouer le rôle périphérique : utilisez OBC réseau.</value></data>
+  <data name="Err_ObcServiceRefused" xml:space="preserve"><value>Création du service OBC refusée ({0})</value></data>
+  <data name="Err_CharRefused" xml:space="preserve"><value>Caractéristique {0} refusée ({1})</value></data>
+  <data name="Err_BleDeviceNotFound" xml:space="preserve"><value>Appareil BLE introuvable.</value></data>
+  <data name="Op_CharsUnavailable" xml:space="preserve"><value>Caractéristiques de {0} indisponibles</value></data>
+  <data name="Gatt_Unreachable" xml:space="preserve"><value>{0} : appareil injoignable (déjà connecté à une autre application ou à un téléphone ?)</value></data>
+  <data name="Gatt_AccessDenied" xml:space="preserve"><value>{0} : accès refusé (l'appairage Windows est peut-être nécessaire)</value></data>
+  <data name="Gatt_ProtocolError" xml:space="preserve"><value>{0} : erreur de l'appareil (code ATT 0x{1:X2})</value></data>
+  <data name="Err_BtBadAddress" xml:space="preserve"><value>Adresse Bluetooth invalide.</value></data>
+  <data name="Err_GattOpenRefused" xml:space="preserve"><value>Android a refusé d'ouvrir la liaison Bluetooth.</value></data>
+  <data name="Err_ConnectTimeout" xml:space="preserve"><value>Délai de connexion dépassé.</value></data>
+  <data name="Err_GattServicesStatus" xml:space="preserve"><value>Services GATT indisponibles (statut {0}).</value></data>
+  <data name="Err_ReadStatus" xml:space="preserve"><value>Lecture refusée (statut {0}).</value></data>
+  <data name="Err_WriteStatus" xml:space="preserve"><value>Écriture refusée (statut {0}).</value></data>
+  <data name="Err_LocalSubscribeRefused" xml:space="preserve"><value>Abonnement local refusé pour {0}.</value></data>
+  <data name="Err_NoCccd" xml:space="preserve"><value>{0} n'a pas de descripteur de configuration (0x2902).</value></data>
+  <data name="Err_SubscribeStatus" xml:space="preserve"><value>Abonnement refusé (statut {0}).</value></data>
+  <data name="Err_OpRefused" xml:space="preserve"><value>{0} : refusé par Android (une opération est peut-être déjà en cours).</value></data>
+  <data name="Err_ConnectStatus" xml:space="preserve"><value>Connexion impossible (statut {0}).</value></data>
+  <data name="Err_LinkLost" xml:space="preserve"><value>Liaison perdue.</value></data>
+  <data name="Op_NegotiateMtu" xml:space="preserve"><value>négociation du MTU</value></data>
+  <data name="Err_NoPeripheralRoleAndroid" xml:space="preserve"><value>Cet appareil ne peut pas jouer le rôle périphérique Bluetooth : utilisez OBC réseau.</value></data>
+  <data name="Err_GattServerRefused" xml:space="preserve"><value>Android a refusé d'ouvrir le serveur GATT.</value></data>
+  <data name="Err_ServiceCreateRefused" xml:space="preserve"><value>Création du service {0} refusée.</value></data>
+  <data name="Err_ServiceCreateTimeout" xml:space="preserve"><value>Délai dépassé : création du service {0}.</value></data>
+  <data name="Err_AdvUnavailable" xml:space="preserve"><value>Annonce Bluetooth indisponible.</value></data>
+  <data name="Err_AdvStartTimeout" xml:space="preserve"><value>Délai dépassé : démarrage de l'annonce Bluetooth.</value></data>
+  <data name="Err_NotifyRefused" xml:space="preserve"><value>notification refusée par Android</value></data>
+  <data name="Err_ServiceRefusedStatus" xml:space="preserve"><value>Service refusé par Android (statut {0}).</value></data>
+  <data name="Err_AdvRefused" xml:space="preserve"><value>Annonce Bluetooth refusée ({0}).</value></data>
+  <data name="Err_LinkClosed" xml:space="preserve"><value>Liaison fermée.</value></data>
+  <data name="Err_UnknownCharacteristic" xml:space="preserve"><value>Caractéristique {0} inconnue</value></data>
+  <data name="Err_Timeout" xml:space="preserve"><value>Délai dépassé : {0}</value></data>
+  <data name="Err_PermConnect" xml:space="preserve"><value>Permission Bluetooth refusée (BLUETOOTH_CONNECT).</value></data>
+  <data name="Err_PermAdvertise" xml:space="preserve"><value>Permission Bluetooth refusée (BLUETOOTH_ADVERTISE).</value></data>
+  <data name="Err_BtOff" xml:space="preserve"><value>Bluetooth désactivé ou indisponible.</value></data>
+  <data name="Err_SubscribeRefused" xml:space="preserve"><value>Abonnement refusé ({0})</value></data>
+  <data name="Op_DiscoverServices" xml:space="preserve"><value>découverte des services</value></data>
+  <data name="Op_Read" xml:space="preserve"><value>lecture de {0}</value></data>
+  <data name="Op_Write" xml:space="preserve"><value>écriture sur {0}</value></data>
+  <data name="Op_Subscribe" xml:space="preserve"><value>abonnement à {0}</value></data>
+  <data name="Op_GattServicesUnavailable" xml:space="preserve"><value>Services GATT indisponibles</value></data>
+  <data name="Op_ReadRefused" xml:space="preserve"><value>Lecture refusée</value></data>
+  <data name="Op_WriteRefused" xml:space="preserve"><value>Écriture refusée</value></data>
+  <data name="Main_Subtitle" xml:space="preserve"><value>Manettes Zwift → OpenBikeControl</value></data>
+  <data name="Nav_Home" xml:space="preserve"><value>Accueil</value></data>
+  <data name="Nav_Controllers" xml:space="preserve"><value>Appareils</value></data>
+  <data name="Nav_Buttons" xml:space="preserve"><value>Touches</value></data>
+  <data name="Nav_Trainer" xml:space="preserve"><value>Trainer</value></data>
+  <data name="Nav_App" xml:space="preserve"><value>Application</value></data>
+  <data name="Nav_Diagnostic" xml:space="preserve"><value>Diagnostic</value></data>
+  <data name="Overlay_Title" xml:space="preserve"><value>Vitesse virtuelle ShiftBridge</value></data>
+  <data name="Home_Tagline" xml:space="preserve"><value>Vos manettes Zwift, vos vitesses virtuelles, votre application d'entraînement.</value></data>
+  <data name="Home_Open" xml:space="preserve"><value>Ouvrir</value></data>
+  <data name="Home_SecGear" xml:space="preserve"><value>VITESSE VIRTUELLE</value></data>
+  <data name="Home_SecControllers" xml:space="preserve"><value>MANETTES</value></data>
+  <data name="Home_SecButtons" xml:space="preserve"><value>TOUCHES</value></data>
+  <data name="Home_SecTrainer" xml:space="preserve"><value>TRAINER</value></data>
+  <data name="Home_SecApp" xml:space="preserve"><value>APPLICATION</value></data>
+  <data name="Devices_Intro" xml:space="preserve"><value>Tout ce qui se connecte à ShiftBridge : manettes Zwift, capteur cardio, clavier.</value></data>
+  <data name="Devices_Scan" xml:space="preserve"><value>Rechercher les manettes</value></data>
+  <data name="Devices_Scanning" xml:space="preserve"><value>Recherche en cours…</value></data>
+  <data name="Devices_NoneFound" xml:space="preserve"><value>Aucune manette détectée</value></data>
+  <data name="Devices_NoneHint" xml:space="preserve"><value>Éteignez puis rallumez la manette, et déconnectez-la de Zwift ou du téléphone.</value></data>
+  <data name="Devices_MoreActions" xml:space="preserve"><value>Plus d'actions</value></data>
+  <data name="Devices_Vibrate" xml:space="preserve"><value>Faire vibrer</value></data>
+  <data name="Devices_Forget" xml:space="preserve"><value>Oublier cette manette</value></data>
+  <data name="Devices_NotFoundTitle" xml:space="preserve"><value>Manette introuvable ?</value></data>
+  <data name="Devices_NotFoundBody" xml:space="preserve"><value>Éteignez-la puis rallumez-la, et déconnectez-la de Zwift, du trainer ou du téléphone : une manette n'accepte qu'une connexion à la fois. Click v2 et Ride v2 verrouillés : déverrouillez-les via l'app Zwift.</value></data>
+  <data name="Devices_AutoReconnect" xml:space="preserve"><value>Reconnexion automatique des manettes</value></data>
+  <data name="Devices_LocalTitle" xml:space="preserve"><value>Clavier et manettes de jeu</value></data>
+  <data name="Devices_LocalIntro" xml:space="preserve"><value>Utilisez aussi un clavier, une télécommande ou une manette (Xbox, joystick) pour passer les vitesses. Assignez les touches dans l'onglet Touches.</value></data>
+  <data name="Devices_UseKeyboard" xml:space="preserve"><value>Utiliser le clavier et les télécommandes (HID)</value></data>
+  <data name="Devices_SuppressKeys" xml:space="preserve"><value>Avaler les touches assignées (elles n'atteignent pas l'appli au premier plan)</value></data>
+  <data name="Devices_UseGamepads" xml:space="preserve"><value>Utiliser les manettes de jeu (Xbox, joysticks)</value></data>
+  <data name="Diag_Intro" xml:space="preserve"><value>Journal technique, à joindre à vos retours en cas de problème (il contient aussi le rapport de compatibilité du trainer).</value></data>
+  <data name="Diag_Copy" xml:space="preserve"><value>Copier</value></data>
+  <data name="Diag_Clear" xml:space="preserve"><value>Effacer</value></data>
+  <data name="Diag_Verbose" xml:space="preserve"><value>Journal détaillé (toutes les trames)</value></data>
+  <data name="Diag_AddNote" xml:space="preserve"><value>Ajouter une note</value></data>
+  <data name="Diag_NoteTip" xml:space="preserve"><value>Ex. : j'appuie sur le bouton latéral de la manette gauche</value></data>
+  <data name="Apps_Intro" xml:space="preserve"><value>Dans les réglages de contrôleurs de votre application (TrainingPeaks Virtual, MyWhoosh, Rouvy…), choisissez « ShiftBridge ».</value></data>
+  <data name="Apps_HowConnects" xml:space="preserve"><value>Comment votre application se connecte</value></data>
+  <data name="Apps_WifiLan" xml:space="preserve"><value>Wi-Fi / réseau local</value></data>
+  <data name="Apps_AtLeastOne" xml:space="preserve"><value>Activez au moins une option. Zwift n'utilise pas ce mode : gardez vos manettes appairées directement à Zwift.</value></data>
+  <data name="Apps_DirCon" xml:space="preserve"><value>DirCon (TrainingPeaks Virtual en réseau)</value></data>
+  <data name="Apps_TestTitle" xml:space="preserve"><value>Tester sans manette</value></data>
+  <data name="Apps_TestBody" xml:space="preserve"><value>Envoie un appui « vitesse » à l'application connectée, pour vérifier qu'elle réagit.</value></data>
+  <data name="Buttons_Add" xml:space="preserve"><value>Ajouter une touche</value></data>
+  <data name="Buttons_AddTip" xml:space="preserve"><value>Assigne une touche du clavier, d'une télécommande ou d'une manette de jeu</value></data>
+  <data name="Buttons_Reset" xml:space="preserve"><value>Réinitialiser</value></data>
+  <data name="Buttons_Intro" xml:space="preserve"><value>Choisissez l'action de chaque touche. Le voyant s'allume quand vous appuyez.</value></data>
+  <data name="Buttons_Cancel" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Buttons_Help" xml:space="preserve"><value>Clavier : préférez des touches que vous n'utilisez pas ailleurs (F13 à F24, touches média, télécommande de présentation). Une touche assignée est avalée : elle n'atteint plus les autres applications. Manettes de jeu : elles ne peuvent pas être masquées, désactivez-les dans l'application pilotée pour éviter un double déclenchement.</value></data>
+  <data name="Buttons_Repeat" xml:space="preserve"><value>Répéter</value></data>
+  <data name="Buttons_RepeatTip" xml:space="preserve"><value>Répète la vitesse tant que la touche reste enfoncée</value></data>
+  <data name="Buttons_Remove" xml:space="preserve"><value>Retirer cette touche</value></data>
+  <data name="Trainer_Intro" xml:space="preserve"><value>ShiftBridge se place entre votre trainer et l'application pour appliquer les vitesses virtuelles.</value></data>
+  <data name="Trainer_ConnTitle" xml:space="preserve"><value>Connexion au trainer</value></data>
+  <data name="Trainer_ConnTip" xml:space="preserve"><value>Dans votre appli d'entraînement : choisissez « ShiftBridge Trainer » comme trainer (pas le trainer directement) et « ShiftBridge » comme contrôleur. Désactivez le virtual shifting de l'appli pour éviter le double emploi.</value></data>
+  <data name="Trainer_BtnFind" xml:space="preserve"><value>Rechercher le trainer</value></data>
+  <data name="Trainer_Manual" xml:space="preserve"><value>Adresse manuelle</value></data>
+  <data name="Trainer_IpTip" xml:space="preserve"><value>Adresse IP</value></data>
+  <data name="Trainer_BleTip" xml:space="preserve"><value>Avant de connecter : fermez l'appli du constructeur sur votre téléphone, et n'appairez pas le trainer dans votre appli d'entraînement ni dans les paramètres Bluetooth de Windows. Un trainer Bluetooth n'accepte en général qu'un seul contrôleur.</value></data>
+  <data name="Trainer_AutoStart" xml:space="preserve"><value>Activer automatiquement au lancement de ShiftBridge</value></data>
+  <data name="Trainer_Gearing" xml:space="preserve"><value>Votre braquet</value></data>
+  <data name="Trainer_GearingTip" xml:space="preserve"><value>Dents du plateau et du pignon sur lesquels est la chaîne (Zwift Cog : 14 dents, 18 sur les Elite). Zwift recommande le petit plateau. Avec un grand plateau, renseignez-le, sinon les vitesses virtuelles seraient trop dures.</value></data>
+  <data name="Trainer_Chainring" xml:space="preserve"><value>Plateau</value></data>
+  <data name="Trainer_Cog" xml:space="preserve"><value>Pignon</value></data>
+  <data name="Trainer_Measure" xml:space="preserve"><value>Mesurer mon braquet</value></data>
+  <data name="Trainer_UseMeasure" xml:space="preserve"><value>Utiliser la mesure</value></data>
+  <data name="Trainer_OverlayTitle" xml:space="preserve"><value>Affichage des vitesses virtuelles en superposition à votre jeu</value></data>
+  <data name="Trainer_ShowOverlay" xml:space="preserve"><value>Afficher la vitesse virtuelle par-dessus le jeu</value></data>
+  <data name="Trainer_OverlayHelp" xml:space="preserve"><value>Glissez-le pour le déplacer, molette pour changer la taille.</value></data>
+  <data name="Trainer_Lock" xml:space="preserve"><value>Verrouiller (les clics le traversent)</value></data>
+  <data name="Trainer_GearBar" xml:space="preserve"><value>Barre des vitesses</value></data>
+  <data name="Trainer_Flash" xml:space="preserve"><value>Clignoter à chaque changement (rouge aux butées)</value></data>
+  <data name="Trainer_Telemetry" xml:space="preserve"><value>Puissance, cadence et vitesse du trainer, et fréquence cardiaque</value></data>
+  <data name="Trainer_TelemetryTip" xml:space="preserve"><value>Affichées une fois le virtual shifting actif. La vitesse est celle que voit votre appli (mise à l'échelle par la vitesse virtuelle).</value></data>
+  <data name="Trainer_Opacity" xml:space="preserve"><value>Opacité du fond</value></data>
+  <data name="Trainer_OpacityName" xml:space="preserve"><value>Opacité du fond de la superposition</value></data>
+  <data name="Trainer_Native" xml:space="preserve"><value>Mode natif Zwift</value></data>
+  <data name="Trainer_NativeTip" xml:space="preserve"><value>Le trainer applique lui-même la vitesse via le protocole de virtual shifting de Zwift (non officiel, documenté par des projets tiers). Si le trainer ne le propose pas, ShiftBridge revient automatiquement à la mise à l'échelle FTMS.</value></data>
+  <data name="Trainer_RiderWeight" xml:space="preserve"><value>Poids coureur (kg)</value></data>
+  <data name="Trainer_BikeWeight" xml:space="preserve"><value>Poids vélo (kg)</value></data>
+  <data name="Trainer_WeightsNote" xml:space="preserve"><value>Transmis au trainer en mode natif. Appliqués aussitôt tant que le virtual shifting est actif.</value></data>
+  <data name="Trainer_GearCount" xml:space="preserve"><value>Nombre de vitesses</value></data>
+  <data name="Trainer_GearCountValue" xml:space="preserve"><value>{0} vitesses</value></data>
+  <data name="Trainer_GearCountTip" xml:space="preserve"><value>Moins de vitesses = des écarts plus grands entre elles. La plage reste la même, du rapport le plus léger au plus dur. Votre vitesse actuelle se place au même endroit de l'échelle.</value></data>
+  <data name="Trainer_ReportGear" xml:space="preserve"><value>Envoyer aussi la vitesse à l'appli</value></data>
+  <data name="Trainer_ReportGearTip" xml:space="preserve"><value>Expérimental (OpenBikeControl « Gear Set »). Une appli peut l'ignorer, ou l'appliquer à sa propre simulation : si la résistance double, désactivez cette option et gardez l'affichage par-dessus le jeu.</value></data>
+  <data name="Trainer_SlopeOnly" xml:space="preserve"><value>Pente seule</value></data>
+  <data name="Trainer_SlopeOnlyTip" xml:space="preserve"><value>À activer si votre trainer ignore le roulement et la traînée de la simulation.</value></data>
+  <data name="Nav_AppShort" xml:space="preserve"><value>Appli</value></data>
+  <data name="Home_OpenSettings" xml:space="preserve"><value>Ouvrir les réglages</value></data>
+  <data name="Home_KeepAlive" xml:space="preserve"><value>Garder ShiftBridge actif (réglages de la batterie)</value></data>
+  <data name="Devices_NotFoundCombined" xml:space="preserve"><value>Manette introuvable ? Éteignez-la puis rallumez-la, et déconnectez-la de Zwift, du trainer ou du téléphone : une manette n'accepte qu'une connexion à la fois. Click v2 et Ride v2 verrouillés : déverrouillez-les via l'app Zwift.</value></data>
+  <data name="Buttons_RepeatHold" xml:space="preserve"><value>Répéter tant que la touche est tenue</value></data>
+  <data name="Buttons_RepeatSpeed" xml:space="preserve"><value>Vitesse de répétition</value></data>
+  <data name="RepeatSpeed_Slow" xml:space="preserve"><value>Lente</value></data>
+  <data name="RepeatSpeed_Normal" xml:space="preserve"><value>Normale</value></data>
+  <data name="RepeatSpeed_Fast" xml:space="preserve"><value>Rapide</value></data>
+  <data name="RepeatSpeed_VeryFast" xml:space="preserve"><value>Très rapide</value></data>
+  <data name="Trainer_ManualIpPort" xml:space="preserve"><value>Adresse manuelle (IP et port)</value></data>
+  <data name="Trainer_AutoStartShort" xml:space="preserve"><value>Activer automatiquement au lancement</value></data>
+  <data name="Trainer_BleTipAndroid" xml:space="preserve"><value>Avant de connecter : fermez l'appli du constructeur sur votre téléphone, et n'appairez pas le trainer dans votre appli d'entraînement ni dans les paramètres Bluetooth. Un trainer Bluetooth n'accepte en général qu'un seul contrôleur.</value></data>
+  <data name="Trainer_GearingTipShort" xml:space="preserve"><value>Dents du plateau et du pignon sur lesquels est la chaîne (Zwift Cog : 14 dents, 18 sur les Elite). Zwift recommande le petit plateau.</value></data>
+  <data name="Trainer_OverlayTitleAndroid" xml:space="preserve"><value>Affichage des vitesses virtuelles</value></data>
+  <data name="Trainer_OverlayNoteAndroid" xml:space="preserve"><value>La vitesse virtuelle est affichée dans la notification de ShiftBridge, visible depuis n'importe quelle application.</value></data>
+  <data name="Trainer_ReportGearTipShort" xml:space="preserve"><value>Expérimental (OpenBikeControl « Gear Set »). Si la résistance double, désactivez cette option.</value></data>
+  <data name="Apps_BleNote" xml:space="preserve"><value>Pour une application qui tourne sur un AUTRE appareil (PC, Apple TV…). Si elle tourne sur ce téléphone ou cette tablette, utilisez plutôt le réseau.</value></data>
+  <data name="Diag_NotePlaceholder" xml:space="preserve"><value>Note : j'appuie sur le bouton latéral gauche</value></data>
+  <data name="Diag_Add" xml:space="preserve"><value>Ajouter</value></data>
+  <data name="Notif_GearTitle" xml:space="preserve"><value>Vitesse {0}</value></data>
+  <data name="Notif_Quit" xml:space="preserve"><value>Quitter</value></data>
+  <data name="Notif_ShiftUp" xml:space="preserve"><value>Vitesse +</value></data>
+  <data name="Notif_ShiftDown" xml:space="preserve"><value>Vitesse −</value></data>
+  <data name="Tray_Tooltip" xml:space="preserve"><value>ShiftBridge — vitesse {0}/{1}</value></data>
+  <data name="Tray_Open" xml:space="preserve"><value>Ouvrir ShiftBridge</value></data>
+  <data name="Tray_Quit" xml:space="preserve"><value>Quitter</value></data>
+  <data name="App_SecTitle" xml:space="preserve"><value>Application</value></data>
+  <data name="App_StartWithWindows" xml:space="preserve"><value>Lancer ShiftBridge avec Windows</value></data>
+  <data name="App_StartMinimized" xml:space="preserve"><value>Démarrer réduit</value></data>
+  <data name="App_MinimizeToTray" xml:space="preserve"><value>Réduire dans la zone de notification</value></data>
+  <data name="State_Ok" xml:space="preserve"><value>OK</value></data>
+  <data name="State_Waiting" xml:space="preserve"><value>En attente</value></data>
+  <data name="State_Warning" xml:space="preserve"><value>Attention</value></data>
+  <data name="State_Error" xml:space="preserve"><value>Erreur</value></data>
+  <data name="State_Off" xml:space="preserve"><value>Inactif</value></data>
+  <data name="Notif_ChannelName" xml:space="preserve"><value>Pont ShiftBridge</value></data>
+  <data name="Notif_ChannelDesc" xml:space="preserve"><value>Maintient la connexion entre vos manettes et votre application d'entraînement.</value></data>
+  <data name="Err_LocksUnavailable" xml:space="preserve"><value>Verrous système indisponibles : {0}</value></data>
+  <data name="Perm_BluetoothDenied" xml:space="preserve"><value>Bluetooth non autorisé : ShiftBridge ne peut trouver aucune manette. Autorisez « Appareils à proximité » dans les réglages de l'application.</value></data>
+  <data name="Perm_LocationNeeded" xml:space="preserve"><value>Autorisation non accordée : Android exige la localisation pour chercher des appareils Bluetooth. Autorisez-la dans les réglages de l'application.</value></data>
+  <data name="Err_ForegroundService" xml:space="preserve"><value>Service de premier plan impossible : {0}</value></data>
+  <data name="Lang_Label" xml:space="preserve"><value>Langue</value></data>
+  <data name="Lang_Auto" xml:space="preserve"><value>Automatique (langue du système)</value></data>
+  <data name="Lang_RestartNote" xml:space="preserve"><value>Redémarrez ShiftBridge pour appliquer la langue.</value></data>
+  <data name="Lang_RestartNoteAndroid" xml:space="preserve"><value>Quittez ShiftBridge depuis sa notification, puis rouvrez-le pour appliquer la langue.</value></data>
+  <data name="Proto_ToCheck" xml:space="preserve"><value>à vérifier</value></data>
+  <data name="Proto_FecExperimental" xml:space="preserve"><value>FE-C (expérimental)</value></data>
+  <data name="Proto_PowerOnly" xml:space="preserve"><value>puissance seule</value></data>
+  <data name="Op_CharsOf" xml:space="preserve"><value>caractéristiques de {0}</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>Réglages</value></data>
+  <data name="Common_AdvancedShort" xml:space="preserve"><value>Avancé</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>Retour</value></data>
+  <data name="Settings_Intro" xml:space="preserve"><value>Affichage, démarrage, langue et outils.</value></data>
+  <data name="Settings_SecDisplay" xml:space="preserve"><value>Affichage</value></data>
+  <data name="Settings_SecStartup" xml:space="preserve"><value>Démarrage</value></data>
+  <data name="Settings_SecLanguage" xml:space="preserve"><value>Langue</value></data>
+  <data name="Settings_SecTools" xml:space="preserve"><value>Outils</value></data>
+  <data name="Settings_OpenDiagnostic" xml:space="preserve"><value>Ouvrir le journal de diagnostic</value></data>
+  <data name="Settings_ToolsHelp" xml:space="preserve"><value>Le journal enregistre les trames brutes : utile pour un rapport de bug.</value></data>
+  <data name="Settings_PrivacyPolicy" xml:space="preserve"><value>Politique de confidentialité</value></data>
+  <data name="Settings_PrivacyHelp" xml:space="preserve"><value>ShiftBridge ne collecte rien et n'envoie rien à son développeur : tout reste sur votre appareil.</value></data>
+  <data name="Settings_BackToSettings" xml:space="preserve"><value>← Réglages</value></data>
+  <data name="Home_SecHeartRate" xml:space="preserve"><value>CARDIO</value></data>
+  <data name="Home_LiveTitle" xml:space="preserve"><value>EN DIRECT</value></data>
+  <data name="Hr_Summary_None" xml:space="preserve"><value>Aucun capteur</value></data>
+  <data name="Hr_Summary_Searching" xml:space="preserve"><value>Recherche…</value></data>
+  <data name="Hr_Summary_Connected" xml:space="preserve"><value>Capteur connecté</value></data>
+  <data name="Hr_Summary_Reconnecting" xml:space="preserve"><value>Reconnexion…</value></data>
+  <data name="Hr_AddHint" xml:space="preserve"><value>Facultatif : ceinture ou montre</value></data>
+  <data name="Devices_SecControllers" xml:space="preserve"><value>Manettes Zwift</value></data>
+  <data name="Common_Info" xml:space="preserve"><value>Plus d'informations</value></data>
+  <data name="Common_Close" xml:space="preserve"><value>Fermer</value></data>
+</root>

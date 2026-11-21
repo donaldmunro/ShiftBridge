@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>ShiftBridge.Mobile</RootNamespace>
+    <AssemblyName>ShiftBridge.Android</AssemblyName>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <ApplicationTitle>ShiftBridge</ApplicationTitle>
+    <ApplicationId>org.shiftbridge.app</ApplicationId>
+    <Version>0.15.4</Version>
+    <ApplicationDisplayVersion>0.15.4</ApplicationDisplayVersion>
+    <ApplicationVersion>1504</ApplicationVersion>
+    <SupportedOSPlatformVersion>26</SupportedOSPlatformVersion>
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <!-- Langues livrées : anglais (neutre) et français ; écarte les satellites NuGet des autres langues. -->
+    <SatelliteResourceLanguages>en;fr</SatelliteResourceLanguages>
+
+    <!--
+      Pas d'AOT (il impose l'élagage et alourdit l'APK). Ne PAS forcer AndroidLinkMode=None / PublishTrimmed=false :
+      en Release, l'APK plantait au démarrage (UnsatisfiedLinkError dans MauiApplication.onCreate, constaté sur Android 17).
+      L'élagage par défaut du SDK ne touche que le framework (mode « partial »).
+    -->
+    <RunAOTCompilation>false</RunAOTCompilation>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#111418" />
+    <MauiFont Include="Resources\Fonts\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.110" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ShiftBridge.Platform.Android\ShiftBridge.Platform.Android.csproj" />
+    <ProjectReference Include="..\ShiftBridge.Presentation\ShiftBridge.Presentation.csproj" />
+  </ItemGroup>
+
+</Project>

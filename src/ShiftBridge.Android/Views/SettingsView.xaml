@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView x:Class="ShiftBridge.Mobile.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:loc="clr-namespace:ShiftBridge.Core.Localization;assembly=ShiftBridge.Core"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ShiftBridge.Presentation;assembly=ShiftBridge.Presentation"
+             xmlns:ctl="clr-namespace:ShiftBridge.Mobile"
+             x:DataType="vm:MainViewModel">
+    <ScrollView>
+        <VerticalStackLayout Padding="16,16" Spacing="0">
+            <Label Style="{StaticResource Caption}" Margin="0,0,0,14"
+                   Text="{x:Static loc:Strings.Settings_Intro}" />
+
+            <!-- Affichage : la notification remplace la superposition de la version Windows -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                        <Label Text="{x:Static ctl:Icons.Display}" FontFamily="MaterialIcons" FontSize="22" TextColor="{StaticResource Accent}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{x:Static loc:Strings.Trainer_OverlayTitleAndroid}" Style="{StaticResource SectionTitle}" Margin="0" VerticalOptions="Center" />
+                    </Grid>
+                    <Label Style="{StaticResource Caption}" Text="{x:Static loc:Strings.Trainer_OverlayNoteAndroid}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Démarrage : certains fabricants (Samsung, Xiaomi…) arrêtent le service quand l'écran est éteint, sauf exclusion de la batterie -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                        <Label Text="{x:Static ctl:Icons.Power}" FontFamily="MaterialIcons" FontSize="22" TextColor="{StaticResource Accent}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{x:Static loc:Strings.Settings_SecStartup}" Style="{StaticResource SectionTitle}" Margin="0" VerticalOptions="Center" />
+                    </Grid>
+                    <Button Text="{x:Static loc:Strings.Home_KeepAlive}" Command="{Binding OpenBatterySettingsCommand}" HorizontalOptions="Start" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Langue : le changement s'applique au redémarrage du processus -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                        <Label Text="{x:Static ctl:Icons.Language}" FontFamily="MaterialIcons" FontSize="22" TextColor="{StaticResource Accent}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{x:Static loc:Strings.Settings_SecLanguage}" Style="{StaticResource SectionTitle}" Margin="0" VerticalOptions="Center" />
+                    </Grid>
+                    <Picker ItemsSource="{Binding LanguageOptions}" ItemDisplayBinding="{Binding Name, x:DataType=vm:LanguageOption}" SelectedItem="{Binding SelectedLanguage}"
+                            SemanticProperties.Description="{x:Static loc:Strings.Lang_Label}" />
+                    <Label Text="{x:Static loc:Strings.Lang_RestartNoteAndroid}" Style="{StaticResource Caption}"
+                           IsVisible="{Binding LanguageRestartNeeded}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Outils : journal de diagnostic -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                        <Label Text="{x:Static ctl:Icons.Tools}" FontFamily="MaterialIcons" FontSize="22" TextColor="{StaticResource Accent}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{x:Static loc:Strings.Settings_SecTools}" Style="{StaticResource SectionTitle}" Margin="0" VerticalOptions="Center" />
+                    </Grid>
+                    <Button Text="{x:Static loc:Strings.Settings_OpenDiagnostic}" Command="{Binding NavigateCommand}" CommandParameter="diagnostic" HorizontalOptions="Start" />
+                    <Label Style="{StaticResource Caption}" Text="{x:Static loc:Strings.Settings_ToolsHelp}" />
+                    <Button Text="{x:Static loc:Strings.Settings_PrivacyPolicy}" Command="{Binding OpenPrivacyPolicyCommand}" HorizontalOptions="Start" Margin="0,8,0,0" />
+                    <Label Style="{StaticResource Caption}" Text="{x:Static loc:Strings.Settings_PrivacyHelp}" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentView>

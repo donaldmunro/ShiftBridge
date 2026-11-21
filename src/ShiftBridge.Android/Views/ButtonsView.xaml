@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView x:Class="ShiftBridge.Mobile.Views.ButtonsView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:loc="clr-namespace:ShiftBridge.Core.Localization;assembly=ShiftBridge.Core"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ShiftBridge.Presentation;assembly=ShiftBridge.Presentation"
+             x:DataType="vm:MainViewModel">
+    <ScrollView>
+        <VerticalStackLayout Padding="16,16" Spacing="0">
+            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,14">
+                <VerticalStackLayout>
+                    <Label Style="{StaticResource Caption}" Text="{x:Static loc:Strings.Buttons_Intro}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1" Text="{x:Static loc:Strings.Buttons_Reset}" Command="{Binding ResetProfileCommand}"
+                        Style="{StaticResource GhostButton}" VerticalOptions="Start" />
+            </Grid>
+
+            <!-- Profils : un par appli d'entraînement, activé à sa connexion -->
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="*,170" ColumnSpacing="10">
+                        <Label Text="{x:Static loc:Strings.Profile_Label}" VerticalOptions="Center" />
+                        <Picker Grid.Column="1" ItemsSource="{Binding ProfileOptions}"
+                                ItemDisplayBinding="{Binding Name, x:DataType=vm:ProfileOption}"
+                                SelectedItem="{Binding SelectedProfileOption}" FontSize="13"
+                                SemanticProperties.Description="{x:Static loc:Strings.Profile_Label}" />
+                    </Grid>
+                    <Label Text="{Binding ActiveProfileText}" Style="{StaticResource Caption}" />
+                    <Label Text="{Binding ConnectedAppText}" Style="{StaticResource Caption}" />
+                    <Button Text="{Binding CreateAppProfileText}" Command="{Binding CreateAppProfileCommand}"
+                            IsVisible="{Binding CanCreateAppProfile}" HorizontalOptions="Start" />
+                    <Button Text="{x:Static loc:Strings.Profile_Delete}" Command="{Binding DeleteProfileCommand}"
+                            Style="{StaticResource GhostButton}" IsVisible="{Binding CanDeleteProfile}" HorizontalOptions="Start" />
+                    <Label Style="{StaticResource Caption}" Text="{x:Static loc:Strings.Profile_Help}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Vitesse de répétition (vitesse + / − tenue), commune à toutes les touches -->
+            <Border Style="{StaticResource Card}">
+                <Grid ColumnDefinitions="*,150" ColumnSpacing="10">
+                    <Label Text="{x:Static loc:Strings.Buttons_RepeatSpeed}" VerticalOptions="Center" />
+                    <Picker Grid.Column="1" ItemsSource="{Binding RepeatSpeedOptions}"
+                            ItemDisplayBinding="{Binding Name, x:DataType=vm:RepeatSpeedOption}"
+                            SelectedItem="{Binding SelectedRepeatSpeed}" FontSize="13" />
+                </Grid>
+            </Border>
+
+            <!-- Une carte par manette (gauche / droite…) -->
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding ButtonGroups}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:ButtonGroupViewModel">
+                        <Border Style="{StaticResource Card}">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding Name}" Style="{StaticResource SectionTitle}" />
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Rows}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:ButtonRowViewModel">
+                                          <VerticalStackLayout>
+                                            <Grid ColumnDefinitions="Auto,*,170" ColumnSpacing="10" Margin="0,4">
+                                                <!-- Voyant d'appui en direct -->
+                                                <BoxView Grid.Column="0" WidthRequest="12" HeightRequest="12" CornerRadius="6" VerticalOptions="Center"
+                                                         Color="{StaticResource Off}">
+                                                    <BoxView.Triggers>
+                                                        <DataTrigger TargetType="BoxView" Binding="{Binding IsPressed}" Value="True">
+                                                            <Setter Property="Color" Value="{StaticResource Accent}" />
+                                                        </DataTrigger>
+                                                    </BoxView.Triggers>
+                                                </BoxView>
+                                                <Label Grid.Column="1" Text="{Binding Label}" VerticalOptions="Center" LineBreakMode="WordWrap" />
+                                                <Picker Grid.Column="2" ItemsSource="{Binding Actions}" ItemDisplayBinding="{Binding Display, x:DataType=vm:ActionItem}"
+                                                        SelectedItem="{Binding Selected}" FontSize="13" />
+                                            </Grid>
+                                            <!-- Seulement pour « vitesse + » et « vitesse − » -->
+                                            <HorizontalStackLayout Spacing="6" Margin="22,0,0,4" IsVisible="{Binding CanRepeat}">
+                                                <Switch IsToggled="{Binding RepeatOnHold}" VerticalOptions="Center" Scale="0.8"
+                                                        SemanticProperties.Description="Répéter la vitesse tant que la touche est tenue" />
+                                                <Label Text="{x:Static loc:Strings.Buttons_RepeatHold}" Style="{StaticResource Caption}" VerticalOptions="Center" />
+                                            </HorizontalStackLayout>
+                                            <!-- Seulement pour « Aller au rapport » : rapport visé -->
+                                            <VerticalStackLayout Spacing="2" Margin="22,0,0,6" IsVisible="{Binding CanTarget}">
+                                                <Entry Text="{Binding GearTargetText}" Keyboard="Numeric" WidthRequest="80" HorizontalOptions="Start" FontSize="13"
+                                                       SemanticProperties.Description="{x:Static loc:Strings.Buttons_GearTargetTip}" />
+                                                <Label Text="{x:Static loc:Strings.Buttons_GearTargetTip}" Style="{StaticResource Caption}" />
+                                            </VerticalStackLayout>
+                                          </VerticalStackLayout>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentView>

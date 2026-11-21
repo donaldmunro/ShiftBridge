@@ -1,0 +1,117 @@
+<UserControl x:Class="ShiftBridge.App.Views.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:loc="clr-namespace:ShiftBridge.Core.Localization;assembly=ShiftBridge.Core"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:ShiftBridge.App.Controls">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="36,22,36,22" MaxWidth="860">
+            <TextBlock Text="{x:Static loc:Strings.Nav_Home}" Style="{StaticResource PageTitle}" />
+            <TextBlock Style="{StaticResource Caption}" Margin="0,0,0,16"
+                       Text="{x:Static loc:Strings.Home_Tagline}" />
+
+            <!-- Prochaine étape (masquée quand tout est en place) -->
+            <Border Style="{StaticResource Card}" Padding="16,10" Margin="0,0,0,14"
+                    BorderBrush="{StaticResource Accent}"
+                    Visibility="{Binding HasNextStep, Converter={StaticResource BoolToVis}}">
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="{x:Static loc:Strings.Home_Open}" Command="{Binding NavigateCommand}" CommandParameter="{Binding NextStepPage}"
+                            Style="{StaticResource PrimaryButton}" VerticalAlignment="Center" Margin="16,0,0,0" Padding="16,6" />
+                    <TextBlock Style="{StaticResource Icon}" Text="&#xE73E;" Foreground="{StaticResource Accent}" Margin="0,0,12,0" />
+                    <TextBlock Text="{Binding NextStepText}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                </DockPanel>
+            </Border>
+
+            <!-- Héros : vitesse virtuelle, mesures en direct et bouton d'activation -->
+            <Border Style="{StaticResource Card}" Padding="24,18" Margin="0,0,0,14">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{x:Static loc:Strings.Home_SecGear}" Style="{StaticResource Caption}" FontWeight="SemiBold" />
+                        <!-- Estompée tant que le virtual shifting est arrêté : cette vitesse n'est alors appliquée à rien -->
+                        <TextBlock Text="{Binding GearText}" FontSize="56" FontWeight="Bold" Foreground="{StaticResource Accent}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsGearApplied}" Value="False">
+                                            <Setter Property="Opacity" Value="0.4" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <StackPanel Margin="2,0,0,0">
+                            <TextBlock Text="{Binding GearRatioText}" FontSize="16" />
+                            <TextBlock Text="{Binding ShiftModeText}" FontSize="14" Foreground="{StaticResource TextMuted}" TextWrapping="Wrap" />
+                            <!-- Puissance · cadence · cardio · vitesse tant que le virtual shifting tourne -->
+                            <TextBlock Text="{Binding LiveTelemetry}" FontSize="15" FontWeight="SemiBold" Margin="0,10,0,0"
+                                       Visibility="{Binding LiveTelemetry, Converter={StaticResource NullToCollapsed}}" />
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Width="250" Margin="16,0,0,0">
+                        <Button Content="{Binding ProxyButtonText}" Command="{Binding ToggleProxyCommand}" Padding="18,12" FontSize="15">
+                            <!-- Le libellé passe à la ligne plutôt que d'être coupé (fenêtre étroite, langue plus verbeuse) -->
+                            <Button.ContentTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" TextWrapping="Wrap" TextAlignment="Center"
+                                               Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ProxyActive}" Value="True">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="BorderBrush" Value="{StaticResource Danger}" />
+                                            <Setter Property="Foreground" Value="{StaticResource Danger}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <TextBlock Text="{Binding TrainerStatus}" Style="{StaticResource Caption}" Margin="0,10,0,0" TextAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Tuiles : un clic ouvre la page correspondante (même ordre que le parcours : manettes, touches, trainer, cardio, appli) -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="14" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="14" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="14" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Button Grid.Row="0" Grid.Column="0" Style="{StaticResource Tile}" Command="{Binding NavigateCommand}" CommandParameter="devices">
+                    <controls:StatusTile State="{Binding ControllersState}" Title="{x:Static loc:Strings.Home_SecControllers}"
+                                         Summary="{Binding ControllersSummary}" Detail="{Binding ControllersDetail}" />
+                </Button>
+                <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource Tile}" Command="{Binding NavigateCommand}" CommandParameter="buttons">
+                    <controls:StatusTile State="{Binding ButtonsState}" Title="{x:Static loc:Strings.Home_SecButtons}"
+                                         Summary="{Binding ButtonsSummary}" Detail="{Binding ButtonsDetail}" />
+                </Button>
+                <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource Tile}" Command="{Binding NavigateCommand}" CommandParameter="trainer">
+                    <controls:StatusTile State="{Binding TrainerState}" Title="{x:Static loc:Strings.Home_SecTrainer}"
+                                         Summary="{Binding TrainerSummary}" Detail="{Binding TrainerDetail}" />
+                </Button>
+                <!-- Le cardio se règle dans Appareils -->
+                <Button Grid.Row="2" Grid.Column="0" Style="{StaticResource Tile}" Command="{Binding NavigateCommand}" CommandParameter="devices">
+                    <controls:StatusTile State="{Binding HeartRateState}" Title="{x:Static loc:Strings.Home_SecHeartRate}"
+                                         Summary="{Binding HeartRateSummary}" Detail="{Binding HeartRateDetail}" />
+                </Button>
+                <Button Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="3" Style="{StaticResource Tile}" Command="{Binding NavigateCommand}" CommandParameter="apps">
+                    <controls:StatusTile State="{Binding AppState}" Title="{x:Static loc:Strings.Home_SecApp}"
+                                         Summary="{Binding AppSummary}" Detail="{Binding AppDetail}" />
+                </Button>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
