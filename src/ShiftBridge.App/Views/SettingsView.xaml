@@ -60,6 +60,12 @@
                         <Button Content="{x:Static loc:Strings.Settings_CheckNow}" Command="{Binding CheckUpdatesNowCommand}" />
                         <TextBlock Text="{Binding UpdateStatus}" Style="{StaticResource Caption}" VerticalAlignment="Center" Margin="12,0,0,0" />
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Visibility="{Binding HasPendingUpdate, Converter={StaticResource BoolToVis}}">
+                        <Button Content="{x:Static loc:Strings.Update_Install}" Command="{Binding ApplyUpdateCommand}"
+                                Style="{StaticResource PrimaryButton}" Padding="16,6" />
+                        <Button Content="{x:Static loc:Strings.Update_Notes}" Command="{Binding OpenReleaseNotesCommand}" Padding="12,6" Margin="8,0,0,0" />
+                    </StackPanel>
+                    <TextBlock Text="{Binding UpdateProgressText}" Style="{StaticResource Caption}" TextWrapping="Wrap" Margin="0,8,0,0" />
                     <TextBlock Style="{StaticResource Caption}" Margin="0,8,0,0" Text="{x:Static loc:Strings.Settings_UpdatesHelp}" />
                 </StackPanel>
             </Border>

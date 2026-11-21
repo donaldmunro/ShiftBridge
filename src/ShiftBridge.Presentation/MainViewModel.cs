@@ -1415,6 +1415,8 @@ public sealed partial class MainViewModel : ObservableObject
 
     [ObservableProperty] private bool _checkForUpdates;
     [ObservableProperty] private bool _updateAvailable;
+    /// <summary>Une version plus récente existe (même si le bandeau de l'Accueil a été masqué par « Plus tard ») : boutons des Réglages.</summary>
+    [ObservableProperty] private bool _hasPendingUpdate;
     [ObservableProperty] private bool _isUpdating;
     [ObservableProperty] private bool _isCheckingUpdates;
     [ObservableProperty] private string _updateText = "";
@@ -1462,6 +1464,7 @@ public sealed partial class MainViewModel : ObservableObject
             _ui.Post(() =>
             {
                 _pendingUpdate = update;
+                HasPendingUpdate = update is not null;
                 if (update is null)
                 {
                     UpdateAvailable = false;
