@@ -20,9 +20,9 @@ public class BridgeForegroundService : Service
 {
     private const string ChannelId = "shiftbridge_bridge";
     private const int NotificationId = 1;
-    private const string ActionStop = "org.shiftbridge.app.STOP";
-    private const string ActionShiftUp = "org.shiftbridge.app.SHIFT_UP";
-    private const string ActionShiftDown = "org.shiftbridge.app.SHIFT_DOWN";
+    private const string ActionStop = "com.antoinerenou.shiftbridge.STOP";
+    private const string ActionShiftUp = "com.antoinerenou.shiftbridge.SHIFT_UP";
+    private const string ActionShiftDown = "com.antoinerenou.shiftbridge.SHIFT_DOWN";
     private static readonly long WakeLockMaxMs = (long)TimeSpan.FromHours(6).TotalMilliseconds; // filet de sécurité contre une fuite
 
     private WifiManager.MulticastLock? _multicast;

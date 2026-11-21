@@ -54,7 +54,7 @@ Même logique que sur Windows (mêmes manettes, mêmes touches, même virtual sh
 
 Ces manettes se verrouillent environ une minute après la connexion si Zwift ne les a pas « déverrouillées » dans les dernières 24 h (le service Zwift n'est alors plus exposé). ShiftBridge détecte le verrouillage et reconnecte automatiquement ; pour un déverrouillage durable, ouvrez l'application Zwift, connectez la manette 10 à 30 s, fermez Zwift complètement, puis revenez dans ShiftBridge. L'assistant intégré est prévu pour une version suivante.
 
-## État du projet (v0.15.4)
+## État du projet (v0.15.5)
 
 | Fonction | État |
 |---|---|
@@ -91,7 +91,7 @@ dotnet workload install maui-android
 dotnet publish src/ShiftBridge.Android/ShiftBridge.Android.csproj -f net10.0-android -c Release -o apk
 ```
 
-Si le SDK Android n'est pas détecté, ajoutez `-p:AndroidSdkDirectory=<chemin du SDK>` (et `-p:JavaSdkDirectory=<chemin du JDK 17>`). L'APK `apk/org.shiftbridge.app-Signed.apk` est signé avec une clé de debug ; pour une diffusion, fournissez votre propre clé (`-p:AndroidKeyStore=true -p:AndroidSigningKeyStore=… -p:AndroidSigningKeyAlias=…`). Les projets Android sont dans `ShiftBridge.Android.sln`, à part de `ShiftBridge.sln`, pour que la version Windows se compile sans le workload.
+Si le SDK Android n'est pas détecté, ajoutez `-p:AndroidSdkDirectory=<chemin du SDK>` (et `-p:JavaSdkDirectory=<chemin du JDK 17>`). L'APK `apk/com.antoinerenou.shiftbridge-Signed.apk` est signé avec une clé de debug ; pour une diffusion, fournissez votre propre clé (`-p:AndroidKeyStore=true -p:AndroidSigningKeyStore=… -p:AndroidSigningKeyAlias=…`). Les projets Android sont dans `ShiftBridge.Android.sln`, à part de `ShiftBridge.sln`, pour que la version Windows se compile sans le workload.
 
 ## Structure
 

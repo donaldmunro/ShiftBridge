@@ -1,6 +1,6 @@
 # Politique de confidentialité / Privacy Policy
 
-**ShiftBridge** (`org.shiftbridge.app`) — Windows et Android / Windows and Android
+**ShiftBridge** (`com.antoinerenou.shiftbridge`) — Windows et Android / Windows and Android
 Date d'effet / Effective date : 2026-11-21
 
 Éditeur / Publisher : Antoine Renou — renouantoine@gmail.com
