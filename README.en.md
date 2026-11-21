@@ -65,6 +65,8 @@ These controllers lock about a minute after connecting if Zwift has not "unlocke
 
 ## Project status (v0.16.3)
 
+> **Tested with limited hardware.** ShiftBridge has been tried by its author on a small number of controllers, devices and apps. Other models, trainers, firmwares or apps may behave differently: treat it as a **beta**. Feedback is welcome (**Settings** → diagnostic log, then a [GitHub issue](https://github.com/renoua/ShiftBridge/issues)). In the table, "to validate on real hardware" means "not yet confirmed on a wide range of hardware".
+
 | Feature | Status |
 |---|---|
 | Play / Click / Ride frame parsing, mapping, virtual gear, repeat on hold, lifecycle (disconnection, shutdown, stuck clients, configuration) | Tested (497 automated tests, hand-built frames) |

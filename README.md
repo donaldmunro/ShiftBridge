@@ -65,6 +65,8 @@ Ces manettes se verrouillent environ une minute après la connexion si Zwift ne 
 
 ## État du projet (v0.16.3)
 
+> **Testé avec un matériel limité.** ShiftBridge a été essayé par son auteur sur un petit nombre de manettes, d'appareils et d'applications. D'autres modèles, trainers, firmwares ou applications peuvent se comporter différemment : considérez-le comme une **bêta**. Les retours sont bienvenus (page *Réglages* → journal de diagnostic, puis une [issue GitHub](https://github.com/renoua/ShiftBridge/issues)). Dans le tableau, « à valider sur matériel réel » signifie « pas encore confirmé sur un éventail large de matériel ».
+
 | Fonction | État |
 |---|---|
 | Analyse des trames Play / Click / Ride, mapping, vitesse virtuelle, répétition sur appui long, cycle de vie (déconnexion, arrêt, clients bloqués, configuration) | Testé (497 tests automatisés, trames construites à la main) |
