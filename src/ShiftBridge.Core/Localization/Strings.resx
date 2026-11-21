@@ -363,7 +363,7 @@
   <data name="Diag_Verbose" xml:space="preserve"><value>Detailed log (all frames)</value></data>
   <data name="Diag_AddNote" xml:space="preserve"><value>Add a note</value></data>
   <data name="Diag_NoteTip" xml:space="preserve"><value>E.g.: I'm pressing the side button on the left controller</value></data>
-  <data name="Apps_Intro" xml:space="preserve"><value>In your app's controller settings (TrainingPeaks Virtual, MyWhoosh, Rouvy…), choose “ShiftBridge”.</value></data>
+  <data name="Apps_Intro" xml:space="preserve"><value>In your app's controller settings (TrainingPeaks Virtual, Les jeux du cycle), choose “ShiftBridge”.</value></data>
   <data name="Apps_HowConnects" xml:space="preserve"><value>How your app connects</value></data>
   <data name="Apps_WifiLan" xml:space="preserve"><value>Wi-Fi / local network</value></data>
   <data name="Apps_AtLeastOne" xml:space="preserve"><value>Enable at least one option. Zwift does not use this mode: keep your controllers paired directly with Zwift.</value></data>

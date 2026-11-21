@@ -12,7 +12,7 @@ Use your **Zwift Play, Click, Click v2 and Ride** controllers in other training 
 Zwift Play/Click/Ride ──BLE──▶ ShiftBridge (PC) ──OpenBikeControl──▶ training app ──FTMS──▶ trainer
 ```
 
-ShiftBridge translates each press into an action (gear up/down, navigation…). **The training app applies virtual shifting** on your trainer (Zwift Hub, Cog…), using its own gear curve.
+ShiftBridge translates each press into an action (gear up/down, navigation…). **The training app applies virtual shifting** on your trainer, using its own gear curve.
 
 **Zwift itself does not implement OpenBikeControl**: to play on Zwift, pair your controllers directly with Zwift, without ShiftBridge.
 
@@ -22,7 +22,7 @@ ShiftBridge translates each press into an action (gear up/down, navigation…). 
 2. **Devices** page → *Scan for controllers* → *Connect*.
 3. **Keys** page: choose the action of each key (the indicator lights up when you press).
 4. **App** page: enable *Bluetooth*, *Network* or *DirCon*, then choose OpenBikeControl in the target app.
-   - Network: MyWhoosh, Incyclist, Vieta… — DirCon: TrainingPeaks Virtual over the network — Bluetooth: TPV, Biketerra, icTrainer…
+   - Network (OpenBikeControl over the local network) — DirCon: TrainingPeaks Virtual over the network — Bluetooth: TrainingPeaks Virtual
    - Bluetooth needs an adapter that supports the "peripheral" role. Otherwise, use Network.
 5. **Settings** page → *Display* (Windows): *Show the virtual gear over the game* displays the virtual gear (gear bar, a flash on every change, and optionally power, cadence and trainer speed) on top of your app; drag it to move it, mouse wheel to resize. On the **Trainer** page, *Start automatically on launch* restores virtual shifting with the last trainer, at the last gear.
 6. **Keys** page: for "gear up" and "gear down", the *Repeat* box keeps shifting as long as the key is held (speed set in the card at the top of the page: Slow, Normal, Fast by default, Very fast; `RepeatSpeed` in `config.json`).
@@ -48,7 +48,7 @@ Same logic as on Windows (same controllers, same keys, same virtual shifting), i
 
 | Where does your training app run? | Connection to use |
 |---|---|
-| **On the same Android device** (MyWhoosh, Rouvy…) | **App** tab → *Wi-Fi / local network*, then in the target app choose OpenBikeControl at address `127.0.0.1` (address and port are shown in the tab). Bluetooth "peripheral" is not needed here. |
+| **On the same Android device** | **App** tab → *Wi-Fi / local network*, then in the target app choose OpenBikeControl at address `127.0.0.1` (address and port are shown in the tab). Bluetooth "peripheral" is not needed here. |
 | **On another device** (PC, Apple TV…) | *Bluetooth* if your device can advertise a service (the option tells you otherwise), or *Wi-Fi / local network* / DirCon. |
 
 Good to know:
@@ -63,7 +63,7 @@ Good to know:
 
 These controllers lock about a minute after connecting if Zwift has not "unlocked" them in the last 24 h (the Zwift service is then no longer exposed). ShiftBridge detects the lock and reconnects automatically; for a lasting unlock, open the Zwift app, connect the controller for 10 to 30 s, close Zwift completely, then come back to ShiftBridge. A built-in wizard is planned for a later version.
 
-## Project status (v0.16.3)
+## Project status (v0.16.4)
 
 > **Tested with limited hardware.** ShiftBridge has been tried by its author on a small number of controllers, devices and apps. Other models, trainers, firmwares or apps may behave differently: treat it as a **beta**. Feedback is welcome (**Settings** → diagnostic log, then a [GitHub issue](https://github.com/renoua/ShiftBridge/issues)). In the table, "to validate on real hardware" means "not yet confirmed on a wide range of hardware".
 
@@ -78,7 +78,7 @@ These controllers lock about a minute after connecting if Zwift has not "unlocke
 | Other UI elements (richer overlay, Android permission banner, notification icon) | Compiles; **not yet exercised on screen**: to check visually |
 | Network OBC (mDNS + TCP) and DirCon | Tested with simulated clients; **not yet with real apps** |
 | BLE connection to controllers, vibration, Bluetooth OBC | Written, **to validate on real hardware** |
-| Heart rate: 0x2A37 decoding, scan, source with reconnection, 0x180D service republished by the proxy (local read, write refused), proxy restart on sensor change | Tested with fake sensors and a fake trainer; **not yet with a real strap, nor with TPV / MyWhoosh / Rouvy** (whether an app accepts heart rate from a DirCon trainer is to be validated) |
+| Heart rate: 0x2A37 decoding, scan, source with reconnection, 0x180D service republished by the proxy (local read, write refused), proxy restart on sensor change | Tested with fake sensors and a fake trainer; **not yet with a real strap, nor with TPV / Les jeux du cycle** (whether an app accepts heart rate from a DirCon trainer is to be validated) |
 | Click v2: `0x0A`/`0x0B` codes, Click v1 field meanings, paddle threshold | Assumptions to confirm with Diagnostic mode |
 | Android: the APK builds (Debug and Release) and the manifest is verified; the Bluetooth abstraction is covered by tests with a fake platform | Tested on the logic side |
 | Android: scan, GATT connection to controllers and trainer, peripheral Bluetooth OBC, foreground service, mDNS on Android | Written, **never run on a device**: to validate on real hardware (Bluetooth does not work in the emulator) |

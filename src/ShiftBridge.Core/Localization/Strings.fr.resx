@@ -363,7 +363,7 @@
   <data name="Diag_Verbose" xml:space="preserve"><value>Journal détaillé (toutes les trames)</value></data>
   <data name="Diag_AddNote" xml:space="preserve"><value>Ajouter une note</value></data>
   <data name="Diag_NoteTip" xml:space="preserve"><value>Ex. : j'appuie sur le bouton latéral de la manette gauche</value></data>
-  <data name="Apps_Intro" xml:space="preserve"><value>Dans les réglages de contrôleurs de votre application (TrainingPeaks Virtual, MyWhoosh, Rouvy…), choisissez « ShiftBridge ».</value></data>
+  <data name="Apps_Intro" xml:space="preserve"><value>Dans les réglages de contrôleurs de votre application (TrainingPeaks Virtual, Les jeux du cycle), choisissez « ShiftBridge ».</value></data>
   <data name="Apps_HowConnects" xml:space="preserve"><value>Comment votre application se connecte</value></data>
   <data name="Apps_WifiLan" xml:space="preserve"><value>Wi-Fi / réseau local</value></data>
   <data name="Apps_AtLeastOne" xml:space="preserve"><value>Activez au moins une option. Zwift n'utilise pas ce mode : gardez vos manettes appairées directement à Zwift.</value></data>

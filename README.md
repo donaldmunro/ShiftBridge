@@ -12,7 +12,7 @@ Utilisez vos manettes **Zwift Play, Click, Click v2 et Ride** dans d'autres appl
 Zwift Play/Click/Ride ──BLE──▶ ShiftBridge (PC) ──OpenBikeControl──▶ appli d'entraînement ──FTMS──▶ trainer
 ```
 
-ShiftBridge traduit chaque appui en action (vitesse +/−, navigation…). **C'est l'appli d'entraînement qui applique le virtual shifting** sur votre trainer (Zwift Hub, Cog…), selon sa propre courbe de rapports.
+ShiftBridge traduit chaque appui en action (vitesse +/−, navigation…). **C'est l'appli d'entraînement qui applique le virtual shifting** sur votre trainer, selon sa propre courbe de rapports.
 
 **Zwift lui-même n'implémente pas OpenBikeControl** : pour jouer sur Zwift, appairez vos manettes directement à Zwift, sans ShiftBridge.
 
@@ -22,7 +22,7 @@ ShiftBridge traduit chaque appui en action (vitesse +/−, navigation…). **C'e
 2. Page **Appareils** → *Rechercher les manettes* → *Connecter*.
 3. Page **Touches** : choisissez l'action de chaque touche (le voyant s'allume quand vous appuyez).
 4. Page **Application** : activez *Bluetooth*, *Réseau* ou *DirCon*, puis choisissez OpenBikeControl dans l'appli cible.
-   - Réseau : MyWhoosh, Incyclist, Vieta… — DirCon : TrainingPeaks Virtual en réseau — Bluetooth : TPV, Biketerra, icTrainer…
+   - Réseau (OpenBikeControl en réseau local) — DirCon : TrainingPeaks Virtual en réseau — Bluetooth : TrainingPeaks Virtual
    - Le Bluetooth nécessite un adaptateur supportant le rôle « périphérique ». Sinon, utilisez Réseau.
 5. Page **Réglages** → *Affichage* (Windows) : *Afficher la vitesse virtuelle par-dessus le jeu* affiche la vitesse virtuelle (barre des vitesses, clignotement à chaque changement, puissance, cadence et vitesse du trainer en option) au-dessus de votre appli ; glissez-la pour la déplacer, molette pour la redimensionner. Dans la page **Trainer**, *Activer automatiquement au lancement* rétablit le virtual shifting avec le dernier trainer, à la dernière vitesse.
 6. Page **Touches** : pour « vitesse + » et « vitesse − », la case *Répéter* enchaîne les changements tant que la touche est tenue (vitesse réglable dans la carte du haut de la page : Lente, Normale, Rapide par défaut, Très rapide ; `RepeatSpeed` dans `config.json`).
@@ -48,7 +48,7 @@ Même logique que sur Windows (mêmes manettes, mêmes touches, même virtual sh
 
 | Où tourne votre appli d'entraînement ? | Connexion à utiliser |
 |---|---|
-| **Sur le même appareil Android** (MyWhoosh, Rouvy…) | Onglet **Appli** → *Wi-Fi / réseau local*, puis dans l'appli cible choisissez OpenBikeControl à l'adresse `127.0.0.1` (adresse et port affichés dans l'onglet). Le Bluetooth « périphérique » ne sert pas dans ce cas. |
+| **Sur le même appareil Android** | Onglet **Appli** → *Wi-Fi / réseau local*, puis dans l'appli cible choisissez OpenBikeControl à l'adresse `127.0.0.1` (adresse et port affichés dans l'onglet). Le Bluetooth « périphérique » ne sert pas dans ce cas. |
 | **Sur un autre appareil** (PC, Apple TV…) | *Bluetooth* si votre appareil sait annoncer un service (sinon l'option l'indique), ou *Wi-Fi / réseau local* / DirCon. |
 
 À savoir :
@@ -63,7 +63,7 @@ Même logique que sur Windows (mêmes manettes, mêmes touches, même virtual sh
 
 Ces manettes se verrouillent environ une minute après la connexion si Zwift ne les a pas « déverrouillées » dans les dernières 24 h (le service Zwift n'est alors plus exposé). ShiftBridge détecte le verrouillage et reconnecte automatiquement ; pour un déverrouillage durable, ouvrez l'application Zwift, connectez la manette 10 à 30 s, fermez Zwift complètement, puis revenez dans ShiftBridge. L'assistant intégré est prévu pour une version suivante.
 
-## État du projet (v0.16.3)
+## État du projet (v0.16.4)
 
 > **Testé avec un matériel limité.** ShiftBridge a été essayé par son auteur sur un petit nombre de manettes, d'appareils et d'applications. D'autres modèles, trainers, firmwares ou applications peuvent se comporter différemment : considérez-le comme une **bêta**. Les retours sont bienvenus (page *Réglages* → journal de diagnostic, puis une [issue GitHub](https://github.com/renoua/ShiftBridge/issues)). Dans le tableau, « à valider sur matériel réel » signifie « pas encore confirmé sur un éventail large de matériel ».
 
@@ -78,7 +78,7 @@ Ces manettes se verrouillent environ une minute après la connexion si Zwift ne 
 | Autres éléments d'interface (superposition enrichie, bandeau de permission Android, icône de notification) | Compile ; **pas encore exercés à l'écran** : à vérifier visuellement |
 | OBC réseau (mDNS + TCP) et DirCon | Testé avec des clients simulés ; **pas encore avec de vraies applications** |
 | Connexion BLE aux manettes, vibration, OBC Bluetooth | Écrit, **à valider sur matériel réel** |
-| Cardio : décodage 0x2A37, recherche, source avec reconnexion, service 0x180D republié par le proxy (lecture locale, écriture refusée), redémarrage du proxy au changement de capteur | Testé avec de faux capteurs et un faux trainer ; **pas encore avec une vraie ceinture, ni avec TPV / MyWhoosh / Rouvy** (qu'une appli accepte la FC d'un trainer DirCon est à valider) |
+| Cardio : décodage 0x2A37, recherche, source avec reconnexion, service 0x180D republié par le proxy (lecture locale, écriture refusée), redémarrage du proxy au changement de capteur | Testé avec de faux capteurs et un faux trainer ; **pas encore avec une vraie ceinture, ni avec TPV / Les jeux du cycle** (qu'une appli accepte la FC d'un trainer DirCon est à valider) |
 | Click v2 : codes `0x0A`/`0x0B`, sens des champs du Click v1, seuil des palettes | Hypothèses à confirmer avec le mode Diagnostic |
 | Android : l'APK se compile (Debug et Release) et le manifeste est vérifié ; l'abstraction Bluetooth est couverte par des tests avec une fausse plateforme | Testé côté logique |
 | Android : scan, connexion GATT des manettes et du trainer, OBC Bluetooth périphérique, service de premier plan, mDNS sous Android | Écrit, **jamais exécuté sur un appareil** : à valider sur matériel réel (le Bluetooth ne fonctionne pas dans l'émulateur) |

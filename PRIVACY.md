@@ -20,7 +20,7 @@ Pour fonctionner, ShiftBridge lit et relaie en temps réel, sur votre appareil :
 - la fréquence cardiaque d'une ceinture ou d'une montre Bluetooth, si vous en connectez une ;
 - les noms et adresses Bluetooth des appareils que vous choisissez de connecter.
 
-Ces informations ne sont transmises **qu'à l'application d'entraînement que vous avez choisie** (TrainingPeaks Virtual, MyWhoosh, Rouvy…), par Bluetooth ou sur votre réseau local (OpenBikeControl, DirCon). Elles ne sortent jamais vers Internet. Ce que fait ensuite cette application est régi par sa propre politique.
+Ces informations ne sont transmises **qu'à l'application d'entraînement que vous avez choisie** (TrainingPeaks Virtual, Les jeux du cycle), par Bluetooth ou sur votre réseau local (OpenBikeControl, DirCon). Elles ne sortent jamais vers Internet. Ce que fait ensuite cette application est régi par sa propre politique.
 
 ### Mises à jour (Windows uniquement)
 La version Windows cherche une nouvelle version de ShiftBridge au lancement, puis une fois par jour, en interrogeant l'API publique de GitHub (`api.github.com`) ; si vous choisissez de mettre à jour, le nouveau fichier est téléchargé depuis `github.com`. Comme toute requête Internet, elle révèle votre adresse IP à GitHub et indique la version de l'application ; aucune autre donnée (appareils, réglages, mesures) n'est envoyée, et rien n'est transmis au développeur. Vous pouvez la désactiver dans **Réglages → Mises à jour**. La version Android est mise à jour par le Play Store et n'effectue pas cette requête.
@@ -57,7 +57,7 @@ To work, ShiftBridge reads and relays in real time, on your device:
 - heart rate from a Bluetooth strap or watch, if you connect one;
 - the names and Bluetooth addresses of the devices you choose to connect.
 
-This information is passed **only to the training app you chose** (TrainingPeaks Virtual, MyWhoosh, Rouvy…), over Bluetooth or your local network (OpenBikeControl, DirCon). It never leaves for the Internet. What that app does with it is governed by its own policy.
+This information is passed **only to the training app you chose** (TrainingPeaks Virtual, Les jeux du cycle), over Bluetooth or your local network (OpenBikeControl, DirCon). It never leaves for the Internet. What that app does with it is governed by its own policy.
 
 ### Updates (Windows only)
 The Windows version checks for a new ShiftBridge release at startup, then once a day, by querying GitHub's public API (`api.github.com`); if you choose to update, the new file is downloaded from `github.com`. Like any Internet request, it reveals your IP address to GitHub and states the app version; no other data (devices, settings, measurements) is sent, and nothing is transmitted to the developer. You can turn it off in **Settings → Updates**. The Android version is updated by the Play Store and makes no such request.
