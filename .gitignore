@@ -9,3 +9,12 @@ apk/
 *.aab
 *.keystore
 *.jks
+
+# Scripts de build/publication, visuels de la fiche Play et clés : locaux, jamais publiés
+tools/
+store/
+keys/
+*.ps1
+*.pfx
+*.p12
+*.snk
