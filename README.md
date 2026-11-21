@@ -54,7 +54,7 @@ Même logique que sur Windows (mêmes manettes, mêmes touches, même virtual sh
 
 Ces manettes se verrouillent environ une minute après la connexion si Zwift ne les a pas « déverrouillées » dans les dernières 24 h (le service Zwift n'est alors plus exposé). ShiftBridge détecte le verrouillage et reconnecte automatiquement ; pour un déverrouillage durable, ouvrez l'application Zwift, connectez la manette 10 à 30 s, fermez Zwift complètement, puis revenez dans ShiftBridge. L'assistant intégré est prévu pour une version suivante.
 
-## État du projet (v0.15.5)
+## État du projet (v0.15.6)
 
 | Fonction | État |
 |---|---|

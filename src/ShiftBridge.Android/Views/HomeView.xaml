@@ -18,6 +18,14 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Bluetooth éteint : bouton d'activation (masqué si le bandeau de permission est déjà affiché) -->
+            <Border Style="{StaticResource Card}" Stroke="{StaticResource Danger}" IsVisible="{Binding ShowBluetoothOff}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{x:Static loc:Strings.Bt_OffBanner}" />
+                    <Button Text="{x:Static loc:Strings.Bt_Enable}" Command="{Binding EnableBluetoothCommand}" HorizontalOptions="Start" />
+                </VerticalStackLayout>
+            </Border>
+
             <!-- Prochaine étape (masquée quand tout est en place) -->
             <Border Style="{StaticResource Card}" Stroke="{StaticResource Accent}" IsVisible="{Binding HasNextStep}">
                 <VerticalStackLayout Spacing="8">

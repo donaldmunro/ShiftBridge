@@ -25,7 +25,13 @@ public sealed class AndroidBlePlatform : IBlePlatform
     public IObcTransport CreateObcPeripheral() => new AndroidObcPeripheral(_context);
 
     /// <summary>Vrai si le Bluetooth est présent et activé.</summary>
-    public bool IsBluetoothEnabled => AndroidBle.Adapter(_context) is { IsEnabled: true };
+    public bool IsBluetoothEnabled => IsBluetoothOn(_context);
+
+    public static bool IsBluetoothOn(Context context)
+    {
+        try { return AndroidBle.Adapter(context) is { IsEnabled: true }; }
+        catch (Java.Lang.SecurityException) { return true; } // permission refusée : le bandeau de permission prend le relais
+    }
 }
 
 internal static class AndroidBle

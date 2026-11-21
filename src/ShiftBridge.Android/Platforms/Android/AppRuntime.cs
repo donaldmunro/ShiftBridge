@@ -92,6 +92,61 @@ internal sealed class MauiAppHost : IAppHost
         catch { /* écran absent sur cet appareil */ }
     }
 
+    public bool IsBluetoothOn => AndroidBlePlatform.IsBluetoothOn(global::Android.App.Application.Context);
+
+    private static long _lastBluetoothRequestTicks;
+
+    /// <summary>Demande système « Autoriser ShiftBridge à activer le Bluetooth ? ». Anti-rebond : pas de seconde fenêtre empilée.</summary>
+    public void RequestBluetoothOn()
+    {
+        long now = Environment.TickCount64;
+        if (now - Interlocked.Exchange(ref _lastBluetoothRequestTicks, now) < 2000) return;
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            try
+            {
+                var intent = new global::Android.Content.Intent(global::Android.Bluetooth.BluetoothAdapter.ActionRequestEnable);
+                if (Microsoft.Maui.ApplicationModel.Platform.CurrentActivity is { } activity) activity.StartActivityForResult(intent, MainActivity.BluetoothEnableRequestCode);
+                else
+                {
+                    intent.AddFlags(global::Android.Content.ActivityFlags.NewTask);
+                    global::Android.App.Application.Context.StartActivity(intent);
+                }
+            }
+            catch { /* BLUETOOTH_CONNECT refusée (le bandeau de permission l'explique) ou écran absent */ }
+        });
+    }
+
+    public bool IsWifiOn
+    {
+        get
+        {
+            try
+            {
+                var cm = global::Android.App.Application.Context.GetSystemService(global::Android.Content.Context.ConnectivityService)
+                    as global::Android.Net.ConnectivityManager;
+                var caps = cm?.GetNetworkCapabilities(cm.ActiveNetwork);
+                return caps is not null && (caps.HasTransport(global::Android.Net.TransportType.Wifi) ||
+                                            caps.HasTransport(global::Android.Net.TransportType.Ethernet));
+            }
+            catch { return true; } // état illisible : on ne bloque pas l'utilisateur
+        }
+    }
+
+    public void RequestWifiOn()
+    {
+        try
+        {
+            string action = OperatingSystem.IsAndroidVersionAtLeast(29)
+                ? global::Android.Provider.Settings.Panel.ActionWifi
+                : global::Android.Provider.Settings.ActionWifiSettings;
+            var intent = new global::Android.Content.Intent(action);
+            intent.AddFlags(global::Android.Content.ActivityFlags.NewTask);
+            global::Android.App.Application.Context.StartActivity(intent);
+        }
+        catch { /* aucun écran Wi-Fi disponible */ }
+    }
+
     public void OpenUrl(string url)
     {
         try

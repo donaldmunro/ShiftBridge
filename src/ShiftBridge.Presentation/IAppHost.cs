@@ -22,6 +22,18 @@ public interface IAppHost
     /// <summary>Ouvre les réglages d'optimisation de la batterie (Android : sans exclusion, le système peut tuer le pont).</summary>
     void OpenBatterySettings() { }
 
+    /// <summary>Bluetooth allumé ? Toujours vrai là où l'hôte ne peut pas le savoir (Windows).</summary>
+    bool IsBluetoothOn => true;
+
+    /// <summary>Affiche la demande système d'activation du Bluetooth. La reprise passe par <c>MainViewModel.OnBluetoothTurnedOn</c>.</summary>
+    void RequestBluetoothOn() { }
+
+    /// <summary>Appareil connecté à un réseau local (Wi-Fi ou Ethernet) ? Toujours vrai là où l'hôte ne peut pas le savoir.</summary>
+    bool IsWifiOn => true;
+
+    /// <summary>Ouvre le panneau Wi-Fi (Android ne permet plus à une appli de l'activer elle-même).</summary>
+    void RequestWifiOn() { }
+
     /// <summary>Ouvre une adresse https dans le navigateur par défaut ; ne lève jamais d'exception.</summary>
     void OpenUrl(string url) { }
 }

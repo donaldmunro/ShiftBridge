@@ -455,6 +455,11 @@
   <data name="Err_LocksUnavailable" xml:space="preserve"><value>Verrous système indisponibles : {0}</value></data>
   <data name="Perm_BluetoothDenied" xml:space="preserve"><value>Bluetooth non autorisé : ShiftBridge ne peut trouver aucune manette. Autorisez « Appareils à proximité » dans les réglages de l'application.</value></data>
   <data name="Perm_LocationNeeded" xml:space="preserve"><value>Autorisation non accordée : Android exige la localisation pour chercher des appareils Bluetooth. Autorisez-la dans les réglages de l'application.</value></data>
+  <data name="Bt_Off" xml:space="preserve"><value>Bluetooth désactivé : activez-le pour lancer la recherche.</value></data>
+  <data name="Bt_OffBanner" xml:space="preserve"><value>Bluetooth désactivé : ShiftBridge ne peut trouver aucune manette tant qu'il n'est pas activé.</value></data>
+  <data name="Bt_Enable" xml:space="preserve"><value>Activer le Bluetooth</value></data>
+  <data name="Wifi_Off" xml:space="preserve"><value>Wi-Fi non connecté : connectez-vous au même réseau que le trainer, puis réessayez.</value></data>
+  <data name="Log_NetworkNoWifi" xml:space="preserve"><value>Transports réseau activés mais l'appareil n'est pas en Wi-Fi : les autres applis ne pourront pas joindre ShiftBridge.</value></data>
   <data name="Err_ForegroundService" xml:space="preserve"><value>Service de premier plan impossible : {0}</value></data>
   <data name="Lang_Label" xml:space="preserve"><value>Langue</value></data>
   <data name="Lang_Auto" xml:space="preserve"><value>Automatique (langue du système)</value></data>

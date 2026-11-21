@@ -29,7 +29,7 @@ internal sealed class AndroidBleScanner(Context context) : IBleScanner
             try
             {
                 var scanner = AndroidBle.Adapter(context)?.BluetoothLeScanner;
-                if (scanner is null) { Stopped?.Invoke("Bluetooth désactivé ou indisponible"); return; }
+                if (scanner is null) { Stopped?.Invoke("Bluetooth off or unavailable"); return; }
 
                 var settings = new ScanSettings.Builder()!.SetScanMode(global::Android.Bluetooth.LE.ScanMode.Balanced)!.Build()!;
                 _handler = new ScanHandler(this);

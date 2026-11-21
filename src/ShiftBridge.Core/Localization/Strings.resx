@@ -455,6 +455,11 @@
   <data name="Err_LocksUnavailable" xml:space="preserve"><value>System locks unavailable: {0}</value></data>
   <data name="Perm_BluetoothDenied" xml:space="preserve"><value>Bluetooth not allowed: ShiftBridge cannot find any controller. Allow “Nearby devices” in the app settings.</value></data>
   <data name="Perm_LocationNeeded" xml:space="preserve"><value>Permission not granted: Android requires location access to scan for Bluetooth devices. Allow it in the app settings.</value></data>
+  <data name="Bt_Off" xml:space="preserve"><value>Bluetooth is off: turn it on to search for devices.</value></data>
+  <data name="Bt_OffBanner" xml:space="preserve"><value>Bluetooth is off: ShiftBridge cannot find any controller until you turn it on.</value></data>
+  <data name="Bt_Enable" xml:space="preserve"><value>Turn on Bluetooth</value></data>
+  <data name="Wifi_Off" xml:space="preserve"><value>Not connected to Wi-Fi: connect to the same network as the trainer, then try again.</value></data>
+  <data name="Log_NetworkNoWifi" xml:space="preserve"><value>Network transports enabled but the device is not on Wi-Fi: other apps will not reach ShiftBridge.</value></data>
   <data name="Err_ForegroundService" xml:space="preserve"><value>Could not start the foreground service: {0}</value></data>
   <data name="Lang_Label" xml:space="preserve"><value>Language</value></data>
   <data name="Lang_Auto" xml:space="preserve"><value>Automatic (system language)</value></data>

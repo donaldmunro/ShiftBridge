@@ -343,6 +343,7 @@ public sealed partial class MainViewModel : ObservableObject
         AutoReconnect = _config.AutoReconnect;
         _bridge.AutoConnectKnown();
         await ApplyTransportsAsync();
+        if ((EnableNetwork || EnableDirCon) && !_host.IsWifiOn) AppendLog(Strings.Log_NetworkNoWifi);
         StartScan();
         _ = StartSensorsAndProxyAsync();
     }
@@ -385,9 +386,61 @@ public sealed partial class MainViewModel : ObservableObject
 
     // ---------- Appareils ----------
 
+    // ---------- Radios (Bluetooth / Wi-Fi) ----------
+
+    /// <summary>Bluetooth coupé : bandeau de l'Accueil avec un bouton d'activation (renseigné par l'hôte).</summary>
+    [ObservableProperty] private bool _bluetoothOff;
+    partial void OnBluetoothOffChanged(bool value) => OnPropertyChanged(nameof(ShowBluetoothOff));
+    partial void OnHasPermissionProblemChanged(bool value) => OnPropertyChanged(nameof(ShowBluetoothOff));
+
+    /// <summary>Bandeau « Bluetooth éteint », masqué tant que le bandeau de permission (prioritaire) est affiché.</summary>
+    public bool ShowBluetoothOff => BluetoothOff && !HasPermissionProblem;
+
+    public void SetBluetoothOff(bool off) => _ui.Post(() => BluetoothOff = off);
+
+    private Action? _pendingBluetooth;
+
+    /// <summary>
+    /// Vrai si le Bluetooth est allumé. Sinon affiche la demande système et mémorise <paramref name="retry"/> : il est relancé par
+    /// <see cref="OnBluetoothTurnedOn"/> dès que l'utilisateur l'a activé (demande, réglages rapides ou réglages système).
+    /// </summary>
+    private bool EnsureBluetooth(Action? retry)
+    {
+        if (_host.IsBluetoothOn) return true;
+        _pendingBluetooth = retry;
+        SetBluetoothOff(true);
+        _host.RequestBluetoothOn();
+        return false;
+    }
+
+    /// <summary>Appelé par l'hôte quand le Bluetooth vient de s'allumer : relance la recherche des manettes et l'action en attente.</summary>
+    public void OnBluetoothTurnedOn() => _ui.Post(() =>
+    {
+        BluetoothOff = false;
+        var retry = _pendingBluetooth;
+        _pendingBluetooth = null;
+        StartScan();
+        retry?.Invoke();
+        if (!HeartRateConnected && !IsHeartRateBusy) _ = AutoConnectHeartRateAsync();
+    });
+
+    /// <summary>Vrai si l'appareil est sur un réseau local. Sinon explique et ouvre le panneau Wi-Fi.</summary>
+    private bool EnsureWifi()
+    {
+        if (_host.IsWifiOn) return true;
+        SetTrainerMessage(Strings.Wifi_Off);
+        _host.RequestWifiOn();
+        return false;
+    }
+
+    [RelayCommand]
+    private void EnableBluetooth() => _host.RequestBluetoothOn();
+
     [RelayCommand]
     private void StartScan()
     {
+        if (!EnsureBluetooth(null)) { IsScanning = false; return; }
+        SetBluetoothOff(false);
         _bridge.StartScan();
         IsScanning = _bridge.IsScanning;
     }
@@ -1018,6 +1071,7 @@ public sealed partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void FindBleTrainers()
     {
+        if (!EnsureBluetooth(FindBleTrainers)) { SetTrainerMessage(Strings.Bt_Off); return; }
         // La liste n'est pas vidée : le trainer mémorisé ou sélectionné y reste, les autres s'y ajoutent au fil des annonces.
         _bridge.StartTrainerScan();
         IsScanningBle = true;
@@ -1058,6 +1112,7 @@ public sealed partial class MainViewModel : ObservableObject
     [RelayCommand]
     private async Task FindTrainersAsync()
     {
+        if (!EnsureWifi()) return;
         IsSearchingTrainer = true;
         SetTrainerMessage(Strings.Wifi_Searching);
         try
@@ -1082,6 +1137,7 @@ public sealed partial class MainViewModel : ObservableObject
         TrainerEndpoint endpoint;
         if (UseBluetooth)
         {
+            if (!EnsureBluetooth(() => _ = StartProxyAsync())) { SetTrainerMessage(Strings.Bt_Off); return; }
             if (SelectedBleTrainer is not { } ble)
             {
                 SetTrainerMessage(Strings.Trainer_ChooseBle);
@@ -1092,6 +1148,7 @@ public sealed partial class MainViewModel : ObservableObject
         }
         else
         {
+            if (!EnsureWifi()) return;
             if (string.IsNullOrWhiteSpace(TrainerHost) || !int.TryParse(TrainerPortText, out int port) || port is < 1 or > 65535)
             {
                 SetTrainerMessage(Strings.Trainer_ChooseWifi);
@@ -1162,6 +1219,7 @@ public sealed partial class MainViewModel : ObservableObject
     {
         _hrFailed = false;
         if (IsScanningHeartRate) { _bridge.StopHeartRateScan(); IsScanningHeartRate = false; RefreshHeartRate(); return; }
+        if (!EnsureBluetooth(ToggleHeartRateScan)) { _hrFailed = true; HeartRateStatus = Strings.Bt_Off; return; }
         _bridge.StartHeartRateScan();
         IsScanningHeartRate = true;
         HeartRateStatus = Strings.Hr_Searching;
@@ -1189,6 +1247,7 @@ public sealed partial class MainViewModel : ObservableObject
     {
         if (IsHeartRateBusy) return;
         if (SelectedHeartRateSensor is not { } sensor) { HeartRateStatus = Strings.Hr_ChooseSensor; return; }
+        if (!EnsureBluetooth(() => _ = ConnectHeartRateAsync())) { _hrFailed = true; HeartRateStatus = Strings.Bt_Off; return; }
         IsHeartRateBusy = true;
         IsScanningHeartRate = false;
         _hrFailed = false;

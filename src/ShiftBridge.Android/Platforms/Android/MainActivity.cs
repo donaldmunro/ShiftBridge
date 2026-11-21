@@ -4,6 +4,7 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
+using ShiftBridge.Platform.Android;
 
 namespace ShiftBridge.Mobile;
 
@@ -13,10 +14,17 @@ namespace ShiftBridge.Mobile;
 public class MainActivity : MauiAppCompatActivity
 {
     private const int PermissionRequestCode = 4001;
+    internal const int BluetoothEnableRequestCode = 4002;
+
+    private BluetoothStateReceiver? _bluetoothReceiver;
 
     protected override void OnCreate(Bundle? savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
+
+        // Suit l'état du Bluetooth : la demande d'activation, les réglages rapides et les réglages système aboutissent tous ici.
+        _bluetoothReceiver = new BluetoothStateReceiver();
+        RegisterReceiver(_bluetoothReceiver, new IntentFilter(global::Android.Bluetooth.BluetoothAdapter.ActionStateChanged));
 
         var missing = BridgePermissions.Missing(this);
         UpdatePermissionBanner();
@@ -33,6 +41,27 @@ public class MainActivity : MauiAppCompatActivity
         {
             UpdatePermissionBanner();
             StartBridge();
+        }
+    }
+
+    protected override void OnDestroy()
+    {
+        if (_bluetoothReceiver is not null)
+        {
+            try { UnregisterReceiver(_bluetoothReceiver); } catch { /* déjà désenregistré */ }
+            _bluetoothReceiver = null;
+        }
+        base.OnDestroy();
+    }
+
+    private sealed class BluetoothStateReceiver : BroadcastReceiver
+    {
+        public override void OnReceive(Context? context, Intent? intent)
+        {
+            if (intent?.Action != global::Android.Bluetooth.BluetoothAdapter.ActionStateChanged) return;
+            var state = (global::Android.Bluetooth.State)intent.GetIntExtra(global::Android.Bluetooth.BluetoothAdapter.ExtraState, -1);
+            if (state == global::Android.Bluetooth.State.On) AppRuntime.ViewModel.OnBluetoothTurnedOn();
+            else if (state == global::Android.Bluetooth.State.Off) AppRuntime.ViewModel.SetBluetoothOff(true);
         }
     }
 
@@ -55,6 +84,7 @@ public class MainActivity : MauiAppCompatActivity
         string? problem = BridgePermissions.BluetoothProblem(this);
         _bluetoothWasMissing = problem is not null;
         AppRuntime.ViewModel.SetPermissionProblem(problem);
+        AppRuntime.ViewModel.SetBluetoothOff(!AndroidBlePlatform.IsBluetoothOn(this));
     }
 
     private void StartBridge()
