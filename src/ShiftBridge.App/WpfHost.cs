@@ -19,6 +19,11 @@ internal sealed class WpfAppHost : IAppHost
 {
     public string AppVersion { get; } = typeof(WpfAppHost).Assembly.GetName().Version?.ToString(3) ?? "?";
 
+    public IAppUpdater? Updater { get; } = new Updates.GitHubUpdater(typeof(WpfAppHost).Assembly.GetName().Version?.ToString(3) ?? "0.0.0");
+
+    public bool Confirm(string message) =>
+        MessageBox.Show(message, "ShiftBridge", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
+
     public void CopyText(string text)
     {
         try { Clipboard.SetText(text); } catch { /* presse-papiers occupé */ }

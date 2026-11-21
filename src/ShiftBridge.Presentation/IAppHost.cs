@@ -34,6 +34,12 @@ public interface IAppHost
     /// <summary>Ouvre le panneau Wi-Fi (Android ne permet plus à une appli de l'activer elle-même).</summary>
     void RequestWifiOn() { }
 
+    /// <summary>Pose une question oui/non à l'utilisateur. Vrai par défaut là où l'hôte n'a pas de boîte de dialogue.</summary>
+    bool Confirm(string message) => true;
+
+    /// <summary>Mise à jour intégrée ; null là où l'application est mise à jour par une boutique (Android).</summary>
+    IAppUpdater? Updater => null;
+
     /// <summary>Ouvre une adresse https dans le navigateur par défaut ; ne lève jamais d'exception.</summary>
     void OpenUrl(string url) { }
 }

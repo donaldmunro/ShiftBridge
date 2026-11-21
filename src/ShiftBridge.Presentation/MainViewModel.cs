@@ -117,6 +117,7 @@ public sealed partial class MainViewModel : ObservableObject
         _startMinimized = _config.StartMinimized;
         _minimizeToTray = _config.MinimizeToTray;
         _startWithWindows = _config.StartWithWindows;
+        _checkForUpdates = _config.CheckForUpdates;
         _selectedLanguage = LanguageOptions.First(o => o.Code == AppLanguage.Normalize(_config.Language));
         _selectedRepeatSpeed = RepeatSpeedOptions.First(o => o.Speed == _config.RepeatSpeed);
         _loading = false;
@@ -346,6 +347,7 @@ public sealed partial class MainViewModel : ObservableObject
         if ((EnableNetwork || EnableDirCon) && !_host.IsWifiOn) AppendLog(Strings.Log_NetworkNoWifi);
         StartScan();
         _ = StartSensorsAndProxyAsync();
+        StartUpdateLoop();
     }
 
     private async Task StartSensorsAndProxyAsync()
@@ -381,6 +383,7 @@ public sealed partial class MainViewModel : ObservableObject
     {
         _config.AutoReconnect = AutoReconnect;
         SaveConfig();
+        _updateCts.Cancel();
         await _bridge.DisposeAsync();
     }
 
@@ -1400,6 +1403,132 @@ public sealed partial class MainViewModel : ObservableObject
     partial void OnStartMinimizedChanged(bool value) { if (!_loading) { _config.StartMinimized = value; SaveConfig(); } }
     partial void OnMinimizeToTrayChanged(bool value) { if (!_loading) { _config.MinimizeToTray = value; SaveConfig(); } }
     partial void OnStartWithWindowsChanged(bool value) { if (!_loading) { _config.StartWithWindows = value; SaveConfig(); } }
+
+    // ---------- Mises à jour (Windows) ----------
+
+    private static readonly TimeSpan UpdateFirstDelay = TimeSpan.FromSeconds(15);
+    private static readonly TimeSpan UpdateInterval = TimeSpan.FromHours(24);
+
+    private readonly CancellationTokenSource _updateCts = new();
+    private ShiftBridge.Core.Updates.UpdateInfo? _pendingUpdate;
+    private bool _updateDismissed;
+
+    [ObservableProperty] private bool _checkForUpdates;
+    [ObservableProperty] private bool _updateAvailable;
+    [ObservableProperty] private bool _isUpdating;
+    [ObservableProperty] private bool _isCheckingUpdates;
+    [ObservableProperty] private string _updateText = "";
+    [ObservableProperty] private string _updateProgressText = "";
+    [ObservableProperty] private string _updateStatus = "";
+
+    /// <summary>L'hôte sait se mettre à jour (Windows) : affiche la carte « Mises à jour » des Réglages.</summary>
+    public bool HasUpdater => _host.Updater is not null;
+
+    partial void OnCheckForUpdatesChanged(bool value)
+    {
+        if (_loading) return;
+        _config.CheckForUpdates = value;
+        SaveConfig();
+    }
+
+    private void StartUpdateLoop()
+    {
+        if (_host.Updater is null) return;
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                var ct = _updateCts.Token;
+                await Task.Delay(UpdateFirstDelay, ct);
+                while (!ct.IsCancellationRequested)
+                {
+                    if (CheckForUpdates && !IsUpdating) await CheckUpdatesAsync(manual: false);
+                    await Task.Delay(UpdateInterval, ct);
+                }
+            }
+            catch (OperationCanceledException) { /* arrêt de l'application */ }
+        });
+    }
+
+    /// <summary>Interroge GitHub. En automatique, un échec reste silencieux (journal seulement) ; en manuel, l'état s'affiche dans les Réglages.</summary>
+    private async Task CheckUpdatesAsync(bool manual)
+    {
+        var updater = _host.Updater;
+        if (updater is null) return;
+        _ui.Post(() => { IsCheckingUpdates = true; if (manual) UpdateStatus = ""; });
+        try
+        {
+            var update = await updater.CheckAsync(_updateCts.Token);
+            _ui.Post(() =>
+            {
+                _pendingUpdate = update;
+                if (update is null)
+                {
+                    UpdateAvailable = false;
+                    if (manual) UpdateStatus = Loc.Fmt(Strings.Update_UpToDate, _host.AppVersion);
+                    return;
+                }
+                UpdateText = Loc.Fmt(Strings.Update_Available, update.Version.ToString(3));
+                UpdateStatus = UpdateText;
+                if (!_updateDismissed || manual) { _updateDismissed = false; UpdateAvailable = true; }
+            });
+        }
+        catch (OperationCanceledException) { throw; }
+        catch (Exception ex)
+        {
+            AppendLog($"Mise à jour : vérification impossible ({ex.Message})");
+            if (manual) _ui.Post(() => UpdateStatus = Strings.Update_CheckFailed);
+        }
+        finally { _ui.Post(() => IsCheckingUpdates = false); }
+    }
+
+    [RelayCommand]
+    private Task CheckUpdatesNow() => IsUpdating || IsCheckingUpdates ? Task.CompletedTask : CheckUpdatesAsync(manual: true);
+
+    [RelayCommand]
+    private void DismissUpdate()
+    {
+        _updateDismissed = true;
+        UpdateAvailable = false;
+    }
+
+    [RelayCommand]
+    private void OpenReleaseNotes()
+    {
+        if (_pendingUpdate is { PageUrl.Length: > 0 } u) _host.OpenUrl(u.PageUrl);
+    }
+
+    [RelayCommand]
+    private async Task ApplyUpdate()
+    {
+        var updater = _host.Updater;
+        var update = _pendingUpdate;
+        if (updater is null || update is null || IsUpdating) return;
+
+        // Sans empreinte vérifiable ou dossier non inscriptible : on ne remplace rien nous-mêmes, la page de la release s'ouvre.
+        if (!updater.CanSelfUpdate(update))
+        {
+            _host.OpenUrl(update.PageUrl);
+            return;
+        }
+        if (ProxyActive && !_host.Confirm(Strings.Update_ConfirmProxy)) return;
+
+        IsUpdating = true;
+        UpdateProgressText = Loc.Fmt(Strings.Update_Downloading, 0);
+        try
+        {
+            var progress = new Progress<double>(p => UpdateProgressText = Loc.Fmt(Strings.Update_Downloading, (int)Math.Round(p * 100)));
+            string file = await updater.DownloadAsync(update, progress, _updateCts.Token);
+            UpdateProgressText = "";
+            updater.ApplyAndRestart(file); // ferme l'application ; si cela échoue, l'exception arrive ici
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            AppendLog($"Mise à jour : échec ({ex.Message})");
+            UpdateProgressText = Loc.Fmt(Strings.Update_Failed, ex.Message);
+        }
+        finally { IsUpdating = false; }
+    }
 
     /// <summary>Démarrage réduit demandé par la configuration (lu par MainWindow avant l'affichage).</summary>
     public bool ShouldStartMinimized => _config.StartMinimized;

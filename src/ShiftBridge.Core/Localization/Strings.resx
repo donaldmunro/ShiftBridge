@@ -492,4 +492,17 @@
   <data name="Devices_SecControllers" xml:space="preserve"><value>Zwift controllers</value></data>
   <data name="Common_Info" xml:space="preserve"><value>More information</value></data>
   <data name="Common_Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Update_Available" xml:space="preserve"><value>ShiftBridge {0} is available</value></data>
+  <data name="Update_Install" xml:space="preserve"><value>Update</value></data>
+  <data name="Update_Notes" xml:space="preserve"><value>Release notes</value></data>
+  <data name="Update_Later" xml:space="preserve"><value>Later</value></data>
+  <data name="Update_Downloading" xml:space="preserve"><value>Downloading… {0}%</value></data>
+  <data name="Update_Failed" xml:space="preserve"><value>Update failed: {0}</value></data>
+  <data name="Update_ConfirmProxy" xml:space="preserve"><value>Virtual shifting is active. Updating will disconnect your controllers for a few seconds while ShiftBridge restarts. Continue?</value></data>
+  <data name="Settings_SecUpdates" xml:space="preserve"><value>Updates</value></data>
+  <data name="Settings_CheckUpdates" xml:space="preserve"><value>Check for updates automatically</value></data>
+  <data name="Settings_CheckNow" xml:space="preserve"><value>Check now</value></data>
+  <data name="Update_UpToDate" xml:space="preserve"><value>ShiftBridge is up to date (v{0}).</value></data>
+  <data name="Update_CheckFailed" xml:space="preserve"><value>Could not check for updates.</value></data>
+  <data name="Settings_UpdatesHelp" xml:space="preserve"><value>Contacts github.com anonymously (no data other than your IP address and the app version) when the app starts, then once a day.</value></data>
 </root>

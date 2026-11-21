@@ -33,6 +33,12 @@ ShiftBridge traduit chaque appui en action (vitesse +/−, navigation…). **C'e
 
 Une seule instance de ShiftBridge peut tourner à la fois. La recherche des manettes s'arrête d'elle-même une fois toutes les manettes connues connectées (bouton *Rechercher* pour en ajouter une).
 
+## Mises à jour (Windows)
+
+Au lancement puis toutes les 24 h, ShiftBridge consulte la dernière release GitHub. Si une version plus récente existe, un bandeau apparaît sur l'Accueil : **Mettre à jour** télécharge le nouvel `exe`, vérifie son SHA-256 (publié par GitHub), remplace l'exe en place et redémarre ; **Notes de version** ouvre la page de la release. Si le dossier de l'exe n'est pas inscriptible, le bouton ouvre la page de la release pour un remplacement manuel. La vérification se désactive dans **Réglages → Mises à jour** (une requête anonyme vers `api.github.com`, voir [PRIVACY.md](PRIVACY.md)). Sous Android, c'est le Play Store qui met à jour l'application.
+
+Pour publier : créer la release GitHub avec le fichier **`ShiftBridge.exe`** (ce nom exact) et un tag `vX.Y.Z`. Les préversions et brouillons sont ignorés. Pour tester sans publier : `SHIFTBRIDGE_UPDATE_FEED=http://localhost:8000/latest.json` remplace l'adresse de l'API.
+
 ## Android
 
 Même logique que sur Windows (mêmes manettes, mêmes touches, même virtual shifting), dans une application pour téléphone ou tablette Android 8.0 (API 26) ou plus. Le cœur est partagé avec la version Windows : seuls l'accès Bluetooth et l'interface changent.
@@ -54,7 +60,7 @@ Même logique que sur Windows (mêmes manettes, mêmes touches, même virtual sh
 
 Ces manettes se verrouillent environ une minute après la connexion si Zwift ne les a pas « déverrouillées » dans les dernières 24 h (le service Zwift n'est alors plus exposé). ShiftBridge détecte le verrouillage et reconnecte automatiquement ; pour un déverrouillage durable, ouvrez l'application Zwift, connectez la manette 10 à 30 s, fermez Zwift complètement, puis revenez dans ShiftBridge. L'assistant intégré est prévu pour une version suivante.
 
-## État du projet (v0.15.6)
+## État du projet (v0.16.0)
 
 | Fonction | État |
 |---|---|
