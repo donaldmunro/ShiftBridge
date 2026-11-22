@@ -41,10 +41,21 @@ public class BridgeForegroundService : Service
 
         EnsureChannel();
         var notification = BuildNotification();
-        if (OperatingSystem.IsAndroidVersionAtLeast(29))
-            StartForeground(NotificationId, notification, ForegroundService.TypeConnectedDevice);
-        else
-            StartForeground(NotificationId, notification);
+        try
+        {
+            if (OperatingSystem.IsAndroidVersionAtLeast(29))
+                StartForeground(NotificationId, notification, ForegroundService.TypeConnectedDevice);
+            else
+                StartForeground(NotificationId, notification);
+        }
+        catch (Exception ex)
+        {
+            // Permission de type refusée, ou démarrage interdit en arrière-plan : on ne plante pas, le pont reste actif dans l'activité.
+            Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(() =>
+                AppRuntime.ViewModel.ReportError(Loc.Fmt(Strings.Err_ForegroundService, ex.Message)));
+            StopSelf();
+            return StartCommandResult.NotSticky;
+        }
 
         AcquireLocks();
         Observe();
