@@ -3,6 +3,8 @@
 	<application android:allowBackup="false" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true" />
 
 	<uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
+	<!-- Les permissions Wi-Fi ci-dessous imposent implicitement la fonctionnalité wifi : le réseau est facultatif (le BLE suffit). -->
+	<uses-feature android:name="android.hardware.wifi" android:required="false" />
 
 	<!-- Bluetooth : modèle Android 12+ ; les anciennes permissions sont limitées aux versions précédentes -->
 	<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
