@@ -66,6 +66,8 @@ public enum ObcButtonId : byte
     // envoyées à l'appli d'entraînement.
     CenterGear = 0xF0,
     GoToGear = 0xF1,
+    ShiftUpBy = 0xF2,
+    ShiftDownBy = 0xF3,
 }
 
 public static class ObcButtonCatalog
@@ -78,6 +80,8 @@ public static class ObcButtonCatalog
         (ObcButtonId.ShiftDown, "Cat_Gears"),
         (ObcButtonId.CenterGear, "Cat_Gears"),
         (ObcButtonId.GoToGear, "Cat_Gears"),
+        (ObcButtonId.ShiftUpBy, "Cat_Gears"),
+        (ObcButtonId.ShiftDownBy, "Cat_Gears"),
         (ObcButtonId.Up, "Cat_Navigation"),
         (ObcButtonId.Down, "Cat_Navigation"),
         (ObcButtonId.Left, "Cat_Navigation"),
@@ -109,7 +113,7 @@ public static class ObcButtonCatalog
     ];
 
     /// <summary>Vrai pour une action propre à ShiftBridge (vitesse centrale, aller au rapport…) : jamais envoyée à l'appli, jamais filtrée par App Info.</summary>
-    public static bool IsInternal(ObcButtonId id) => id is ObcButtonId.CenterGear or ObcButtonId.GoToGear;
+    public static bool IsInternal(ObcButtonId id) => id is ObcButtonId.CenterGear or ObcButtonId.GoToGear or ObcButtonId.ShiftUpBy or ObcButtonId.ShiftDownBy;
 
     /// <summary>Libellés et catégories pour l'interface, dans la langue courante. Seuls les boutons numériques (appui/relâche) sont proposés.</summary>
     public static IReadOnlyList<(ObcButtonId Id, string Category, string Label)> Assignable =>

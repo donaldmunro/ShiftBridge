@@ -15,6 +15,9 @@ public sealed class ButtonBinding
 
     /// <summary>Rapport visé par l'action « Aller au rapport » (1..N) ; 0 = non réglé.</summary>
     public int GearTarget { get; set; }
+
+    /// <summary>Nombre de vitesses des actions « Monter / Descendre de X vitesses » (1..23) ; 0 = non réglé.</summary>
+    public int GearSteps { get; set; }
 }
 
 /// <summary>Clé d'un profil d'appli : l'AppId reçu dans App Info, sans espaces ni casse (« TrainingPeaks Virtual » = « trainingpeaks virtual »).</summary>
@@ -36,6 +39,7 @@ public sealed class Profile
             {
                 Actions = [.. v.Actions], RepeatOnHold = v.RepeatOnHold,
                 RepeatDelayMs = v.RepeatDelayMs, RepeatIntervalMs = v.RepeatIntervalMs, GearTarget = v.GearTarget,
+                GearSteps = v.GearSteps,
             };
         return p;
     }

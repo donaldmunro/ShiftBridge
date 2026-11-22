@@ -24,7 +24,7 @@ public sealed class VirtualGearState(int gearCount = 24, int initialGear = 12)
         else { GearCount = count; Gear = Math.Clamp(gear, 1, count); }
     }
 
-    /// <summary>Applique une action de vitesse. <paramref name="target"/> n'est lu que par « Aller au rapport ».</summary>
+    /// <summary>Applique une action de vitesse. <paramref name="target"/> n'est lu que par « Aller au rapport » (rapport visé) et « Monter / Descendre de X vitesses » (X).</summary>
     public GearChange Apply(ObcButtonId action, int target = 0)
     {
         switch (action)
@@ -41,6 +41,14 @@ public sealed class VirtualGearState(int gearCount = 24, int initialGear = 12)
                 if (Gear <= 1) return GearChange.AtBottomLimit;
                 Gear--;
                 return GearChange.Changed;
+            case ObcButtonId.ShiftUpBy:
+                if (target <= 0) return GearChange.None;
+                if (Gear >= GearCount) return GearChange.AtTopLimit;
+                return GoTo(Gear + target);
+            case ObcButtonId.ShiftDownBy:
+                if (target <= 0) return GearChange.None;
+                if (Gear <= 1) return GearChange.AtBottomLimit;
+                return GoTo(Gear - target);
             default:
                 return GearChange.None;
         }

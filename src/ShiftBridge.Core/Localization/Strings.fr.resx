@@ -19,6 +19,9 @@
   <data name="Action_ShiftDown" xml:space="preserve"><value>Vitesse inférieure</value></data>
   <data name="Action_CenterGear" xml:space="preserve"><value>Vitesse centrale</value></data>
   <data name="Action_GoToGear" xml:space="preserve"><value>Aller au rapport…</value></data>
+  <data name="Action_ShiftUpBy" xml:space="preserve"><value>Monter de X vitesses…</value></data>
+  <data name="Action_ShiftDownBy" xml:space="preserve"><value>Descendre de X vitesses…</value></data>
+  <data name="Buttons_GearStepsTip" xml:space="preserve"><value>Nombre de vitesses à changer (1 à 23) en un appui. Appliqué au trainer tant que le virtual shifting est actif ; sinon, l'appli reçoit autant d'appuis de vitesse.</value></data>
   <data name="Buttons_GearTargetTip" xml:space="preserve"><value>Rapport visé (1 à 24). Appliqué au trainer tant que le virtual shifting est actif ; sinon, seule la vitesse affichée par ShiftBridge change.</value></data>
   <data name="Profile_Label" xml:space="preserve"><value>Profil modifié</value></data>
   <data name="Profile_Default" xml:space="preserve"><value>Par défaut</value></data>

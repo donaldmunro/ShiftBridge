@@ -132,6 +132,12 @@
                                      Visibility="{Binding CanTarget, Converter={StaticResource BoolToVis}}"
                                      ToolTip="{x:Static loc:Strings.Buttons_GearTargetTip}"
                                      AutomationProperties.Name="{x:Static loc:Strings.Buttons_GearTargetTip}" />
+                            <!-- Seulement pour « Monter / Descendre de X vitesses » : nombre de vitesses -->
+                            <TextBox Grid.Column="2" Width="56" Margin="0,0,12,0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                     Text="{Binding GearStepsText}"
+                                     Visibility="{Binding CanStep, Converter={StaticResource BoolToVis}}"
+                                     ToolTip="{x:Static loc:Strings.Buttons_GearStepsTip}"
+                                     AutomationProperties.Name="{x:Static loc:Strings.Buttons_GearStepsTip}" />
                             <!-- Seulement pour les touches clavier / manette ajoutées -->
                             <Button Grid.Column="4" Content="&#xE711;" FontFamily="{StaticResource IconFont}" Padding="8,4" Margin="6,0,0,0"
                                     Style="{StaticResource GhostButton}" AutomationProperties.Name="{x:Static loc:Strings.Buttons_Remove}"

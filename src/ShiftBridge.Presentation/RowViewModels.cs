@@ -46,10 +46,10 @@ public sealed partial class ButtonRowViewModel : ObservableObject
 
     public ButtonRowViewModel(ButtonKey button, string group, string label, string? tooltip,
         IReadOnlyList<ActionItem> actions, ActionItem? selected, Action<ButtonRowViewModel> changed, bool repeatOnHold = false,
-        int gearTarget = 0)
+        int gearTarget = 0, int gearSteps = 0)
     {
         Button = button; Group = group; Label = label; Tooltip = tooltip; Actions = actions; _changed = changed;
-        SetSilently(selected, repeatOnHold, gearTarget);
+        SetSilently(selected, repeatOnHold, gearTarget, gearSteps);
     }
 
     public ButtonKey Button { get; }
@@ -82,6 +82,18 @@ public sealed partial class ButtonRowViewModel : ObservableObject
     /// <summary>Rapport proposé quand on choisit « Aller au rapport » : le rapport central.</summary>
     private const int DefaultGearTarget = 12;
 
+    /// <summary>Texte saisi pour « Monter / Descendre de X vitesses » ; <see cref="GearSteps"/> en est la valeur utilisable.</summary>
+    [ObservableProperty] private string _gearStepsText = "";
+
+    /// <summary>Nombre de vitesses (1..23), 0 tant que le champ est vide ou illisible.</summary>
+    public int GearSteps { get; private set; }
+
+    /// <summary>Le champ « nombre de vitesses » n'a de sens que pour « Monter / Descendre de X vitesses ».</summary>
+    public bool CanStep => Selected is { Id: ObcButtonId.ShiftUpBy or ObcButtonId.ShiftDownBy };
+
+    /// <summary>Nombre de vitesses proposé quand on choisit « Monter / Descendre de X vitesses ».</summary>
+    private const int DefaultGearSteps = 2;
+
     private bool _silent;
 
     partial void OnGearTargetTextChanged(string value)
@@ -90,10 +102,17 @@ public sealed partial class ButtonRowViewModel : ObservableObject
         if (!_silent) _changed(this);
     }
 
+    partial void OnGearStepsTextChanged(string value)
+    {
+        GearSteps = int.TryParse(value, out int n) ? Math.Clamp(n, 1, 23) : 0;
+        if (!_silent) _changed(this);
+    }
+
     partial void OnSelectedChanged(ActionItem? value)
     {
         OnPropertyChanged(nameof(CanRepeat));
         OnPropertyChanged(nameof(CanTarget));
+        OnPropertyChanged(nameof(CanStep));
         bool wasSilent = _silent;
         _silent = true;
         try
@@ -102,6 +121,8 @@ public sealed partial class ButtonRowViewModel : ObservableObject
                 RepeatOnHold = false; // une touche qui n'est plus « vitesse » ne doit pas garder une répétition invisible
             if (CanTarget && GearTarget == 0)
                 GearTargetText = DefaultGearTarget.ToString();
+            if (CanStep && GearSteps == 0)
+                GearStepsText = DefaultGearSteps.ToString();
         }
         finally { _silent = wasSilent; }
         if (!_silent) _changed(this);
@@ -113,12 +134,13 @@ public sealed partial class ButtonRowViewModel : ObservableObject
     }
 
     /// <summary>Met à jour la sélection sans redéclencher la sauvegarde (rechargement de profil).</summary>
-    public void SetSilently(ActionItem? item, bool repeatOnHold = false, int gearTarget = 0)
+    public void SetSilently(ActionItem? item, bool repeatOnHold = false, int gearTarget = 0, int gearSteps = 0)
     {
         _silent = true;
         try
         {
             GearTargetText = gearTarget > 0 ? gearTarget.ToString() : "";
+            GearStepsText = gearSteps > 0 ? gearSteps.ToString() : "";
             Selected = item;
             RepeatOnHold = repeatOnHold && CanRepeat;
         }

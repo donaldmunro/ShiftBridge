@@ -877,10 +877,10 @@ public sealed class BridgeService : IAsyncDisposable
 
         // Rapport virtuel + retour haptique sur appui uniquement.
         foreach (var (id, state) in changes.Where(c => c.State == 1))
-            ApplyGearAction(id, id == ObcButtonId.GoToGear ? GearTargetFor(events) : 0);
+            ApplyGearAction(id, GearParamFor(events, id));
         StartRepeaters(events, changes);
 
-        if (_proxy is not null && changes.Any(c => c.Id is ObcButtonId.ShiftUp or ObcButtonId.ShiftDown))
+        if (_proxy is not null && changes.Any(c => c.Id is ObcButtonId.ShiftUp or ObcButtonId.ShiftDown or ObcButtonId.ShiftUpBy or ObcButtonId.ShiftDownBy))
             Log?.Invoke("Vitesse appliquée par le proxy trainer (non envoyée à l'appli).");
     }
 
@@ -906,19 +906,56 @@ public sealed class BridgeService : IAsyncDisposable
     private void ApplyGearAction(ObcButtonId id, int target = 0)
     {
         GearChange change;
-        lock (_gearLock) change = Gear.Apply(id, target);
+        int before, after;
+        lock (_gearLock) { before = Gear.Gear; change = Gear.Apply(id, target); after = Gear.Gear; }
         LastGearChange = change;
         if (change != GearChange.None) GearChanged?.Invoke();
         if (change == GearChange.Changed) OnGearChanged();
         _ = BuzzAsync(change);
+
+        // « Monter / Descendre de X vitesses » : sans proxy, l'appli applique elle-même ses vitesses, elle reçoit donc
+        // autant d'appuis brefs que de crans réellement franchis.
+        if (id is ObcButtonId.ShiftUpBy or ObcButtonId.ShiftDownBy && after != before)
+            _ = PulseAppAsync(id == ObcButtonId.ShiftUpBy ? ObcButtonId.ShiftUp : ObcButtonId.ShiftDown, Math.Abs(after - before));
     }
 
-    /// <summary>Rapport visé par la touche « Aller au rapport » qui vient d'être appuyée (réglé dans l'onglet Touches).</summary>
-    private int GearTargetFor(IReadOnlyList<ButtonEvent> events)
+    /// <summary>Pause entre deux appuis brefs envoyés à l'appli pour « Monter / Descendre de X vitesses ».</summary>
+    private const int StepPulseGapMs = 60;
+    private readonly SemaphoreSlim _pulseGate = new(1, 1);
+
+    private async Task PulseAppAsync(ObcButtonId action, int count)
     {
+        // Une seule rafale à la fois : deux appuis rapprochés ne mélangent pas leurs impulsions.
+        await _pulseGate.WaitAsync();
+        try
+        {
+            for (int i = 0; i < count; i++)
+            {
+                lock (_dispatchLock)
+                {
+                    bool appSupportsIt = _mapping.SupportedActions is not { Count: > 0 } supported || supported.Contains(action);
+                    if (_proxy is not null || !appSupportsIt) return; // le proxy a déjà appliqué le rapport au trainer
+                    // Appui et relâchement dans deux messages distincts : l'appli voit un vrai appui à chaque fois.
+                    foreach (var m in ObcMessages.EncodeButtonState([(action, (byte)1)])) _outbox.Writer.TryWrite(m);
+                    foreach (var m in ObcMessages.EncodeButtonState([(action, (byte)0)])) _outbox.Writer.TryWrite(m);
+                }
+                if (i < count - 1) await Task.Delay(StepPulseGapMs);
+            }
+        }
+        catch (Exception ex) { Log?.Invoke($"Rafale de vitesses interrompue : {ex.Message}"); }
+        finally { _pulseGate.Release(); }
+    }
+
+    /// <summary>
+    /// Paramètre de l'action de vitesse qui vient d'être appuyée, réglé dans l'onglet Touches : le rapport visé pour
+    /// « Aller au rapport », le nombre de vitesses pour « Monter / Descendre de X vitesses ».
+    /// </summary>
+    private int GearParamFor(IReadOnlyList<ButtonEvent> events, ObcButtonId id)
+    {
+        if (id is not (ObcButtonId.GoToGear or ObcButtonId.ShiftUpBy or ObcButtonId.ShiftDownBy)) return 0;
         foreach (var e in events.Where(e => e.Pressed))
-            if (Profile.Bindings.TryGetValue(e.Button, out var binding) && binding.Actions.Contains(ObcButtonId.GoToGear))
-                return binding.GearTarget;
+            if (Profile.Bindings.TryGetValue(e.Button, out var binding) && binding.Actions.Contains(id))
+                return id == ObcButtonId.GoToGear ? binding.GearTarget : binding.GearSteps;
         return 0;
     }
 

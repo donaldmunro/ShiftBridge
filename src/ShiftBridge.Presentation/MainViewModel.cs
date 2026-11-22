@@ -530,7 +530,7 @@ public sealed partial class MainViewModel : ObservableObject
         {
             ButtonKey key = b;
             var row = new ButtonRowViewModel(key, Loc.Get(group), Loc.Get(label), tip is null ? null : Loc.Get(tip), Actions,
-                ItemFor(key), OnRowChanged, RepeatFor(key), TargetFor(key));
+                ItemFor(key), OnRowChanged, RepeatFor(key), TargetFor(key), StepsFor(key));
             _rowByButton[key] = row;
             ButtonRows.Add(row);
         }
@@ -557,6 +557,9 @@ public sealed partial class MainViewModel : ObservableObject
     private int TargetFor(ButtonKey b) =>
         _editProfile.Bindings.TryGetValue(b, out var binding) ? binding.GearTarget : 0;
 
+    private int StepsFor(ButtonKey b) =>
+        _editProfile.Bindings.TryGetValue(b, out var binding) ? binding.GearSteps : 0;
+
     private void OnRowChanged(ButtonRowViewModel row)
     {
         if (_loading) return;
@@ -573,6 +576,7 @@ public sealed partial class MainViewModel : ObservableObject
                 RepeatDelayMs = previous?.RepeatDelayMs ?? 500,
                 RepeatIntervalMs = previous?.RepeatIntervalMs ?? 250,
                 GearTarget = row.CanTarget ? row.GearTarget : 0,
+                GearSteps = row.CanStep ? row.GearSteps : 0,
             };
         }
         SaveConfig();
@@ -599,7 +603,7 @@ public sealed partial class MainViewModel : ObservableObject
             foreach (var key in _editProfile.Bindings.Keys.Where(k => k.IsLocalInput).OrderBy(k => k.Id, StringComparer.Ordinal))
                 AddLocalRow(key);
         foreach (var r in ButtonRows.Where(r => !r.CanRemove))
-            r.SetSilently(ItemFor(r.Button), RepeatFor(r.Button), TargetFor(r.Button));
+            r.SetSilently(ItemFor(r.Button), RepeatFor(r.Button), TargetFor(r.Button), StepsFor(r.Button));
     }
 
     // ---------- Profils par appli ----------
@@ -725,7 +729,7 @@ public sealed partial class MainViewModel : ObservableObject
     {
         if (_rowByButton.TryGetValue(key, out var existing)) return existing;
         var row = new ButtonRowViewModel(key, LocalInputGroup, ButtonKeyNames.Label(key), null, Actions, ItemFor(key),
-            OnRowChanged, RepeatFor(key), TargetFor(key)) { CanRemove = true };
+            OnRowChanged, RepeatFor(key), TargetFor(key), StepsFor(key)) { CanRemove = true };
         _rowByButton[key] = row;
         ButtonRows.Add(row);
         return row;

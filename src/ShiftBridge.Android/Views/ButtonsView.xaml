@@ -81,6 +81,12 @@
                                                        SemanticProperties.Description="{x:Static loc:Strings.Buttons_GearTargetTip}" />
                                                 <Label Text="{x:Static loc:Strings.Buttons_GearTargetTip}" Style="{StaticResource Caption}" />
                                             </VerticalStackLayout>
+                                            <!-- Seulement pour « Monter / Descendre de X vitesses » : nombre de vitesses -->
+                                            <VerticalStackLayout Spacing="2" Margin="22,0,0,6" IsVisible="{Binding CanStep}">
+                                                <Entry Text="{Binding GearStepsText}" Keyboard="Numeric" WidthRequest="80" HorizontalOptions="Start" FontSize="13"
+                                                       SemanticProperties.Description="{x:Static loc:Strings.Buttons_GearStepsTip}" />
+                                                <Label Text="{x:Static loc:Strings.Buttons_GearStepsTip}" Style="{StaticResource Caption}" />
+                                            </VerticalStackLayout>
                                           </VerticalStackLayout>
                                         </DataTemplate>
                                     </BindableLayout.ItemTemplate>

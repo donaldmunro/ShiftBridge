@@ -36,6 +36,78 @@ public class InternalGearActionTests
         Assert.Equal(expected, gears.Gear);
     }
 
+    [Theory]
+    [InlineData(ObcButtonId.ShiftUpBy, 12, 3, 15, GearChange.Changed)]
+    [InlineData(ObcButtonId.ShiftUpBy, 22, 5, 24, GearChange.Changed)]
+    [InlineData(ObcButtonId.ShiftUpBy, 24, 1, 24, GearChange.AtTopLimit)]
+    [InlineData(ObcButtonId.ShiftDownBy, 12, 4, 8, GearChange.Changed)]
+    [InlineData(ObcButtonId.ShiftDownBy, 2, 3, 1, GearChange.Changed)]
+    [InlineData(ObcButtonId.ShiftDownBy, 1, 1, 1, GearChange.AtBottomLimit)]
+    [InlineData(ObcButtonId.ShiftUpBy, 12, 0, 12, GearChange.None)]
+    public void Shift_by_moves_several_gears_and_stops_at_the_limits(ObcButtonId action, int start, int steps, int expected, GearChange change)
+    {
+        var gears = new VirtualGearState(24, start);
+        Assert.Equal(change, gears.Apply(action, steps));
+        Assert.Equal(expected, gears.Gear);
+    }
+
+    [Fact]
+    public async Task Shift_by_sends_that_many_shift_presses_to_the_app_and_never_the_internal_action()
+    {
+        await using var bridge = new BridgeService(new AppConfig { GearCount = 24, LastGear = 12 });
+        var app = new FakeTransport("appli");
+        await bridge.AddTransportAsync(app);
+        bridge.Profile.Bindings[PhysicalButton.RightA] = new ButtonBinding { Actions = [ObcButtonId.ShiftUpBy], GearSteps = 3 };
+
+        bridge.InjectEvents([new ButtonEvent(PhysicalButton.RightA, true)]);
+        bridge.InjectEvents([new ButtonEvent(PhysicalButton.RightA, false)]);
+        Assert.Equal(15, bridge.Gear.Gear);
+
+        await Until(() => app.Sent.Count == 6);
+        await Task.Delay(100);
+        var expected = new List<byte[]>();
+        for (int i = 0; i < 3; i++)
+        {
+            expected.Add([0x01, (byte)ObcButtonId.ShiftUp, 1]);
+            expected.Add([0x01, (byte)ObcButtonId.ShiftUp, 0]);
+        }
+        Assert.Equal(expected, app.Sent.ToArray());
+    }
+
+    [Fact]
+    public async Task Shift_by_changes_the_gear_but_sends_nothing_when_the_app_declares_no_shift_buttons()
+    {
+        await using var bridge = new BridgeService(new AppConfig { GearCount = 24, LastGear = 12 });
+        var app = new FakeTransport("appli");
+        await bridge.AddTransportAsync(app);
+        typeof(BridgeService).GetMethod("OnAppInfo", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
+            .Invoke(bridge, [new ObcAppInfo("test", "1", [(byte)ObcButtonId.Back])]);
+        bridge.Profile.Bindings[PhysicalButton.RightA] = new ButtonBinding { Actions = [ObcButtonId.ShiftDownBy], GearSteps = 5 };
+
+        bridge.InjectEvents([new ButtonEvent(PhysicalButton.RightA, true)]);
+        Assert.Equal(7, bridge.Gear.Gear);
+        await Task.Delay(300);
+        Assert.Empty(app.Sent);
+    }
+
+    [Fact]
+    public void The_step_count_is_saved_in_the_profile_and_survives_a_clone()
+    {
+        var profile = new Profile();
+        profile.Bindings[PhysicalButton.RightA] = new ButtonBinding { Actions = [ObcButtonId.ShiftUpBy], GearSteps = 4 };
+        Assert.Equal(4, profile.Clone().Bindings[PhysicalButton.RightA].GearSteps);
+
+        string path = Path.Combine(Path.GetTempPath(), $"shiftbridge-test-{Guid.NewGuid():N}.json");
+        try
+        {
+            ConfigStore.Save(new AppConfig { Profile = profile }, path);
+            var back = ConfigStore.Load(path).Profile.Bindings[PhysicalButton.RightA];
+            Assert.Equal(4, back.GearSteps);
+            Assert.Equal([ObcButtonId.ShiftUpBy], back.Actions);
+        }
+        finally { File.Delete(path); }
+    }
+
     [Fact]
     public void Center_gear_follows_the_gear_count()
     {
@@ -49,8 +121,12 @@ public class InternalGearActionTests
     {
         Assert.True(ObcButtonCatalog.IsInternal(ObcButtonId.CenterGear));
         Assert.True(ObcButtonCatalog.IsInternal(ObcButtonId.GoToGear));
+        Assert.True(ObcButtonCatalog.IsInternal(ObcButtonId.ShiftUpBy));
+        Assert.True(ObcButtonCatalog.IsInternal(ObcButtonId.ShiftDownBy));
         Assert.False(ObcButtonCatalog.IsInternal(ObcButtonId.ShiftUp));
         var ids = ObcButtonCatalog.Assignable.Select(a => a.Id).ToList();
+        Assert.Contains(ObcButtonId.ShiftUpBy, ids);
+        Assert.Contains(ObcButtonId.ShiftDownBy, ids);
         Assert.Contains(ObcButtonId.CenterGear, ids);
         Assert.Contains(ObcButtonId.GoToGear, ids);
     }

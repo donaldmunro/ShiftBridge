@@ -19,6 +19,9 @@
   <data name="Action_ShiftDown" xml:space="preserve"><value>Shift down</value></data>
   <data name="Action_CenterGear" xml:space="preserve"><value>Center gear</value></data>
   <data name="Action_GoToGear" xml:space="preserve"><value>Go to gear…</value></data>
+  <data name="Action_ShiftUpBy" xml:space="preserve"><value>Shift up by X gears…</value></data>
+  <data name="Action_ShiftDownBy" xml:space="preserve"><value>Shift down by X gears…</value></data>
+  <data name="Buttons_GearStepsTip" xml:space="preserve"><value>Number of gears to shift (1 to 23) in one press. Applied to the trainer while virtual shifting is active; otherwise the app receives that many shift presses.</value></data>
   <data name="Buttons_GearTargetTip" xml:space="preserve"><value>Gear to jump to (1 to 24). Applied to the trainer while virtual shifting is active; otherwise only the gear shown by ShiftBridge changes.</value></data>
   <data name="Profile_Label" xml:space="preserve"><value>Profile being edited</value></data>
   <data name="Profile_Default" xml:space="preserve"><value>Default</value></data>
