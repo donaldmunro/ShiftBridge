@@ -245,11 +245,41 @@ public class MappingTests
     public void Shared_action_is_released_only_when_last_button_is_released()
     {
         var engine = new MappingEngine();
-        engine.Translate([new ButtonEvent(PhysicalButton.RightShiftUp, true), new ButtonEvent(PhysicalButton.LeftShiftUp, true)]);
+        engine.Translate([new ButtonEvent(PhysicalButton.RightShiftUp, true), new ButtonEvent(PhysicalButton.RightPaddle, true)]);
         var first = engine.Translate([new ButtonEvent(PhysicalButton.RightShiftUp, false)]);
-        var second = engine.Translate([new ButtonEvent(PhysicalButton.LeftShiftUp, false)]);
+        var second = engine.Translate([new ButtonEvent(PhysicalButton.RightPaddle, false)]);
         Assert.Empty(first);
         Assert.Equal([(ObcButtonId.ShiftUp, (byte)0)], second);
+    }
+
+    // Journal réel Click v2 : la manette gauche relaie les appuis de la droite, la même touche est donc signalée deux fois.
+    [Fact]
+    public void Same_button_reported_by_two_sources_acts_as_one_press()
+    {
+        var engine = new MappingEngine();
+        var press = new ButtonEvent(PhysicalButton.RightShiftUp, true);
+        var release = new ButtonEvent(PhysicalButton.RightShiftUp, false);
+
+        var down1 = engine.Translate([press]);
+        var down2 = engine.Translate([press]);
+        Assert.Equal([(ObcButtonId.ShiftUp, (byte)1)], down1);
+        Assert.Empty(down2);
+
+        var up1 = engine.Translate([release]);
+        var up2 = engine.Translate([release]);
+        Assert.Empty(up1);
+        Assert.Equal([(ObcButtonId.ShiftUp, (byte)0)], up2);
+
+        // Régression : avant, l'action restait tenue et les appuis suivants ne produisaient plus rien.
+        Assert.Equal([(ObcButtonId.ShiftUp, (byte)1)], engine.Translate([press]));
+    }
+
+    [Fact]
+    public void Default_profile_maps_left_click_v2_button_to_shift_down()
+    {
+        var p = Profile.ZwiftLike();
+        Assert.Equal([ObcButtonId.ShiftDown], p.Bindings[PhysicalButton.LeftShiftUp].Actions);
+        Assert.Equal([ObcButtonId.ShiftUp], p.Bindings[PhysicalButton.RightShiftUp].Actions);
     }
 
     [Fact]

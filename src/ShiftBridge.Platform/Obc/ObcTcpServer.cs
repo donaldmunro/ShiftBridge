@@ -59,7 +59,7 @@ public sealed class ObcTcpServer : IObcTransport
                 ["service-uuids"] = "d273f680-d548-419d-b9d1-fa0472345229",
                 ["manufacturer"] = "ShiftBridge",
                 ["model"] = "ShiftBridge",
-            });
+            }, m => Log?.Invoke(m));
         }
         catch (Exception ex)
         {

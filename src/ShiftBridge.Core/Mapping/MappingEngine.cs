@@ -11,7 +11,10 @@ namespace ShiftBridge.Core.Mapping;
 public sealed class MappingEngine
 {
     private readonly Dictionary<ObcButtonId, int> _held = [];
-    private readonly Dictionary<ButtonKey, List<ObcButtonId>> _activePerButton = [];
+    // Une touche peut être signalée par deux sources à la fois (Click v2 : la manette gauche relaie les appuis de la droite) :
+    // on compte les appuis par touche, et les actions ne sont libérées qu'au dernier relâchement.
+    private sealed class ActiveButton(List<ObcButtonId> actions) { public List<ObcButtonId> Actions { get; } = actions; public int Count = 1; }
+    private readonly Dictionary<ButtonKey, ActiveButton> _activePerButton = [];
 
     public Profile Profile { get; set; } = Profile.ZwiftLike();
 
@@ -31,21 +34,23 @@ public sealed class MappingEngine
         {
             if (e.Pressed)
             {
+                if (_activePerButton.TryGetValue(e.Button, out var already)) { already.Count++; continue; }
                 if (!Profile.Bindings.TryGetValue(e.Button, out var binding)) continue;
                 var actions = binding.Actions
                     .Where(a => a != ObcButtonId.None && IsSupported(a))
                     .Distinct().ToList();
-                _activePerButton[e.Button] = actions;
+                _activePerButton[e.Button] = new ActiveButton(actions);
                 foreach (var a in actions)
                 {
                     _held[a] = _held.GetValueOrDefault(a) + 1;
                     if (_held[a] == 1) changes.Add((a, 1));
                 }
             }
-            else if (_activePerButton.Remove(e.Button, out var actions))
+            else if (_activePerButton.TryGetValue(e.Button, out var active) && --active.Count <= 0)
             {
+                _activePerButton.Remove(e.Button);
                 // On relâche ce qui a été pressé, même si le profil a changé entre-temps.
-                foreach (var a in actions)
+                foreach (var a in active.Actions)
                 {
                     int n = _held.GetValueOrDefault(a) - 1;
                     if (n <= 0) { _held.Remove(a); changes.Add((a, 0)); }

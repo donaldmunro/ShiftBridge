@@ -325,7 +325,7 @@ public class ZwiftControllerTests
     }
 
     [Fact]
-    public async Task Click_v2_stop_frame_locks_the_controller()
+    public async Task Click_v2_status_frame_does_not_lock_the_controller()
     {
         var conn = new FakeBleConnection(ZwiftService());
         await using var c = new ZwiftController(new FakeBleCentral { Connection = conn }, Click(), autoReconnect: false)
@@ -335,8 +335,9 @@ public class ZwiftControllerTests
         c.Start();
         await WaitFor(() => c.State == ControllerState.Connected);
 
-        conn.Emit(Svc, ZwiftConstants.SyncTxCharacteristic, [0xFF, 0x05, 0x00, 0xEA, 0x05]);
-        Assert.Equal(ControllerState.Locked, c.State);
+        // Trame réelle du journal (réponse au handshake, suivie du numéro de série) : aucun verrouillage.
+        conn.Emit(Svc, ZwiftConstants.SyncTxCharacteristic, [0xFF, 0x05, 0x00, 0xFA, 0x05, 0x18, 0x0A, 0x0C]);
+        Assert.Equal(ControllerState.Connected, c.State);
     }
 
     [Fact]

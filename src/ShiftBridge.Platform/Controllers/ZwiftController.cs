@@ -28,6 +28,7 @@ public sealed class ZwiftController : IAsyncDisposable
     private IBleConnection? _connection;
     private Guid _service;
     private long _lastFrameTick;
+    private bool _statusFrameLogged;
     private TaskCompletionSource? _disconnected;
 
     public ZwiftController(IBleCentral central, DiscoveredZwiftDevice info, bool autoReconnect = true)
@@ -94,13 +95,15 @@ public sealed class ZwiftController : IAsyncDisposable
                     // Manette verrouillée (Click v2) : on ne rejoue pas la connexion toutes les 3 s indéfiniment, l'attente
                     // continue de croître (jusqu'à 15 s). Une vraie connexion remet l'attente à 1 s.
                     delayMs = State == ControllerState.Locked ? Math.Min(delayMs, 15000) : 1000;
-                    // Attend la perte de connexion ou le verrouillage, avec un chien de garde : la manette émet au moins
-                    // une trame par seconde. Six secondes de silence = notifications mortes => on se reconnecte.
+                    // Attend la perte de connexion ou le verrouillage. Chien de garde réservé au Play, qui émet des trames en
+                    // continu : six secondes de silence = notifications mortes => on se reconnecte. Click / Click v2 / Ride
+                    // n'émettent rien au repos : ils s'appuient sur l'événement BLE de déconnexion.
+                    bool watchdog = Info.Type.Model == ZwiftModel.Play;
                     while (!_disconnected!.Task.IsCompleted)
                     {
                         await Task.WhenAny(_disconnected.Task, Task.Delay(2000, ct));
                         ct.ThrowIfCancellationRequested();
-                        if (State == ControllerState.Connected && Environment.TickCount64 - _lastFrameTick > 6000)
+                        if (watchdog && State == ControllerState.Connected && Environment.TickCount64 - _lastFrameTick > 6000)
                         {
                             Log?.Invoke($"{Info.Name} : aucune notification depuis 6 s, reconnexion");
                             break;
@@ -160,6 +163,7 @@ public sealed class ZwiftController : IAsyncDisposable
 
         _service = service.Uuid;
         _lastFrameTick = Environment.TickCount64;
+        _statusFrameLogged = false;
 
         // Le gestionnaire ValueChanged est posé AVANT d'activer les notifications pour ne perdre aucune trame.
         await _connection.SetNotifyAsync(_service, ZwiftConstants.AsyncCharacteristic, BleNotifyMode.Notify);
@@ -192,13 +196,17 @@ public sealed class ZwiftController : IAsyncDisposable
         _lastFrameTick = Environment.TickCount64;
         string hex = Convert.ToHexString(data);
 
-        // Trames d'arrêt Click v2 : la manette se verrouille.
+        // Trame d'état Click v2 (FF 05 00 EA|FA 05 …, suivie du numéro de série) : réponse au handshake, PAS un verrouillage
+        // (journal réel : elle suit chaque RideOn, la manette continue d'envoyer ses boutons). Le verrouillage se détecte
+        // à l'absence du service Zwift (ConnectOnceAsync).
         if (data.Length >= 5 && data[0] == 0xFF && data[1] == 0x05 && data[2] == 0x00 && (data[3] is 0xEA or 0xFA) && data[4] == 0x05)
         {
             Frame?.Invoke($"{Info.Name} < {hex}");
-            Log?.Invoke($"{Info.Name} : trame d'arrêt reçue, manette verrouillée");
-            SetState(ControllerState.Locked);
-            if (ReconnectOnLock) _disconnected?.TrySetResult();
+            if (!_statusFrameLogged)
+            {
+                _statusFrameLogged = true;
+                Log?.Invoke($"{Info.Name} : trame d'état Click v2 reçue (ignorée)");
+            }
             return;
         }
 

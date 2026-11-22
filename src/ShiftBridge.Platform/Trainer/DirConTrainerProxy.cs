@@ -180,7 +180,7 @@ public sealed class DirConTrainerProxy : IAsyncDisposable
             txt["ble-service-uuids"] = string.Join(",", _tree.Keys.Select(ShortOrFull));
         else if (_hrInjected && !txt["ble-service-uuids"].Contains("180d", StringComparison.OrdinalIgnoreCase))
             txt["ble-service-uuids"] += ",0x180D";
-        try { _mdns.Advertise($"{_name} {serial[^4..]}", "_wahoo-fitness-tnp._tcp", (ushort)Port, txt); }
+        try { _mdns.Advertise($"{_name} {serial[^4..]}", "_wahoo-fitness-tnp._tcp", (ushort)Port, txt, m => Log?.Invoke(m)); }
         catch (Exception ex) { Log?.Invoke($"mDNS indisponible : {ex.Message}"); }
 
         Log?.Invoke($"Proxy trainer en écoute sur le port {Port}");

@@ -63,7 +63,7 @@ public sealed class DirConServer : IObcTransport
                 ["mac-address"] = mac,
                 ["serial-number"] = serial,
                 ["ble-service-uuids"] = Service.ToString(),
-            });
+            }, m => Log?.Invoke(m));
         }
         catch (Exception ex) { Log?.Invoke($"mDNS indisponible : {ex.Message}"); }
 
@@ -237,10 +237,7 @@ public sealed class DirConServer : IObcTransport
     /// </summary>
     internal static (string Mac, string Serial) NicIdentity(int variant = 0)
     {
-        var nic = NetworkInterface.GetAllNetworkInterfaces()
-            .FirstOrDefault(n => n.OperationalStatus == OperationalStatus.Up
-                                 && n.NetworkInterfaceType is NetworkInterfaceType.Ethernet or NetworkInterfaceType.Wireless80211
-                                 && n.GetPhysicalAddress().GetAddressBytes().Length == 6);
+        var nic = MdnsAdvertiser.PrimaryNic();
         var b = (nic?.GetPhysicalAddress().GetAddressBytes() ?? [0x02, 0x00, 0x53, 0x42, 0x00, 0x01]).ToArray();
         b[^1] ^= (byte)variant;
         return (string.Join("-", b.Select(x => x.ToString("X2"))), Convert.ToHexString(b));

@@ -58,7 +58,7 @@ public sealed class Profile
 
         Map(PhysicalButton.RightShiftUp, ObcButtonId.ShiftUp);
         Map(PhysicalButton.RightShiftDown, ObcButtonId.ShiftDown);
-        Map(PhysicalButton.LeftShiftUp, ObcButtonId.ShiftUp);
+        Map(PhysicalButton.LeftShiftUp, ObcButtonId.ShiftDown); // Click v2 gauche : gauche = −, droite = + (convention BikeControl)
         Map(PhysicalButton.LeftShiftDown, ObcButtonId.ShiftDown);
         Map(PhysicalButton.RightPaddle, ObcButtonId.ShiftUp);
         Map(PhysicalButton.LeftPaddle, ObcButtonId.ShiftDown);
