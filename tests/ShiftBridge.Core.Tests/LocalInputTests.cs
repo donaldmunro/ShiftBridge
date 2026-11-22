@@ -139,6 +139,72 @@ public class LocalInputTests
         Assert.True(fake.Vibrations >= 1);
     }
 
+    private static async Task WaitForAsync(Func<bool> condition, int timeoutMs = 3000)
+    {
+        var deadline = DateTime.UtcNow.AddMilliseconds(timeoutMs);
+        while (!condition() && DateTime.UtcNow < deadline) await Task.Delay(10);
+    }
+
+    [Fact]
+    public async Task App_haptic_right_after_a_local_buzz_is_ignored_as_an_echo_but_a_later_one_plays()
+    {
+        var fake = new FakeLocalInputProvider { CanVibrate = true };
+        await using var bridge = new BridgeService(ConfigWith((ButtonKey.Pad("RB"), ObcButtonId.ShiftUp)), localInput: fake);
+        var tcp = new ObcTcpServer("EchoTest");
+        await bridge.AddTransportAsync(tcp);
+        using var client = new TcpClient();
+        await client.ConnectAsync("127.0.0.1", tcp.Port);
+        var s = client.GetStream();
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+        await ReadAsync(s, 3, cts.Token);
+        var haptic = ObcMessages.EncodeHaptic(new ObcHaptic(ObcHapticPattern.Short, 0, 0));
+
+        fake.Press(ButtonKey.Pad("RB"), true);
+        await WaitForAsync(() => fake.Vibrations >= 1);
+        Assert.Equal(1, fake.Vibrations);
+
+        await s.WriteAsync(haptic, cts.Token);   // écho de l'appli : ignoré
+        await Task.Delay(300, cts.Token);
+        Assert.Equal(1, fake.Vibrations);
+
+        await Task.Delay(500, cts.Token);        // hors de la fenêtre d'écho : demande légitime de l'appli
+        await s.WriteAsync(haptic, cts.Token);
+        await WaitForAsync(() => fake.Vibrations >= 2);
+        Assert.Equal(2, fake.Vibrations);
+    }
+
+    [Fact]
+    public async Task App_haptic_without_a_press_vibrates_the_local_gamepad_too()
+    {
+        var fake = new FakeLocalInputProvider { CanVibrate = true };
+        await using var bridge = new BridgeService(ConfigWith(), localInput: fake);
+        var tcp = new ObcTcpServer("AppHapticTest");
+        await bridge.AddTransportAsync(tcp);
+        using var client = new TcpClient();
+        await client.ConnectAsync("127.0.0.1", tcp.Port);
+        var s = client.GetStream();
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+        await ReadAsync(s, 3, cts.Token);
+
+        await s.WriteAsync(ObcMessages.EncodeHaptic(new ObcHaptic(ObcHapticPattern.Short, 0, 0)), cts.Token);
+
+        await WaitForAsync(() => fake.Vibrations >= 1);
+        Assert.Equal(1, fake.Vibrations);
+    }
+
+    [Fact]
+    public async Task Injected_press_without_a_source_vibrates_the_local_gamepad()
+    {
+        // Appui sans source précise (notification, simulation) : toutes les cibles vibrent, gamepad local compris.
+        var fake = new FakeLocalInputProvider { CanVibrate = true };
+        await using var bridge = new BridgeService(ConfigWith((ButtonKey.Keyboard("F13"), ObcButtonId.ShiftUp)), localInput: fake);
+
+        bridge.InjectEvents([new ButtonEvent(ButtonKey.Keyboard("F13"), true)]);
+
+        await WaitForAsync(() => fake.Vibrations >= 1);
+        Assert.Equal(1, fake.Vibrations);
+    }
+
     [Fact]
     public async Task Gear_change_does_not_vibrate_when_controller_vibration_is_off()
     {

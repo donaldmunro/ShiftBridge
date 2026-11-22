@@ -31,7 +31,7 @@ ShiftBridge translates each press into an action (gear up/down, navigation…). 
    - Xbox controllers (XInput, vibration included) and generic HID joysticks (buttons, d-pad, axes): read even when another window has focus. A gamepad cannot be hidden from the training app: if it reads it too, disable it in its settings to avoid double triggering.
    - Not available on Android yet.
 8. **Heart rate** (**Devices** page, Windows and Android): *Scan* for a Bluetooth heart-rate strap or watch (standard heart-rate service), then *Connect*. The proxy republishes it to the training app together with the "ShiftBridge Trainer" trainer: power, cadence, speed and heart rate all arrive through a single device. Disconnect the strap from your phone or watch first (many accept only one or two connections). Connecting or removing a sensor restarts the proxy (the app reconnects). The last sensor is reconnected at launch; heart rate also shows in the overlay (*Power, cadence and speed…* option).
-9. **Controller vibration**: controllers vibrate on every gear change (twice at the first or last gear) and when the training app asks for it. **Devices** page → *Advanced* → *Controller vibration* turns this off. The *Vibrate* test in a controller's menu still works.
+9. **Controller vibration**: the controller whose button you press vibrates on every gear change (twice at the first or last gear), and all of them when the training app asks for it (an echo of a vibration already played is ignored). **Devices** page → *Advanced* → *Controller vibration* turns this off. The *Vibrate* test in a controller's menu still works.
 10. **Settings** → *Open diagnostic log* records the raw frames (useful for a bug report). Unexpected errors are written to `%APPDATA%\ShiftBridge\crash.log`.
 
 Only one instance of ShiftBridge can run at a time. Controller scanning stops by itself once all known controllers are connected (use *Scan* to add one).
@@ -63,7 +63,7 @@ Good to know:
 
 These controllers lock about a minute after connecting if Zwift has not "unlocked" them in the last 24 h (the Zwift service is then no longer exposed). ShiftBridge detects the lock and reconnects automatically; for a lasting unlock, open the Zwift app, connect the controller for 10 to 30 s, close Zwift completely, then come back to ShiftBridge. A built-in wizard is planned for a later version.
 
-## Project status (v0.17.2)
+## Project status (v0.17.3)
 
 > **Tested with limited hardware.** ShiftBridge has been tried by its author on a small number of controllers, devices and apps. Other models, trainers, firmwares or apps may behave differently: treat it as a **beta**. Feedback is welcome (**Settings** → diagnostic log, then a [GitHub issue](https://github.com/renoua/ShiftBridge/issues)). In the table, "to validate on real hardware" means "not yet confirmed on a wide range of hardware".
 

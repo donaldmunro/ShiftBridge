@@ -47,7 +47,7 @@ public sealed class ZwiftController : IAsyncDisposable
     /// <summary>Journalise toutes les trames de boutons, même au repos (capture détaillée).</summary>
     public bool VerboseFrames { get; set; }
 
-    private long _lastVibrationTick;
+    private long _lastVibrationTick = long.MinValue / 2;
     private long _lastStatTick;
     private long _buttonFrameCount;
     private long _countAtLastStat;
@@ -248,9 +248,10 @@ public sealed class ZwiftController : IAsyncDisposable
     {
         if (!CanVibrate || State != ControllerState.Connected) return;
         // Garde-fou : jamais plus d'une vibration toutes les 120 ms (évite de saturer la manette si une boucle s'emballe).
+        // Atomique : deux appels concurrents (appui + écho de l'appli) ne passent pas tous les deux.
         long now = Environment.TickCount64;
-        if (now - _lastVibrationTick < 120) return;
-        _lastVibrationTick = now;
+        long last = Interlocked.Read(ref _lastVibrationTick);
+        if (now - last < 120 || Interlocked.CompareExchange(ref _lastVibrationTick, now, last) != last) return;
         try { await WriteAsync(ZwiftConstants.VibrationCommand(pattern), withResponse: false); }
         catch (Exception ex) { Log?.Invoke($"Vibration impossible : {ex.Message}"); }
     }

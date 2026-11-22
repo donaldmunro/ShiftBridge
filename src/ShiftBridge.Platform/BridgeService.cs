@@ -81,7 +81,8 @@ public sealed class BridgeService : IAsyncDisposable
             _hrSensors[s.Address] = s;
             if (changed) HeartRateSensorsChanged?.Invoke();
         };
-        _localInput.ButtonEvents += OnButtonEvents;
+        _localInputHandler = ev => InjectEvents(ev, _localInput);
+        _localInput.ButtonEvents += _localInputHandler;
         _localInput.Log += m => Log?.Invoke(m);
         _localInput.DevicesChanged += () => LocalInputChanged?.Invoke();
         RefreshLocalInput();
@@ -314,7 +315,7 @@ public sealed class BridgeService : IAsyncDisposable
     {
         if (_controllers.ContainsKey(device.Address)) return;
         var c = new ZwiftController(_platform.Central, device, Config.AutoReconnect) { VerboseFrames = _verboseFrames };
-        c.ButtonEvents += OnButtonEvents;
+        c.ButtonEvents += ev => InjectEvents(ev, c); // la source sert à ne faire vibrer que la manette appuyée
         c.StateChanged += _ => { DevicesChanged?.Invoke(); EvaluateScan(); };
         c.BatteryChanged += pct =>
         {
@@ -497,7 +498,15 @@ public sealed class BridgeService : IAsyncDisposable
     private void OnAppHaptic(ObcHaptic h)
     {
         if (h.Pattern == ObcHapticPattern.Stop || !Config.ControllerVibration) return;
-        foreach (var c in _controllers.Values) _ = c.VibrateAsync();
+        // Écho d'une vibration que ShiftBridge vient déjà de jouer à l'appui : l'ignorer évite la double vibration décalée.
+        if (Environment.TickCount64 - Interlocked.Read(ref _lastLocalBuzzTick) < AppEchoWindowMs)
+        {
+            if (_verboseFrames) Log?.Invoke("Écho haptique de l'appli ignoré (vibration déjà jouée à l'appui).");
+            return;
+        }
+        // En parallèle : pas de retard cumulé d'une manette à l'autre.
+        foreach (var c in _controllers.Values.Where(c => c.CanVibrate)) _ = c.VibrateAsync();
+        if (_localInput.CanVibrate) _ = BuzzOneAsync(_localInput.VibrateAsync, limit: false);
     }
 
     // ---------- Proxy trainer (virtual shifting) ----------
@@ -837,10 +846,14 @@ public sealed class BridgeService : IAsyncDisposable
 
     // ---------- Flux principal ----------
 
-    private void OnButtonEvents(IReadOnlyList<ButtonEvent> events) => InjectEvents(events);
+    private readonly Action<IReadOnlyList<ButtonEvent>> _localInputHandler;
 
-    /// <summary>Point d'entrée du flux (appelé par les manettes ; public pour les tests et le mode simulation).</summary>
-    public void InjectEvents(IReadOnlyList<ButtonEvent> events)
+    /// <summary>
+    /// Point d'entrée du flux (appelé par les manettes ; public pour les tests et le mode simulation).
+    /// <paramref name="source"/> : la manette (ZwiftController) ou le fournisseur local à l'origine de l'appui, seul à vibrer ;
+    /// null = pas de source précise, toutes les manettes vibrent.
+    /// </summary>
+    public void InjectEvents(IReadOnlyList<ButtonEvent> events, object? source = null)
     {
         List<(ObcButtonId Id, byte State)> changes, toSend;
         lock (_dispatchLock)
@@ -877,8 +890,8 @@ public sealed class BridgeService : IAsyncDisposable
 
         // Rapport virtuel + retour haptique sur appui uniquement.
         foreach (var (id, state) in changes.Where(c => c.State == 1))
-            ApplyGearAction(id, GearParamFor(events, id));
-        StartRepeaters(events, changes);
+            ApplyGearAction(id, GearParamFor(events, id), source);
+        StartRepeaters(events, changes, source);
 
         if (_proxy is not null && changes.Any(c => c.Id is ObcButtonId.ShiftUp or ObcButtonId.ShiftDown or ObcButtonId.ShiftUpBy or ObcButtonId.ShiftDownBy))
             Log?.Invoke("Vitesse appliquée par le proxy trainer (non envoyée à l'appli).");
@@ -903,7 +916,7 @@ public sealed class BridgeService : IAsyncDisposable
     }
 
     /// <summary>Une action de vitesse (appui) : met à jour le rapport virtuel, l'interface, le trainer et la vibration.</summary>
-    private void ApplyGearAction(ObcButtonId id, int target = 0)
+    private void ApplyGearAction(ObcButtonId id, int target = 0, object? source = null)
     {
         GearChange change;
         int before, after;
@@ -911,7 +924,7 @@ public sealed class BridgeService : IAsyncDisposable
         LastGearChange = change;
         if (change != GearChange.None) GearChanged?.Invoke();
         if (change == GearChange.Changed) OnGearChanged();
-        _ = BuzzAsync(change);
+        _ = BuzzAsync(change, source);
 
         // « Monter / Descendre de X vitesses » : sans proxy, l'appli applique elle-même ses vitesses, elle reçoit donc
         // autant d'appuis brefs que de crans réellement franchis.
@@ -971,7 +984,7 @@ public sealed class BridgeService : IAsyncDisposable
     /// Démarre la répétition pour les touches qui viennent d'être appuyées, ont l'option « répéter » et déclenchent une vitesse.
     /// Seules ShiftUp et ShiftDown se répètent : répéter « Menu » ou « Select » n'aurait aucun sens.
     /// </summary>
-    private void StartRepeaters(IReadOnlyList<ButtonEvent> events, List<(ObcButtonId Id, byte State)> changes)
+    private void StartRepeaters(IReadOnlyList<ButtonEvent> events, List<(ObcButtonId Id, byte State)> changes, object? source)
     {
         foreach (var e in events.Where(e => e.Pressed))
         {
@@ -984,7 +997,7 @@ public sealed class BridgeService : IAsyncDisposable
             _repeaters[e.Button] = cts;
             // Réglage global (onglet Touches) : lu à chaque appui, donc pris en compte sans redémarrage.
             var (delayMs, intervalMs) = RepeatSpeeds.Timings(Config.RepeatSpeed);
-            _ = RepeatLoopAsync(action, Math.Max(delayMs, MinRepeatMs), Math.Max(intervalMs, MinRepeatMs), cts.Token);
+            _ = RepeatLoopAsync(action, Math.Max(delayMs, MinRepeatMs), Math.Max(intervalMs, MinRepeatMs), source, cts.Token);
         }
     }
 
@@ -993,14 +1006,14 @@ public sealed class BridgeService : IAsyncDisposable
         if (_repeaters.TryRemove(button, out var cts)) cts.Cancel();
     }
 
-    private async Task RepeatLoopAsync(ObcButtonId action, int delayMs, int intervalMs, CancellationToken ct)
+    private async Task RepeatLoopAsync(ObcButtonId action, int delayMs, int intervalMs, object? source, CancellationToken ct)
     {
         try
         {
             await Task.Delay(delayMs, ct);
             while (!ct.IsCancellationRequested)
             {
-                if (!RepeatShift(action)) return; // butée atteinte : inutile d'insister
+                if (!RepeatShift(action, source)) return; // butée atteinte : inutile d'insister
                 await Task.Delay(intervalMs, ct);
             }
         }
@@ -1009,14 +1022,14 @@ public sealed class BridgeService : IAsyncDisposable
     }
 
     /// <summary>Une répétition : même effet qu'un nouvel appui (vitesse, retour haptique), sauf que la touche reste tenue.</summary>
-    private bool RepeatShift(ObcButtonId action)
+    private bool RepeatShift(ObcButtonId action, object? source)
     {
         GearChange change;
         lock (_gearLock) change = Gear.Apply(action);
         LastGearChange = change;
         if (change != GearChange.None) GearChanged?.Invoke();
         if (change == GearChange.Changed) OnGearChanged();
-        _ = BuzzAsync(change);
+        _ = BuzzAsync(change, source);
         if (change != GearChange.Changed) return false;
 
         // Sans proxy, l'appli applique elle-même les vitesses : elle doit voir un nouvel appui. La touche est toujours tenue
@@ -1049,28 +1062,51 @@ public sealed class BridgeService : IAsyncDisposable
             foreach (var pump in _pumps.Values) pump.Post(msg);
     }
 
-    private async Task BuzzAsync(GearChange change)
+    /// <summary>
+    /// Fenêtre pendant laquelle une demande haptique de l'appli est considérée comme l'écho d'une vibration déjà jouée par
+    /// ShiftBridge (l'appli vibre à son tour après avoir appliqué la même vitesse) et ignorée : sinon double vibration, la seconde
+    /// en retard de l'aller-retour appli.
+    /// </summary>
+    private const int AppEchoWindowMs = 500;
+    private long _lastLocalBuzzTick = long.MinValue / 2;
+
+    /// <summary>
+    /// Vibre sur un changement de vitesse. Seule la manette à l'origine de l'appui vibre (<paramref name="source"/>), toutes
+    /// si la source est inconnue (notification Android, simulation). Les cibles vibrent en parallèle : pas de retard cumulé.
+    /// </summary>
+    private Task BuzzAsync(GearChange change, object? source)
     {
-        if (change == GearChange.None || !Config.ControllerVibration) return;
+        if (change == GearChange.None || !Config.ControllerVibration) return Task.CompletedTask;
         bool limit = change is GearChange.AtTopLimit or GearChange.AtBottomLimit;
-        foreach (var c in _controllers.Values.Where(c => c.CanVibrate))
+        Interlocked.Exchange(ref _lastLocalBuzzTick, Environment.TickCount64); // avant l'écriture : l'écho ne peut pas passer entre-temps
+
+        var tasks = new List<Task>();
+        if (source is ZwiftController { CanVibrate: true } one)
         {
-            await c.VibrateAsync();
+            tasks.Add(BuzzOneAsync(() => one.VibrateAsync(), limit));
+        }
+        else if (!ReferenceEquals(source, _localInput))
+        {
+            // Source inconnue, ou manette qui ne vibre pas (Click) : on retombe sur celles qui savent vibrer.
+            foreach (var c in _controllers.Values.Where(c => c.CanVibrate)) tasks.Add(BuzzOneAsync(() => c.VibrateAsync(), limit));
+        }
+        if ((source is null || ReferenceEquals(source, _localInput)) && _localInput.CanVibrate)
+            tasks.Add(BuzzOneAsync(_localInput.VibrateAsync, limit));
+        return Task.WhenAll(tasks);
+    }
+
+    private async Task BuzzOneAsync(Func<Task> vibrate, bool limit)
+    {
+        try
+        {
+            await vibrate();
             if (limit)
             {
                 await Task.Delay(150); // double vibration = butée atteinte
-                await c.VibrateAsync();
+                await vibrate();
             }
         }
-        if (_localInput.CanVibrate)
-        {
-            try
-            {
-                await _localInput.VibrateAsync();
-                if (limit) { await Task.Delay(150); await _localInput.VibrateAsync(); }
-            }
-            catch (Exception ex) { Log?.Invoke($"Vibration manette : {ex.Message}"); }
-        }
+        catch (Exception ex) { Log?.Invoke($"Vibration manette : {ex.Message}"); }
     }
 
     public async ValueTask DisposeAsync()
@@ -1078,7 +1114,7 @@ public sealed class BridgeService : IAsyncDisposable
         _disposed = true;
         Interlocked.Increment(ref _scanEval); // annule tout arrêt de scan différé
         foreach (var button in _repeaters.Keys) StopRepeater(button);
-        _localInput.ButtonEvents -= OnButtonEvents;
+        _localInput.ButtonEvents -= _localInputHandler;
         await _localInput.DisposeAsync();
         await StopTrainerProxyAsync();
         await DropHeartRateCoreAsync();

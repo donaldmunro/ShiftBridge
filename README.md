@@ -31,7 +31,7 @@ ShiftBridge traduit chaque appui en action (vitesse +/−, navigation…). **C'e
    - Manettes Xbox (XInput, vibration comprise) et joysticks HID génériques (boutons, croix, axes) : lues même quand une autre fenêtre a le focus. Une manette ne peut pas être masquée à l'application d'entraînement : si celle-ci la lit aussi, désactivez-la dans ses réglages pour éviter un double déclenchement.
    - Non disponible sur Android pour l'instant.
 8. **Cardio** (page **Appareils**, Windows et Android) : *Rechercher* une ceinture ou une montre cardio Bluetooth (service standard de fréquence cardiaque), puis *Connecter*. Le proxy la republie à l'appli d'entraînement avec le trainer « ShiftBridge Trainer » : puissance, cadence, vitesse et FC arrivent par un seul appareil. Déconnectez d'abord la ceinture de votre téléphone ou de votre montre (beaucoup n'acceptent qu'une ou deux connexions). Connecter ou retirer un capteur redémarre le proxy (l'appli se reconnecte). Le dernier capteur est reconnecté au lancement ; la FC s'affiche aussi dans la superposition (option *Puissance, cadence et vitesse…*).
-9. **Vibration des manettes** : les manettes vibrent à chaque changement de vitesse (deux fois en butée) et quand l'appli le demande. Page **Appareils** → *Avancé* → *Vibration des manettes* la désactive ; le test *Faire vibrer* du menu d'une manette reste disponible.
+9. **Vibration des manettes** : la manette dont vous appuyez le bouton vibre à chaque changement de vitesse (deux fois en butée), et toutes quand l'appli le demande (l'écho d'une vibration déjà jouée est ignoré). Page **Appareils** → *Avancé* → *Vibration des manettes* la désactive ; le test *Faire vibrer* du menu d'une manette reste disponible.
 10. **Réglages** → *Ouvrir le journal de diagnostic* journalise les trames brutes (utile pour un rapport de bug). Les erreurs inattendues sont écrites dans `%APPDATA%\ShiftBridge\crash.log`.
 
 Une seule instance de ShiftBridge peut tourner à la fois. La recherche des manettes s'arrête d'elle-même une fois toutes les manettes connues connectées (bouton *Rechercher* pour en ajouter une).
@@ -63,7 +63,7 @@ Même logique que sur Windows (mêmes manettes, mêmes touches, même virtual sh
 
 Ces manettes se verrouillent environ une minute après la connexion si Zwift ne les a pas « déverrouillées » dans les dernières 24 h (le service Zwift n'est alors plus exposé). ShiftBridge détecte le verrouillage et reconnecte automatiquement ; pour un déverrouillage durable, ouvrez l'application Zwift, connectez la manette 10 à 30 s, fermez Zwift complètement, puis revenez dans ShiftBridge. L'assistant intégré est prévu pour une version suivante.
 
-## État du projet (v0.17.2)
+## État du projet (v0.17.3)
 
 > **Testé avec un matériel limité.** ShiftBridge a été essayé par son auteur sur un petit nombre de manettes, d'appareils et d'applications. D'autres modèles, trainers, firmwares ou applications peuvent se comporter différemment : considérez-le comme une **bêta**. Les retours sont bienvenus (page *Réglages* → journal de diagnostic, puis une [issue GitHub](https://github.com/renoua/ShiftBridge/issues)). Dans le tableau, « à valider sur matériel réel » signifie « pas encore confirmé sur un éventail large de matériel ».
 

@@ -107,6 +107,8 @@ internal sealed class XInputPoller : IDisposable
     {
         var slots = ConnectedSlots;
         if (slots.Count == 0) return;
+        // Un appel qui en recouvre un autre prolonge la vibration : seul le dernier appel éteint les moteurs.
+        int generation = Interlocked.Increment(ref _vibrationGeneration);
         try
         {
             var on = new Native.XINPUT_VIBRATION { Left = 40000, Right = 40000 };
@@ -116,10 +118,15 @@ internal sealed class XInputPoller : IDisposable
         catch (DllNotFoundException) { }
         finally
         {
-            var off = new Native.XINPUT_VIBRATION();
-            foreach (var i in slots) try { Native.XInputSetState((uint)i, ref off); } catch { /* ignoré */ }
+            if (generation == Volatile.Read(ref _vibrationGeneration))
+            {
+                var off = new Native.XINPUT_VIBRATION();
+                foreach (var i in slots) try { Native.XInputSetState((uint)i, ref off); } catch { /* ignoré */ }
+            }
         }
     }
+
+    private int _vibrationGeneration;
 
     public void Dispose()
     {
