@@ -68,8 +68,9 @@
                                     <Button Content="{Binding ActionText}" Margin="0,0,8,0" Padding="14,6"
                                             Command="{Binding DataContext.ToggleDeviceCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                             CommandParameter="{Binding}" />
-                                    <Button Content="&#xE712;" FontFamily="{StaticResource IconFont}" Padding="10,6"
-                                            Style="{StaticResource GhostButton}" AutomationProperties.Name="{x:Static loc:Strings.Devices_MoreActions}"
+                                    <Button Content="&#xE712;" Style="{StaticResource IconButton}"
+                                            AutomationProperties.Name="{x:Static loc:Strings.Devices_MoreActions}"
+                                            ToolTip="{x:Static loc:Strings.Devices_MoreActions}"
                                             Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                             Click="MoreButton_Click">
                                         <Button.ContextMenu>
@@ -77,7 +78,8 @@
                                                 <MenuItem Header="{x:Static loc:Strings.Devices_Vibrate}" IsEnabled="{Binding CanVibrate}"
                                                           Command="{Binding PlacementTarget.Tag.VibrateDeviceCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                           CommandParameter="{Binding}" />
-                                                <MenuItem Header="{x:Static loc:Strings.Devices_Forget}"
+                                                <Separator />
+                                                <MenuItem Header="{x:Static loc:Strings.Devices_Forget}" Style="{StaticResource DangerMenuItem}"
                                                           Command="{Binding PlacementTarget.Tag.ForgetDeviceCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                           CommandParameter="{Binding}" />
                                             </ContextMenu>

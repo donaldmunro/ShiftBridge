@@ -139,8 +139,8 @@
                                      ToolTip="{x:Static loc:Strings.Buttons_GearStepsTip}"
                                      AutomationProperties.Name="{x:Static loc:Strings.Buttons_GearStepsTip}" />
                             <!-- Seulement pour les touches clavier / manette ajoutées -->
-                            <Button Grid.Column="4" Content="&#xE711;" FontFamily="{StaticResource IconFont}" Padding="8,4" Margin="6,0,0,0"
-                                    Style="{StaticResource GhostButton}" AutomationProperties.Name="{x:Static loc:Strings.Buttons_Remove}"
+                            <Button Grid.Column="4" Content="&#xE711;" Margin="6,0,0,0"
+                                    Style="{StaticResource IconDangerButton}" AutomationProperties.Name="{x:Static loc:Strings.Buttons_Remove}"
                                     ToolTip="{x:Static loc:Strings.Buttons_Remove}"
                                     Command="{Binding DataContext.RemoveInputKeyCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                     CommandParameter="{Binding}"

@@ -43,6 +43,14 @@ public partial class DevicesView : UserControl
         if (sender is Button { ContextMenu: { } menu } button)
         {
             menu.PlacementTarget = button;
+            // Sous le bouton, bord droit aligné sur le sien
+            menu.Placement = System.Windows.Controls.Primitives.PlacementMode.Custom;
+            menu.CustomPopupPlacementCallback = (popupSize, targetSize, _) =>
+            [
+                new System.Windows.Controls.Primitives.CustomPopupPlacement(
+                    new Point(targetSize.Width - popupSize.Width, targetSize.Height),
+                    System.Windows.Controls.Primitives.PopupPrimaryAxis.Horizontal)
+            ];
             menu.IsOpen = true;
         }
     }

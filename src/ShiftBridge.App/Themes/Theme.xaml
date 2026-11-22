@@ -118,6 +118,118 @@
         <Setter Property="Foreground" Value="{StaticResource TextMuted}" />
     </Style>
 
+    <!-- Bouton-icône : le glyphe est posé sur un TextBlock qui porte lui-même la police d'icônes
+         (le style TextBlock global écrasait sinon la police du Button → carré « tofu »). Content = le glyphe. -->
+    <ControlTemplate x:Key="IconButtonTemplate" TargetType="Button">
+        <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8">
+            <TextBlock x:Name="Glyph" Style="{StaticResource Icon}" Text="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}"
+                       Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Bd" Property="Background" Value="{StaticResource SurfaceHover}" />
+                <Setter TargetName="Glyph" Property="Foreground" Value="{StaticResource Text}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="Bd" Property="Opacity" Value="0.72" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="Bd" Property="Opacity" Value="0.4" />
+            </Trigger>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Accent}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    <Style x:Key="IconButton" TargetType="Button" BasedOn="{StaticResource GhostButton}">
+        <Setter Property="Width" Value="34" />
+        <Setter Property="Height" Value="34" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template" Value="{StaticResource IconButtonTemplate}" />
+    </Style>
+    <ControlTemplate x:Key="IconDangerButtonTemplate" TargetType="Button">
+        <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8">
+            <TextBlock x:Name="Glyph" Style="{StaticResource Icon}" Text="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}"
+                       Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Bd" Property="Background" Value="{StaticResource SurfaceHover}" />
+                <Setter TargetName="Glyph" Property="Foreground" Value="{StaticResource Danger}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="Bd" Property="Opacity" Value="0.72" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="Bd" Property="Opacity" Value="0.4" />
+            </Trigger>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Accent}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    <Style x:Key="IconDangerButton" TargetType="Button" BasedOn="{StaticResource IconButton}">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Template" Value="{StaticResource IconDangerButtonTemplate}" />
+    </Style>
+
+    <!-- ===== Menu contextuel sombre ===== -->
+    <Style TargetType="ContextMenu">
+        <Setter Property="Foreground" Value="{StaticResource Text}" />
+        <Setter Property="HasDropShadow" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ContextMenu">
+                    <Border Margin="0,4,12,12" Background="{StaticResource Surface}" BorderBrush="{StaticResource Border}"
+                            BorderThickness="1" CornerRadius="8" Padding="4" MinWidth="170">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="12" ShadowDepth="2" Opacity="0.45" Color="Black" />
+                        </Border.Effect>
+                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="MenuItem">
+        <Setter Property="Foreground" Value="{StaticResource Text}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="MenuItem">
+                    <Border x:Name="Bd" Background="Transparent" CornerRadius="6" Padding="12,8" Margin="0,1">
+                        <ContentPresenter ContentSource="Header" RecognizesAccessKey="True" TextElement.Foreground="{TemplateBinding Foreground}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource SurfaceHover}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource TextMuted}" />
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="DangerMenuItem" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+        <Setter Property="Foreground" Value="{StaticResource Danger}" />
+    </Style>
+    <Style TargetType="Separator">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Separator">
+                    <Border Height="1" Margin="8,4" Background="{StaticResource Border}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- ===== Interrupteur (CheckBox) ===== -->
     <Style x:Key="ToggleSwitch" TargetType="CheckBox">
         <Setter Property="Foreground" Value="{StaticResource Text}" />
