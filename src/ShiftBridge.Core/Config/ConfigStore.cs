@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using ShiftBridge.Core.Controllers;
 using ShiftBridge.Core.Mapping;
 
 namespace ShiftBridge.Core.Config;
@@ -30,6 +31,9 @@ public sealed class AppConfig
     /// <summary>Langue de l'interface : null/"auto" = suit la langue du système, "fr" ou "en" = forcée (prise en compte au redémarrage).</summary>
     public string? Language { get; set; }
     public List<string> KnownDevices { get; set; } = [];
+
+    /// <summary>Modèle de chaque manette BLE non Zwift déjà connectée (adresse → modèle) : sert à afficher ses touches dans l'onglet Touches même hors ligne.</summary>
+    public Dictionary<string, ControllerKind> KnownControllerKinds { get; set; } = [];
 
     /// <summary>Écoute le clavier (et les télécommandes HID) comme source de touches.</summary>
     public bool KeyboardInputEnabled { get; set; }
@@ -123,6 +127,7 @@ public sealed class AppConfig
         }
         AppProfiles = appProfiles;
         KnownDevices ??= [];
+        KnownControllerKinds ??= [];
         GearCount = Math.Clamp(GearCount, 8, 24); // plage proposée par l'interface ; la table (VirtualShiftingModel) en compte 24 au plus
         if (TrainerPort is < 1 or > 65535) TrainerPort = 36866;
         if (TrainerTransport is not ("wifi" or "ble")) TrainerTransport = "wifi";

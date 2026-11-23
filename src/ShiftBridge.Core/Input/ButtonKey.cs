@@ -1,4 +1,5 @@
 using System.Text.Json;
+using ShiftBridge.Core.Controllers;
 using System.Text.Json.Serialization;
 
 namespace ShiftBridge.Core.Input;
@@ -14,10 +15,29 @@ public readonly record struct ButtonKey(string Id)
     public const string KeyboardPrefix = "kbd:";
     public const string PadPrefix = "pad:";
     public const string JoystickPrefix = "joy:";
+    public const string ControllerPrefix = "ctl:";
 
     public static ButtonKey Keyboard(string name) => new(KeyboardPrefix + name);
     public static ButtonKey Pad(string name) => new(PadPrefix + name);
     public static ButtonKey Joystick(string deviceId, string name) => new($"{JoystickPrefix}{deviceId}:{name}");
+
+    /// <summary>Touche d'une manette BLE non Zwift : « ctl:vs200:Up » (modèle, puis nom de la touche).</summary>
+    public static ButtonKey Controller(ControllerKind kind, string name) =>
+        new($"{ControllerPrefix}{kind.Slug()}:{name}");
+
+    public bool IsController => Id.StartsWith(ControllerPrefix, StringComparison.Ordinal);
+
+    /// <summary>Découpe « ctl:modèle:touche » ; faux si la clé n'est pas une touche de manette connue.</summary>
+    public bool TryAsController(out ControllerKind kind, out string name)
+    {
+        kind = default; name = "";
+        if (!IsController) return false;
+        var rest = Id[ControllerPrefix.Length..];
+        int i = rest.IndexOf(':');
+        if (i <= 0 || !ControllerKinds.TryFromSlug(rest[..i], out kind)) return false;
+        name = rest[(i + 1)..];
+        return true;
+    }
 
     public bool IsKeyboard => Id.StartsWith(KeyboardPrefix, StringComparison.Ordinal);
     public bool IsPad => Id.StartsWith(PadPrefix, StringComparison.Ordinal);

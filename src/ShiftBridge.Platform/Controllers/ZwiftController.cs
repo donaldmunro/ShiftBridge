@@ -7,14 +7,12 @@ using ShiftBridge.Platform.Ble;
 
 namespace ShiftBridge.Platform.Controllers;
 
-public enum ControllerState { Disconnected, Connecting, Connected, Locked, Error }
-
 /// <summary>
 /// Connexion à une manette Zwift : abonnements Async/SyncTx, handshake « RideOn » (non chiffré),
 /// reconnexion automatique, batterie et vibration. Une seule instance par manette physique.
 /// L'accès GATT passe par <see cref="IBleConnection"/> (WinRT sous Windows, Android.Bluetooth sous Android).
 /// </summary>
-public sealed class ZwiftController : IAsyncDisposable
+public sealed class ZwiftController : IController
 {
     private static readonly Guid BatteryService = FtmsCodec.BaseUuid(0x180F);
     private static readonly Guid BatteryLevel = FtmsCodec.BaseUuid(0x2A19);
@@ -39,6 +37,7 @@ public sealed class ZwiftController : IAsyncDisposable
     }
 
     public DiscoveredZwiftDevice Info { get; }
+    DiscoveredController IController.Info => Info;
     public bool AutoReconnect { get; set; }
 
     /// <summary>Si vrai, une manette qui se verrouille (Click v2 gauche) est reconnectée aussitôt.</summary>

@@ -2,6 +2,7 @@ using ShiftBridge.Core.Localization;
 using System.Collections.Concurrent;
 using System.Threading.Channels;
 using ShiftBridge.Core.Config;
+using ShiftBridge.Core.Controllers;
 using ShiftBridge.Core.Gears;
 using ShiftBridge.Core.Input;
 using ShiftBridge.Core.Mapping;
@@ -24,9 +25,9 @@ public sealed class BridgeService : IAsyncDisposable
 {
     private readonly IBlePlatform _platform;
     private readonly BleAdvertisementHub _hub;
-    private readonly ZwiftScanner _scanner;
-    private readonly ConcurrentDictionary<ulong, DiscoveredZwiftDevice> _seen = new();
-    private readonly ConcurrentDictionary<ulong, ZwiftController> _controllers = new();
+    private readonly ControllerScanner _scanner;
+    private readonly ConcurrentDictionary<ulong, DiscoveredController> _seen = new();
+    private readonly ConcurrentDictionary<ulong, IController> _controllers = new();
     private readonly List<IObcTransport> _transports = [];
     private readonly object _transportsLock = new(); // _transports est lue par la boucle d'envoi pendant que l'UI en ajoute/retire
     private readonly ConcurrentDictionary<string, byte> _manuallyDisconnected = new(); // manettes que l'utilisateur a déconnectées
@@ -47,7 +48,9 @@ public sealed class BridgeService : IAsyncDisposable
         _localInput = localInput ?? new NullLocalInputProvider();
         _platform = platform ?? new NullBlePlatform();
         _hub = new BleAdvertisementHub(_platform.CreateScanner());
-        _scanner = new ZwiftScanner(_hub);
+        _scanner = new ControllerScanner(_hub);
+        Inspector = new BleInspector(_hub, _platform.Central);
+        Inspector.Log += m => Log?.Invoke(m);
         _trainerScanner = new BleTrainerScanner(_hub);
         _hrScanner = new BleHeartRateScanner(_hub);
         _sendLoop = Task.Run(SendLoopAsync);
@@ -90,6 +93,9 @@ public sealed class BridgeService : IAsyncDisposable
 
     public AppConfig Config { get; }
 
+    /// <summary>Inspecteur Bluetooth (diagnostic des appareils non reconnus).</summary>
+    public BleInspector Inspector { get; }
+
     /// <summary>Clavier, télécommandes HID et manettes de jeu (jamais null : source vide si la plateforme n'en a pas).</summary>
     public ILocalInputProvider LocalInput => _localInput;
     /// <summary>Un périphérique local est apparu ou a disparu.</summary>
@@ -113,8 +119,8 @@ public sealed class BridgeService : IAsyncDisposable
     public VirtualGearState Gear { get; }
     public IReadOnlyCollection<IObcTransport> Transports => TransportsSnapshot();
     private IObcTransport[] TransportsSnapshot() { lock (_transportsLock) return [.. _transports]; }
-    public IReadOnlyCollection<DiscoveredZwiftDevice> SeenDevices => _seen.Values.ToList();
-    public IReadOnlyCollection<ZwiftController> Controllers => _controllers.Values.ToList();
+    public IReadOnlyCollection<DiscoveredController> SeenDevices => _seen.Values.ToList();
+    public IReadOnlyCollection<IController> Controllers => _controllers.Values.ToList();
     public bool IsScanning => _scanner.IsScanning;
 
     private bool _verboseFrames;
@@ -311,10 +317,11 @@ public sealed class BridgeService : IAsyncDisposable
         });
     }
 
-    public void Connect(DiscoveredZwiftDevice device)
+    public void Connect(DiscoveredController device)
     {
         if (_controllers.ContainsKey(device.Address)) return;
-        var c = new ZwiftController(_platform.Central, device, Config.AutoReconnect) { VerboseFrames = _verboseFrames };
+        var c = CreateController(device);
+        if (c is null) { Log?.Invoke($"Modèle de manette non pris en charge : {device.Name}"); return; }
         c.ButtonEvents += ev => InjectEvents(ev, c); // la source sert à ne faire vibrer que la manette appuyée
         c.StateChanged += _ => { DevicesChanged?.Invoke(); EvaluateScan(); };
         c.BatteryChanged += pct =>
@@ -331,8 +338,41 @@ public sealed class BridgeService : IAsyncDisposable
             string key = device.AddressText;
             _manuallyDisconnected.TryRemove(key, out _); // l'utilisateur la veut à nouveau
             lock (Config.SyncRoot) { if (!Config.KnownDevices.Contains(key)) Config.KnownDevices.Add(key); }
+            if (device.Kind != ControllerKind.Zwift) RegisterControllerKind(key, device.Kind);
             c.Start();
             DevicesChanged?.Invoke();
+        }
+    }
+
+    private IController? CreateController(DiscoveredController device)
+    {
+        if (device is DiscoveredZwiftDevice zwift)
+            return new ZwiftController(_platform.Central, zwift, Config.AutoReconnect) { VerboseFrames = _verboseFrames };
+        return ControllerSpec.For(device.Kind) is { } spec
+            ? new BleButtonController(_platform.Central, device, spec, Config.AutoReconnect) { VerboseFrames = _verboseFrames }
+            : null;
+    }
+
+    /// <summary>
+    /// Mémorise le modèle d'une manette. À la toute première connexion d'un modèle, ses assignations par défaut sont ajoutées
+    /// au profil par défaut et aux profils d'appli (sans toucher aux assignations existantes) ; ensuite, ce que l'utilisateur
+    /// a retiré ne revient pas.
+    /// </summary>
+    private void RegisterControllerKind(string addressText, ControllerKind kind)
+    {
+        bool firstOfKind;
+        lock (Config.SyncRoot)
+        {
+            firstOfKind = !Config.KnownControllerKinds.ContainsValue(kind);
+            Config.KnownControllerKinds[addressText] = kind;
+        }
+        if (!firstOfKind) return;
+        Profile[] appProfiles;
+        lock (Config.SyncRoot) appProfiles = [.. Config.AppProfiles.Values]; // jamais SyncRoot sous _dispatchLock : l'ordre inverse existe ailleurs
+        lock (_dispatchLock) // le mapping lit les assignations pendant ce temps
+        {
+            _defaultProfile.ApplyControllerDefaults(kind);
+            foreach (var p in appProfiles) p.ApplyControllerDefaults(kind);
         }
     }
 
@@ -1081,7 +1121,7 @@ public sealed class BridgeService : IAsyncDisposable
         Interlocked.Exchange(ref _lastLocalBuzzTick, Environment.TickCount64); // avant l'écriture : l'écho ne peut pas passer entre-temps
 
         var tasks = new List<Task>();
-        if (source is ZwiftController { CanVibrate: true } one)
+        if (source is IController { CanVibrate: true } one)
         {
             tasks.Add(BuzzOneAsync(() => one.VibrateAsync(), limit));
         }
@@ -1121,6 +1161,7 @@ public sealed class BridgeService : IAsyncDisposable
         _hrScanner.Dispose();
         _trainerScanner.Dispose();
         _scanner.Dispose();
+        Inspector.Dispose();
         _hub.Dispose();
         foreach (var c in _controllers.Values) await c.DisposeAsync();
         _controllers.Clear();

@@ -61,6 +61,8 @@ public sealed class BleTrainerScanner(BleAdvertisementHub hub) : IDisposable
             if (ZwiftDeviceType.FromManufacturerData(data).Model != ZwiftModel.Unknown) excluded = true;
         }
         if (localName.StartsWith("ShiftBridge", StringComparison.OrdinalIgnoreCase)) excluded = true;
+        // Télécommandes de guidon (Thinkrider VS200, CYCPLUS BC2, Onelap Key…) : leurs noms ressemblent à ceux de home-trainers de la même marque.
+        if (ShiftBridge.Platform.Controllers.ControllerCatalog.Identify(adv) is not null) excluded = true;
 
         var protocols = TrainerAdvertisementRules.FromServiceUuids(adv.ServiceUuids);
 

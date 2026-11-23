@@ -151,19 +151,31 @@ public sealed partial class ButtonRowViewModel : ObservableObject
 /// <summary>Un clavier, une manette de jeu ou un joystick détecté (sources locales).</summary>
 public sealed record LocalDeviceRowViewModel(string Name, string KindText, bool CanVibrate);
 
+/// <summary>Un appareil BLE vu par l'inspecteur de la page Diagnostic.</summary>
+public sealed class InspectedDeviceRowViewModel(ShiftBridge.Platform.Ble.InspectedDevice device, bool isCapturing)
+{
+    public ShiftBridge.Platform.Ble.InspectedDevice Device { get; } = device;
+    public bool IsCapturing { get; } = isCapturing;
+    public string Title => $"{Device.Name} · {Device.Rssi} dBm";
+    public string Detail => string.IsNullOrEmpty(Device.Details) ? Device.AddressText : $"{Device.AddressText} · {Device.Details}";
+    public string ActionText => IsCapturing ? Strings.Inspect_StopCapture : Strings.Inspect_Capture;
+}
+
 /// <summary>Une manette détectée dans l'onglet « Appareils ».</summary>
 public sealed partial class DeviceRowViewModel : ObservableObject
 {
-    public DeviceRowViewModel(DiscoveredZwiftDevice device, ZwiftController? controller)
+    public DeviceRowViewModel(DiscoveredController device, IController? controller)
     {
         Device = device;
         Controller = controller;
     }
 
-    public DiscoveredZwiftDevice Device { get; }
-    public ZwiftController? Controller { get; }
+    public DiscoveredController Device { get; }
+    public IController? Controller { get; }
 
-    public string Title => $"{ModelName(Device.Type.Model)}{SideText}";
+    public string Title => Device is DiscoveredZwiftDevice z
+        ? $"{ModelName(z.Type.Model)}{SideText(z)}"
+        : $"{Loc.Get("Model_" + Device.Kind)} ({Strings.Dev_Beta})";
     /// <summary>Détail technique (adresse, signal) : infobulle de la ligne sous Windows, titre du menu « ⋮ » sous Android.</summary>
     public string Detail => $"{Device.AddressText} · signal {Device.Rssi} dBm";
     public int? BatteryPercent => Controller?.BatteryPercent;
@@ -194,7 +206,7 @@ public sealed partial class DeviceRowViewModel : ObservableObject
 
     public string BatteryText => Controller?.BatteryPercent is { } b ? Loc.Fmt(Strings.Dev_BatteryPct, b) : "";
 
-    private string SideText => Device.Type.Side switch { ZwiftSide.Left => " " + Strings.Dev_SideLeft, ZwiftSide.Right => " " + Strings.Dev_SideRight, _ => "" };
+    private static string SideText(DiscoveredZwiftDevice z) => z.Type.Side switch { ZwiftSide.Left => " " + Strings.Dev_SideLeft, ZwiftSide.Right => " " + Strings.Dev_SideRight, _ => "" };
 
     private static string ModelName(ZwiftModel m) => m switch
     {

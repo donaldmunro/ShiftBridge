@@ -4,7 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ShiftBridge.Presentation;assembly=ShiftBridge.Presentation"
              x:DataType="vm:MainViewModel">
-    <Grid RowDefinitions="Auto,*" Padding="16,16" RowSpacing="10">
+    <ScrollView><Grid RowDefinitions="Auto,Auto" Padding="16,16" RowSpacing="10">
         <VerticalStackLayout Grid.Row="0" Spacing="10">
             <Label Style="{StaticResource Caption}"
                    Text="{x:Static loc:Strings.Diag_Intro}" />
@@ -16,6 +16,30 @@
                 <Switch IsToggled="{Binding VerboseFrames}" VerticalOptions="Center" />
                 <Label Text="{x:Static loc:Strings.Diag_Verbose}" VerticalOptions="Center" />
             </HorizontalStackLayout>
+            <!-- Inspecteur Bluetooth : pour capturer les trames d'une télécommande encore inconnue -->
+            <Label Text="{x:Static loc:Strings.Inspect_Title}" FontAttributes="Bold" Margin="0,6,0,0" />
+            <Label Text="{x:Static loc:Strings.Inspect_Intro}" Style="{StaticResource Caption}" />
+            <HorizontalStackLayout Spacing="8">
+                <Button Text="{Binding InspectorScanText}" Command="{Binding ToggleInspectorScanCommand}" />
+                <Button Text="{x:Static loc:Strings.Inspect_StopCapture}" Command="{Binding StopInspectorCaptureCommand}" Style="{StaticResource GhostButton}"
+                        IsVisible="{Binding IsInspectorCapturing}" />
+            </HorizontalStackLayout>
+            <Label Text="{x:Static loc:Strings.Inspect_Empty}" Style="{StaticResource Caption}" IsVisible="{Binding InspectorEmpty}" />
+            <ScrollView HeightRequest="170">
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding InspectorDevices}" Spacing="6">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:InspectedDeviceRowViewModel">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding Title}" FontAttributes="Bold" />
+                                    <Label Text="{Binding Detail}" Style="{StaticResource Caption}" LineBreakMode="TailTruncation" MaxLines="2" />
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1" Text="{Binding ActionText}" Clicked="OnCaptureClicked" />
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </ScrollView>
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                 <Entry Text="{Binding NoteText}" Placeholder="{x:Static loc:Strings.Diag_NotePlaceholder}"
                        ReturnCommand="{Binding AddNoteCommand}" />
@@ -23,7 +47,7 @@
             </Grid>
         </VerticalStackLayout>
 
-        <Editor Grid.Row="1" Text="{Binding LogText, Mode=OneWay}" IsReadOnly="True" FontFamily="monospace" FontSize="11"
+        <Editor Grid.Row="1" HeightRequest="320" Text="{Binding LogText, Mode=OneWay}" IsReadOnly="True" FontFamily="monospace" FontSize="11"
                 BackgroundColor="{StaticResource Sidebar}" TextColor="{StaticResource TextMuted}" />
-    </Grid>
+    </Grid></ScrollView>
 </ContentView>

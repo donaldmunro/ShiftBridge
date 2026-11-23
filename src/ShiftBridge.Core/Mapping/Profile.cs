@@ -1,3 +1,4 @@
+using ShiftBridge.Core.Controllers;
 using ShiftBridge.Core.Input;
 using ShiftBridge.Core.Obc;
 
@@ -42,6 +43,30 @@ public sealed class Profile
                 GearSteps = v.GearSteps,
             };
         return p;
+    }
+
+    /// <summary>Assignations proposées à la première connexion d'un modèle de manette BLE (haut = vitesse +, bas = vitesse −).</summary>
+    public static IReadOnlyList<(string Name, ObcButtonId Action)> ControllerDefaults(ControllerKind kind) => kind switch
+    {
+        ControllerKind.ThinkriderVs200 or ControllerKind.CycplusBc2 =>
+            [("Up", ObcButtonId.ShiftUp), ("Down", ObcButtonId.ShiftDown)],
+        ControllerKind.OnelapKey =>
+            [("Up", ObcButtonId.ShiftUp), ("Down", ObcButtonId.ShiftDown), ("Left", ObcButtonId.Left), ("Right", ObcButtonId.Right), ("Center", ObcButtonId.Select)],
+        _ => [],
+    };
+
+    /// <summary>Ajoute les assignations par défaut d'un modèle, sans toucher à celles qui existent déjà. Vrai si le profil a changé.</summary>
+    public bool ApplyControllerDefaults(ControllerKind kind)
+    {
+        bool changed = false;
+        foreach (var (name, action) in ControllerDefaults(kind))
+        {
+            var key = ButtonKey.Controller(kind, name);
+            if (Bindings.ContainsKey(key)) continue;
+            Bindings[key] = new ButtonBinding { Actions = [action] };
+            changed = true;
+        }
+        return changed;
     }
 
     /// <summary>

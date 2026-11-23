@@ -3,6 +3,7 @@ using System.Text;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ShiftBridge.Core.Config;
+using ShiftBridge.Core.Controllers;
 using ShiftBridge.Core.Gears;
 using ShiftBridge.Core.Input;
 using ShiftBridge.Core.Localization;
@@ -55,6 +56,8 @@ public sealed partial class MainViewModel : ObservableObject
 
         _bridge.Log += m => OnUi(() => AppendLog(m));
         _bridge.DevicesChanged += () => OnUi(RefreshDevices);
+        _bridge.Inspector.DevicesChanged += () => OnUi(RefreshInspector);
+        _bridge.Inspector.CaptureChanged += () => OnUi(RefreshInspector);
         _bridge.TransportsChanged += () => OnUi(RefreshTransportStatus);
         _bridge.ActiveProfileChanged += () => OnUi(() => { RefreshProfiles(); RefreshSummaries(); });
         _bridge.GearChanged += () => OnUi(RefreshGear);
@@ -457,6 +460,48 @@ public sealed partial class MainViewModel : ObservableObject
         IsScanning = _bridge.IsScanning;
     }
 
+    // ---------- Inspecteur Bluetooth (page Diagnostic) ----------
+
+    public ObservableCollection<InspectedDeviceRowViewModel> InspectorDevices { get; } = [];
+    [ObservableProperty] private bool _isInspectorScanning;
+    [ObservableProperty] private bool _isInspectorCapturing;
+    [ObservableProperty] private bool _inspectorEmpty = true;
+    public string InspectorScanText => IsInspectorScanning ? Strings.Inspect_StopScan : Strings.Inspect_Scan;
+
+    partial void OnIsInspectorScanningChanged(bool value) => OnPropertyChanged(nameof(InspectorScanText));
+
+    private void RefreshInspector()
+    {
+        var insp = _bridge.Inspector;
+        InspectorDevices.Clear();
+        foreach (var d in insp.Devices().Take(40))
+            InspectorDevices.Add(new InspectedDeviceRowViewModel(d, insp.IsCapturing && insp.CapturingAddress == d.Address));
+        InspectorEmpty = InspectorDevices.Count == 0;
+        IsInspectorScanning = insp.IsScanning;
+        IsInspectorCapturing = insp.IsCapturing;
+    }
+
+    [RelayCommand]
+    private void ToggleInspectorScan()
+    {
+        var insp = _bridge.Inspector;
+        if (insp.IsScanning) { insp.Stop(); return; }
+        if (!EnsureBluetooth(null)) return;
+        insp.Start();
+    }
+
+    [RelayCommand]
+    private async Task CaptureInspectedAsync(InspectedDeviceRowViewModel? row)
+    {
+        if (row is null) return;
+        var insp = _bridge.Inspector;
+        if (insp.IsCapturing && insp.CapturingAddress == row.Device.Address) { await insp.StopCaptureAsync(); return; }
+        await insp.StartCaptureAsync(row.Device.Address);
+    }
+
+    [RelayCommand]
+    private async Task StopInspectorCaptureAsync() => await _bridge.Inspector.StopCaptureAsync();
+
     [RelayCommand]
     private async Task ToggleDeviceAsync(DeviceRowViewModel? row)
     {
@@ -491,6 +536,9 @@ public sealed partial class MainViewModel : ObservableObject
             .ToList();
         Devices.Clear();
         foreach (var r in rows) Devices.Add(r);
+        // Un nouveau modèle de manette vient d'être connecté : ses touches (et leurs assignations par défaut) apparaissent,
+        // et la config (modèle mémorisé) est enregistrée.
+        if (AddControllerRows()) { ReloadRows(); SaveConfig(); }
         IsScanning = _bridge.IsScanning;
         RefreshSummaries();
     }
@@ -538,11 +586,57 @@ public sealed partial class MainViewModel : ObservableObject
         if (HasLocalInput)
             foreach (var key in _editProfile.Bindings.Keys.Where(k => k.IsLocalInput).OrderBy(k => k.Id, StringComparer.Ordinal))
                 AddLocalRow(key);
-        ButtonGroups = [.. ButtonRows.GroupBy(r => r.Group).Select(g => new ButtonGroupViewModel(g.Key, [.. g]))];
+        AddControllerRows(); // appelle RebuildButtonGroups si besoin
+        RebuildButtonGroups();
     }
 
+    private void RebuildButtonGroups() =>
+        ButtonGroups = [.. ButtonRows.GroupBy(r => r.Group).Select(g => new ButtonGroupViewModel(g.Key, [.. g]))];
+
+    private IReadOnlyList<ButtonGroupViewModel> _buttonGroups = [];
+
     /// <summary>Les mêmes lignes regroupées par manette (gauche/droite…), pour les interfaces sans liste groupée native.</summary>
-    public IReadOnlyList<ButtonGroupViewModel> ButtonGroups { get; private set; } = [];
+    public IReadOnlyList<ButtonGroupViewModel> ButtonGroups
+    {
+        get => _buttonGroups;
+        private set { _buttonGroups = value; OnPropertyChanged(); }
+    }
+
+    // ---- Manettes BLE non Zwift : leurs touches n'apparaissent qu'une fois le modèle connu ----
+
+    private readonly HashSet<ControllerKind> _shownKinds = [];
+
+    private HashSet<ControllerKind> KindsToShow()
+    {
+        HashSet<ControllerKind> kinds = [];
+        lock (_config.SyncRoot) foreach (var k in _config.KnownControllerKinds.Values) kinds.Add(k);
+        foreach (var c in _bridge.Controllers) kinds.Add(c.Info.Kind);
+        foreach (var key in _editProfile.Bindings.Keys.ToArray())
+            if (key.TryAsController(out var kind, out _)) kinds.Add(kind);
+        kinds.Remove(ControllerKind.Zwift);
+        return kinds;
+    }
+
+    /// <summary>Ajoute les lignes de touches des modèles de manette connus (une seule fois par modèle). Vrai si des lignes ont été ajoutées.</summary>
+    private bool AddControllerRows()
+    {
+        bool added = false;
+        foreach (var kind in KindsToShow().OrderBy(k => k))
+        {
+            if (!_shownKinds.Add(kind)) continue;
+            foreach (var (name, labelKey) in kind.Buttons())
+            {
+                ButtonKey key = ButtonKey.Controller(kind, name);
+                var row = new ButtonRowViewModel(key, Loc.Get("Model_" + kind), Loc.Get(labelKey), null, Actions, ItemFor(key),
+                    OnRowChanged, RepeatFor(key), TargetFor(key), StepsFor(key));
+                _rowByButton[key] = row;
+                ButtonRows.Add(row);
+            }
+            added = true;
+        }
+        if (added) RebuildButtonGroups();
+        return added;
+    }
 
     private ActionItem? ItemFor(ButtonKey b)
     {

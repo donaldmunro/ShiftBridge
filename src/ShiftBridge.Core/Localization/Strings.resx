@@ -268,6 +268,42 @@
   <data name="Err_EnableVsFirst" xml:space="preserve"><value>Enable virtual shifting first: the measurement uses the trainer's data.</value></data>
   <data name="Err_ControllerNotFound" xml:space="preserve"><value>Controller not found (turned off or already connected elsewhere?)</value></data>
   <data name="Err_ZwiftCharsMissing" xml:space="preserve"><value>Zwift characteristics missing</value></data>
+  <data name="Err_ControllerServiceMissing" xml:space="preserve"><value>Expected service missing: this device is not recognised as this model</value></data>
+  <data name="Inspect_NoName" xml:space="preserve"><value>(no name)</value></data>
+  <data name="Inspect_Connecting" xml:space="preserve"><value>Inspector: connecting to {0}…</value></data>
+  <data name="Inspect_Tree" xml:space="preserve"><value>Inspector: {0}, {1} GATT service(s)</value></data>
+  <data name="Inspect_Listening" xml:space="preserve"><value>Inspector: listening to {0} characteristic(s). Press the buttons one at a time, then copy the log.</value></data>
+  <data name="Inspect_Lost" xml:space="preserve"><value>Inspector: {0} disconnected</value></data>
+  <data name="Inspect_Stopped" xml:space="preserve"><value>Inspector: capture of {0} stopped</value></data>
+  <data name="Inspect_Failed" xml:space="preserve"><value>Inspector: {0} failed ({1})</value></data>
+  <data name="Inspect_Title" xml:space="preserve"><value>Bluetooth inspector</value></data>
+  <data name="Inspect_Intro" xml:space="preserve"><value>For an unrecognised remote or controller: start the search, pick the device, press &quot;Capture&quot;, then press each button and copy the log. Nothing is written to the device.</value></data>
+  <data name="Inspect_Scan" xml:space="preserve"><value>Search</value></data>
+  <data name="Inspect_StopScan" xml:space="preserve"><value>Stop searching</value></data>
+  <data name="Inspect_Capture" xml:space="preserve"><value>Capture</value></data>
+  <data name="Inspect_StopCapture" xml:space="preserve"><value>Stop capture</value></data>
+  <data name="Inspect_Empty" xml:space="preserve"><value>No device seen yet</value></data>
+  <data name="Model_ThinkriderVs200" xml:space="preserve"><value>Thinkrider VS200</value></data>
+  <data name="Model_CycplusBc2" xml:space="preserve"><value>CYCPLUS BC2</value></data>
+  <data name="Model_OnelapKey" xml:space="preserve"><value>Magene Onelap Key</value></data>
+  <data name="Dev_Beta" xml:space="preserve"><value>beta</value></data>
+  <data name="Ctl_ShiftUp" xml:space="preserve"><value>Shift up</value></data>
+  <data name="Ctl_ShiftDown" xml:space="preserve"><value>Shift down</value></data>
+  <data name="Ctl_Up" xml:space="preserve"><value>Up</value></data>
+  <data name="Ctl_Down" xml:space="preserve"><value>Down</value></data>
+  <data name="Ctl_Left" xml:space="preserve"><value>Left</value></data>
+  <data name="Ctl_Right" xml:space="preserve"><value>Right</value></data>
+  <data name="Ctl_Center" xml:space="preserve"><value>Center</value></data>
+  <data name="Ctl_LUp" xml:space="preserve"><value>Left unit: up</value></data>
+  <data name="Ctl_LDown" xml:space="preserve"><value>Left unit: down</value></data>
+  <data name="Ctl_LLeft" xml:space="preserve"><value>Left unit: left</value></data>
+  <data name="Ctl_LRight" xml:space="preserve"><value>Left unit: right</value></data>
+  <data name="Ctl_LCenter" xml:space="preserve"><value>Left unit: center</value></data>
+  <data name="Ctl_RUp" xml:space="preserve"><value>Right unit: up</value></data>
+  <data name="Ctl_RDown" xml:space="preserve"><value>Right unit: down</value></data>
+  <data name="Ctl_RLeft" xml:space="preserve"><value>Right unit: left</value></data>
+  <data name="Ctl_RRight" xml:space="preserve"><value>Right unit: right</value></data>
+  <data name="Ctl_RCenter" xml:space="preserve"><value>Right unit: center</value></data>
   <data name="Err_NoFreePortDirCon" xml:space="preserve"><value>No free TCP port for DirCon.</value></data>
   <data name="Err_NoFreePortObc" xml:space="preserve"><value>No free TCP port for OpenBikeControl.</value></data>
   <data name="Err_NoFreePortProxy" xml:space="preserve"><value>No free TCP port for the trainer proxy.</value></data>

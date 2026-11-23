@@ -268,6 +268,42 @@
   <data name="Err_EnableVsFirst" xml:space="preserve"><value>Activez d'abord le virtual shifting : la mesure utilise les données du trainer.</value></data>
   <data name="Err_ControllerNotFound" xml:space="preserve"><value>Manette introuvable (éteinte ou déjà connectée ailleurs ?)</value></data>
   <data name="Err_ZwiftCharsMissing" xml:space="preserve"><value>Caractéristiques Zwift manquantes</value></data>
+  <data name="Err_ControllerServiceMissing" xml:space="preserve"><value>Service attendu absent : cet appareil n'est pas reconnu comme ce modèle</value></data>
+  <data name="Inspect_NoName" xml:space="preserve"><value>(sans nom)</value></data>
+  <data name="Inspect_Connecting" xml:space="preserve"><value>Inspecteur : connexion à {0}…</value></data>
+  <data name="Inspect_Tree" xml:space="preserve"><value>Inspecteur : {0}, {1} service(s) GATT</value></data>
+  <data name="Inspect_Listening" xml:space="preserve"><value>Inspecteur : à l&apos;écoute de {0} caractéristique(s). Appuyez sur les boutons un par un, puis copiez le journal.</value></data>
+  <data name="Inspect_Lost" xml:space="preserve"><value>Inspecteur : {0} s&apos;est déconnecté</value></data>
+  <data name="Inspect_Stopped" xml:space="preserve"><value>Inspecteur : capture de {0} arrêtée</value></data>
+  <data name="Inspect_Failed" xml:space="preserve"><value>Inspecteur : {0} impossible ({1})</value></data>
+  <data name="Inspect_Title" xml:space="preserve"><value>Inspecteur Bluetooth</value></data>
+  <data name="Inspect_Intro" xml:space="preserve"><value>Pour une télécommande ou une manette non reconnue : lancez la recherche, choisissez l&apos;appareil, appuyez sur « Capturer » puis sur chaque bouton, et copiez le journal. Rien n&apos;est écrit dans l&apos;appareil.</value></data>
+  <data name="Inspect_Scan" xml:space="preserve"><value>Rechercher</value></data>
+  <data name="Inspect_StopScan" xml:space="preserve"><value>Arrêter la recherche</value></data>
+  <data name="Inspect_Capture" xml:space="preserve"><value>Capturer</value></data>
+  <data name="Inspect_StopCapture" xml:space="preserve"><value>Arrêter la capture</value></data>
+  <data name="Inspect_Empty" xml:space="preserve"><value>Aucun appareil vu pour l&apos;instant</value></data>
+  <data name="Model_ThinkriderVs200" xml:space="preserve"><value>Thinkrider VS200</value></data>
+  <data name="Model_CycplusBc2" xml:space="preserve"><value>CYCPLUS BC2</value></data>
+  <data name="Model_OnelapKey" xml:space="preserve"><value>Magene Onelap Key</value></data>
+  <data name="Dev_Beta" xml:space="preserve"><value>bêta</value></data>
+  <data name="Ctl_ShiftUp" xml:space="preserve"><value>Vitesse +</value></data>
+  <data name="Ctl_ShiftDown" xml:space="preserve"><value>Vitesse −</value></data>
+  <data name="Ctl_Up" xml:space="preserve"><value>Haut</value></data>
+  <data name="Ctl_Down" xml:space="preserve"><value>Bas</value></data>
+  <data name="Ctl_Left" xml:space="preserve"><value>Gauche</value></data>
+  <data name="Ctl_Right" xml:space="preserve"><value>Droite</value></data>
+  <data name="Ctl_Center" xml:space="preserve"><value>Centre</value></data>
+  <data name="Ctl_LUp" xml:space="preserve"><value>Unité gauche : haut</value></data>
+  <data name="Ctl_LDown" xml:space="preserve"><value>Unité gauche : bas</value></data>
+  <data name="Ctl_LLeft" xml:space="preserve"><value>Unité gauche : gauche</value></data>
+  <data name="Ctl_LRight" xml:space="preserve"><value>Unité gauche : droite</value></data>
+  <data name="Ctl_LCenter" xml:space="preserve"><value>Unité gauche : centre</value></data>
+  <data name="Ctl_RUp" xml:space="preserve"><value>Unité droite : haut</value></data>
+  <data name="Ctl_RDown" xml:space="preserve"><value>Unité droite : bas</value></data>
+  <data name="Ctl_RLeft" xml:space="preserve"><value>Unité droite : gauche</value></data>
+  <data name="Ctl_RRight" xml:space="preserve"><value>Unité droite : droite</value></data>
+  <data name="Ctl_RCenter" xml:space="preserve"><value>Unité droite : centre</value></data>
   <data name="Err_NoFreePortDirCon" xml:space="preserve"><value>Aucun port TCP libre pour DirCon.</value></data>
   <data name="Err_NoFreePortObc" xml:space="preserve"><value>Aucun port TCP libre pour OpenBikeControl.</value></data>
   <data name="Err_NoFreePortProxy" xml:space="preserve"><value>Aucun port TCP libre pour le proxy trainer.</value></data>

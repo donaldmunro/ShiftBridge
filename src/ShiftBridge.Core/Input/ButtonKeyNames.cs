@@ -1,3 +1,4 @@
+using ShiftBridge.Core.Controllers;
 using ShiftBridge.Core.Localization;
 
 namespace ShiftBridge.Core.Input;
@@ -37,12 +38,21 @@ public static class ButtonKeyNames
     };
 
     /// <summary>Groupe d'affichage : « Clavier », « Manette », « Joystick ».</summary>
-    public static string Group(ButtonKey key) =>
-        Loc.Get(key.IsKeyboard ? "Group_Keyboard" : key.IsPad ? "Group_Pad" : key.IsJoystick ? "Group_Joystick" : "Group_Zwift");
+    public static string Group(ButtonKey key)
+    {
+        if (key.TryAsController(out var kind, out _)) return Loc.Get("Model_" + kind);
+        return Loc.Get(key.IsKeyboard ? "Group_Keyboard" : key.IsPad ? "Group_Pad" : key.IsJoystick ? "Group_Joystick" : "Group_Zwift");
+    }
 
     /// <summary>Libellé court sans le groupe (« F13 », « A », « Bouton 3 »).</summary>
     public static string Short(ButtonKey key)
     {
+        if (key.TryAsController(out var kind, out var name))
+        {
+            foreach (var (n, labelKey) in kind.Buttons())
+                if (n == name) return Loc.Get(labelKey);
+            return name;
+        }
         if (key.IsKeyboard)
         {
             var n = key.Id[ButtonKey.KeyboardPrefix.Length..];
@@ -64,6 +74,7 @@ public static class ButtonKeyNames
     /// <summary>Libellé complet (« Clavier : F13 », « Manette : A », « Joystick 046D_C21D : Bouton 3 »).</summary>
     public static string Label(ButtonKey key)
     {
+        if (key.IsController) return Loc.Format("Fmt_Label", Group(key), Short(key));
         if (key.IsJoystick)
         {
             ParseJoystick(key, out var dev, out var part);
