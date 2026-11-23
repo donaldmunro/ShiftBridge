@@ -22,13 +22,16 @@ public partial class DevicesView : ContentView
         if (RowOf(sender) is not { } row || Vm is not { } vm || Window?.Page is not { } page) return;
 
         // Le détail technique (adresse, signal) n'a plus de ligne dédiée : il accompagne le titre du menu.
-        string vibrate = Strings.Devices_Vibrate, forget = Strings.Devices_Forget, cancel = Strings.Buttons_Cancel;
+        string vibrate = Strings.Devices_Vibrate, forget = Strings.Devices_Forget, cancel = Strings.Buttons_Cancel, pair = Strings.Dev_Pair;
         string heading = $"{row.Title}\n{row.Detail}";
-        string? choice = row.CanVibrate
-            ? await page.DisplayActionSheetAsync(heading, cancel, null, vibrate, forget)
-            : await page.DisplayActionSheetAsync(heading, cancel, null, forget);
+        List<string> options = [];
+        if (row.CanPair) options.Add(pair);
+        if (row.CanVibrate) options.Add(vibrate);
+        options.Add(forget);
+        string? choice = await page.DisplayActionSheetAsync(heading, cancel, null, [.. options]);
 
-        if (choice == vibrate) vm.VibrateDeviceCommand.Execute(row);
+        if (choice == pair) vm.PairDeviceCommand.Execute(row);
+        else if (choice == vibrate) vm.VibrateDeviceCommand.Execute(row);
         else if (choice == forget) vm.ForgetDeviceCommand.Execute(row);
     }
 }

@@ -73,6 +73,7 @@ public sealed partial class MainViewModel : ObservableObject
         _reportGearToApp = _config.ReportGearToApp;
         _controllerVibration = _config.ControllerVibration;
         _ltwooPin = _config.LtwooPin ?? "";
+        _sramAxsAdvanced = _config.SramAxsAdvanced;
         _autoStartVirtualShifting = _config.AutoStartVirtualShifting;
         _showOverlay = _config.ShowOverlay;
         _overlayLocked = _config.OverlayLocked;
@@ -149,6 +150,24 @@ public sealed partial class MainViewModel : ObservableObject
     [ObservableProperty] private string _dirConStatus = "";
     [ObservableProperty] private bool _autoReconnect;
     [ObservableProperty] private bool _controllerVibration = true;
+    /// <summary>SRAM AXS en mode avancé (appairage, expérimental) : pris en compte à la prochaine connexion.</summary>
+    [ObservableProperty] private bool _sramAxsAdvanced;
+
+    partial void OnSramAxsAdvancedChanged(bool value)
+    {
+        if (_loading) return;
+        _config.SramAxsAdvanced = value;
+        SaveConfig();
+    }
+
+    [RelayCommand]
+    private async Task PairDeviceAsync(DeviceRowViewModel? row)
+    {
+        if (row is null) return;
+        await _bridge.PairAxsAsync(row.Device.Address);
+        SaveConfig();
+    }
+
     /// <summary>Code PIN (3 caractères) du groupe L-TWOO, lu à la prochaine connexion.</summary>
     [ObservableProperty] private string _ltwooPin = "";
 

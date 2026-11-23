@@ -37,6 +37,10 @@ internal sealed class FakeBleConnection : IBleConnection
     public List<(Guid Service, Guid Char, byte[] Value, bool WithResponse)> Writes { get; } = [];
     public Dictionary<(Guid Service, Guid Char), BleNotifyMode> Notify { get; } = [];
     public Dictionary<(Guid Service, Guid Char), byte[]> ReadValues { get; } = [];
+    /// <summary>Lectures successives d'une caractéristique (une valeur par lecture) ; prioritaires sur <see cref="ReadValues"/>.</summary>
+    public Dictionary<(Guid Service, Guid Char), Queue<byte[]>> ReadQueues { get; } = [];
+    /// <summary>Appelé à chaque écriture : permet à un appareil simulé de réagir (p. ex. répondre à un appairage).</summary>
+    public Action<Guid, Guid, byte[]>? OnWrite { get; set; }
     public bool? FirstDiscoverStrict { get; private set; }
 
     public event Action? Disconnected;
@@ -51,11 +55,13 @@ internal sealed class FakeBleConnection : IBleConnection
     }
 
     public Task<byte[]> ReadAsync(Guid service, Guid characteristic) =>
+        ReadQueues.TryGetValue((service, characteristic), out var q) && q.Count > 0 ? Task.FromResult(q.Dequeue()) :
         ReadValues.TryGetValue((service, characteristic), out var v) ? Task.FromResult(v) : throw new IOException("lecture impossible");
 
     public Task WriteAsync(Guid service, Guid characteristic, byte[] value, bool withResponse)
     {
         Writes.Add((service, characteristic, value, withResponse));
+        OnWrite?.Invoke(service, characteristic, value);
         return Task.CompletedTask;
     }
 

@@ -38,6 +38,15 @@ public sealed class AppConfig
     /// <summary>Code PIN à trois caractères du groupe L-TWOO (appliqué à la prochaine connexion).</summary>
     public string LtwooPin { get; set; } = "";
 
+    /// <summary>SRAM AXS, mode avancé (expérimental) : appairage et lecture du pignon au lieu du simple/double appui. Appliqué à la prochaine connexion.</summary>
+    public bool SramAxsAdvanced { get; set; }
+
+    /// <summary>Clés des dérailleurs AXS appairés (numéro de série → clé hexadécimale de 16 octets). Secret : ne pas partager ce fichier.</summary>
+    public Dictionary<string, string> SramAxsKeys { get; set; } = [];
+
+    /// <summary>Les assignations par défaut des touches Haut/Bas de l'AXS avancé ont déjà été ajoutées une fois.</summary>
+    public bool SramAxsAdvancedSeeded { get; set; }
+
     /// <summary>Écoute le clavier (et les télécommandes HID) comme source de touches.</summary>
     public bool KeyboardInputEnabled { get; set; }
     /// <summary>Écoute les manettes de jeu (Xbox/XInput et joysticks génériques) comme source de touches.</summary>
@@ -131,6 +140,7 @@ public sealed class AppConfig
         AppProfiles = appProfiles;
         KnownDevices ??= [];
         KnownControllerKinds ??= [];
+        SramAxsKeys ??= [];
         GearCount = Math.Clamp(GearCount, 8, 24); // plage proposée par l'interface ; la table (VirtualShiftingModel) en compte 24 au plus
         if (TrainerPort is < 1 or > 65535) TrainerPort = 36866;
         if (TrainerTransport is not ("wifi" or "ble")) TrainerTransport = "wifi";

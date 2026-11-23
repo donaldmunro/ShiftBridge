@@ -191,6 +191,8 @@ public sealed partial class DeviceRowViewModel : ObservableObject
         _ => UiState.Warning,
     };
     public bool IsConnected => Controller is not null;
+    /// <summary>AXS en mode avancé, connecté mais sans clé valable : le bouton « Appairer » est proposé.</summary>
+    public bool CanPair => Controller is SramAxsAdvancedController { CanPair: true };
     public bool CanVibrate => Controller is { CanVibrate: true, State: ControllerState.Connected };
     public string ActionText => IsConnected ? Strings.Dev_Disconnect : Strings.Dev_Connect;
 

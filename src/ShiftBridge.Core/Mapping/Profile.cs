@@ -53,7 +53,7 @@ public sealed class Profile
         ControllerKind.OnelapKey =>
             [("Up", ObcButtonId.ShiftUp), ("Down", ObcButtonId.ShiftDown), ("Left", ObcButtonId.Left), ("Right", ObcButtonId.Right), ("Center", ObcButtonId.Select)],
         ControllerKind.ShimanoDi2 => [("Ch1", ObcButtonId.ShiftUp), ("Ch2", ObcButtonId.ShiftDown)],
-        ControllerKind.SramAxs => [("Single", ObcButtonId.ShiftUp), ("Double", ObcButtonId.ShiftDown)],
+        ControllerKind.SramAxs => [("Single", ObcButtonId.ShiftUp), ("Double", ObcButtonId.ShiftDown), ("Up", ObcButtonId.ShiftUp), ("Down", ObcButtonId.ShiftDown)],
         ControllerKind.WahooKickrBike =>
         [
             ("RightUp", ObcButtonId.ShiftUp), ("RightDown", ObcButtonId.ShiftUp), ("RightSteer", ObcButtonId.Right),
@@ -90,11 +90,12 @@ public sealed class Profile
     };
 
     /// <summary>Ajoute les assignations par défaut d'un modèle, sans toucher à celles qui existent déjà. Vrai si le profil a changé.</summary>
-    public bool ApplyControllerDefaults(ControllerKind kind)
+    public bool ApplyControllerDefaults(ControllerKind kind, IReadOnlyCollection<string>? only = null)
     {
         bool changed = false;
         foreach (var (name, action) in ControllerDefaults(kind))
         {
+            if (only is not null && !only.Contains(name)) continue;
             var key = ButtonKey.Controller(kind, name);
             if (Bindings.ContainsKey(key)) continue;
             Bindings[key] = new ButtonBinding { Actions = [action] };

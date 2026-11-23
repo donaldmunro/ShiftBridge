@@ -102,6 +102,11 @@
                             <Switch IsToggled="{Binding ControllerVibration}" VerticalOptions="Center" />
                             <Label Text="{x:Static loc:Strings.Devices_Vibration}" VerticalOptions="Center" />
                         </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="10">
+                            <Switch IsToggled="{Binding SramAxsAdvanced}" VerticalOptions="Center" />
+                            <Label Text="{x:Static loc:Strings.Axs_AdvancedLabel}" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Label Text="{x:Static loc:Strings.Axs_AdvancedHint}" Style="{StaticResource Caption}" />
                         <Label Text="{x:Static loc:Strings.Ltwoo_PinLabel}" />
                         <Entry Text="{Binding LtwooPin}" MaxLength="3" WidthRequest="90" HorizontalOptions="Start" />
                         <Label Text="{x:Static loc:Strings.Ltwoo_PinHint}" Style="{StaticResource Caption}" />

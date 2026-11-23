@@ -269,6 +269,11 @@
   <data name="Err_ControllerNotFound" xml:space="preserve"><value>Manette introuvable (éteinte ou déjà connectée ailleurs ?)</value></data>
   <data name="Err_ZwiftCharsMissing" xml:space="preserve"><value>Caractéristiques Zwift manquantes</value></data>
   <data name="Err_ControllerServiceMissing" xml:space="preserve"><value>Service attendu absent : cet appareil n'est pas reconnu comme ce modèle</value></data>
+  <data name="Ctl_axs_Up" xml:space="preserve"><value>Pignon arrière : vitesse +</value></data>
+  <data name="Ctl_axs_Down" xml:space="preserve"><value>Pignon arrière : vitesse −</value></data>
+  <data name="Axs_AdvancedLabel" xml:space="preserve"><value>SRAM AXS : mode avancé (expérimental)</value></data>
+  <data name="Axs_AdvancedHint" xml:space="preserve"><value>Appaire le dérailleur et lit son pignon pour connaître le sens de chaque changement (le levier utilisé reste inconnu). L&apos;appairage change la clé du dérailleur : l&apos;appli SRAM devra se reconnecter. Maintenez le bouton AXS du dérailleur jusqu&apos;au clignotement, puis choisissez Appairer. Appliqué à la prochaine connexion.</value></data>
+  <data name="Dev_Pair" xml:space="preserve"><value>Appairer</value></data>
   <data name="Model_ShimanoDi2" xml:space="preserve"><value>Shimano Di2</value></data>
   <data name="Model_SramAxs" xml:space="preserve"><value>SRAM AXS / eTap</value></data>
   <data name="Model_WahooKickrBike" xml:space="preserve"><value>Wahoo KICKR Bike</value></data>

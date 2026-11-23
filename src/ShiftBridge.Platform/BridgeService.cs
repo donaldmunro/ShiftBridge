@@ -348,9 +348,39 @@ public sealed class BridgeService : IAsyncDisposable
     {
         if (device is DiscoveredZwiftDevice zwift)
             return new ZwiftController(_platform.Central, zwift, Config.AutoReconnect) { VerboseFrames = _verboseFrames };
+        if (device.Kind == ControllerKind.SramAxs && Config.SramAxsAdvanced)
+        {
+            SeedAxsAdvancedDefaults();
+            return new SramAxsAdvancedController(_platform.Central, device, new ConfigSramKeyStore(Config), Config.AutoReconnect) { VerboseFrames = _verboseFrames };
+        }
         return ControllerSpec.For(device.Kind, Config.LtwooPin) is { } spec
             ? new BleButtonController(_platform.Central, device, spec, Config.AutoReconnect) { VerboseFrames = _verboseFrames }
             : null;
+    }
+
+    /// <summary>Ajoute une seule fois les assignations par défaut des touches Haut/Bas de l'AXS avancé (sans toucher aux autres).</summary>
+    private void SeedAxsAdvancedDefaults()
+    {
+        if (Config.SramAxsAdvancedSeeded) return;
+        Config.SramAxsAdvancedSeeded = true;
+        string[] only = ["Up", "Down"];
+        Profile[] appProfiles;
+        lock (Config.SyncRoot) appProfiles = [.. Config.AppProfiles.Values];
+        lock (_dispatchLock)
+        {
+            _defaultProfile.ApplyControllerDefaults(ControllerKind.SramAxs, only);
+            foreach (var p in appProfiles) p.ApplyControllerDefaults(ControllerKind.SramAxs, only);
+        }
+    }
+
+    /// <summary>Lance l'appairage d'un dérailleur AXS connecté en mode avancé (il doit être en mode appairage). Vrai si la clé a été obtenue.</summary>
+    public async Task<bool> PairAxsAsync(ulong address)
+    {
+        if (!_controllers.TryGetValue(address, out var c) || c is not SramAxsAdvancedController axs) return false;
+        bool ok = await axs.PairAsync();
+        if (ok) { try { ConfigStore.Save(Config); } catch { /* la clé reste en mémoire pour cette session */ } }
+        DevicesChanged?.Invoke();
+        return ok;
     }
 
     /// <summary>

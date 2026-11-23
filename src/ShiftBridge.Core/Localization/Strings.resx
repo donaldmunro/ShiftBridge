@@ -269,6 +269,11 @@
   <data name="Err_ControllerNotFound" xml:space="preserve"><value>Controller not found (turned off or already connected elsewhere?)</value></data>
   <data name="Err_ZwiftCharsMissing" xml:space="preserve"><value>Zwift characteristics missing</value></data>
   <data name="Err_ControllerServiceMissing" xml:space="preserve"><value>Expected service missing: this device is not recognised as this model</value></data>
+  <data name="Ctl_axs_Up" xml:space="preserve"><value>Rear cog: shift up</value></data>
+  <data name="Ctl_axs_Down" xml:space="preserve"><value>Rear cog: shift down</value></data>
+  <data name="Axs_AdvancedLabel" xml:space="preserve"><value>SRAM AXS: advanced mode (experimental)</value></data>
+  <data name="Axs_AdvancedHint" xml:space="preserve"><value>Pairs with the derailleur and reads its cog to know the direction of each shift (which lever was used stays unknown). Pairing changes the derailleur key: the SRAM app will have to reconnect. Hold the derailleur AXS button until it blinks, then choose Pair. Applied the next time it connects.</value></data>
+  <data name="Dev_Pair" xml:space="preserve"><value>Pair</value></data>
   <data name="Model_ShimanoDi2" xml:space="preserve"><value>Shimano Di2</value></data>
   <data name="Model_SramAxs" xml:space="preserve"><value>SRAM AXS / eTap</value></data>
   <data name="Model_WahooKickrBike" xml:space="preserve"><value>Wahoo KICKR Bike</value></data>

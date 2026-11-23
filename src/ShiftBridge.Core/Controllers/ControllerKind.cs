@@ -85,7 +85,7 @@ public static class ControllerKinds
             ("R.Up", "Ctl_RUp"), ("R.Down", "Ctl_RDown"), ("R.Left", "Ctl_RLeft"), ("R.Right", "Ctl_RRight"), ("R.Center", "Ctl_RCenter"),
         ],
         ControllerKind.ShimanoDi2 => Named(kind, "Ch1", "Ch2", "Ch3", "Ch4"),
-        ControllerKind.SramAxs => Named(kind, "Single", "Double"),
+        ControllerKind.SramAxs => Named(kind, "Single", "Double", "Up", "Down"),
         ControllerKind.WahooKickrBike => Named(kind, "RightUp", "RightDown", "RightSteer", "LeftUp", "LeftDown", "LeftSteer",
             "ShiftUpRight", "ShiftDownRight", "ShiftUpLeft", "ShiftDownLeft", "RightBrake", "LeftBrake"),
         ControllerKind.EliteSquare => Named(kind, "Up", "Down", "Left", "Right", "X", "Square", "LeftShift1", "LeftShift2", "LeftBrake", "CampyLeft",
