@@ -16,6 +16,8 @@ public sealed class ZwiftController : IController
 {
     private static readonly Guid BatteryService = FtmsCodec.BaseUuid(0x180F);
     private static readonly Guid BatteryLevel = FtmsCodec.BaseUuid(0x2A19);
+    private static readonly Guid DeviceInfoService = FtmsCodec.BaseUuid(0x180A);
+    private static readonly Guid FirmwareRevision = FtmsCodec.BaseUuid(0x2A26);
 
     private readonly IBleCentral _central;
     private readonly ButtonStateTracker _tracker = new();
@@ -53,11 +55,14 @@ public sealed class ZwiftController : IController
 
     public ControllerState State { get; private set; } = ControllerState.Disconnected;
     public int? BatteryPercent { get; private set; }
+    public string? FirmwareVersion { get; private set; }
     public bool CanVibrate => Info.Type.Model is ZwiftModel.Play or ZwiftModel.Ride;
 
     public event Action<ControllerState>? StateChanged;
     public event Action<IReadOnlyList<ButtonEvent>>? ButtonEvents;
     public event Action<int>? BatteryChanged;
+    /// <summary>Une information affichée (version du micrologiciel) vient d'être lue.</summary>
+    public event Action? InfoChanged;
     /// <summary>Trame brute (hexadécimale) pour l'onglet Diagnostic et la capture.</summary>
     public event Action<string>? Frame;
     public event Action<string>? Log;
@@ -176,18 +181,35 @@ public sealed class ZwiftController : IController
         return true;
     }
 
+    /// <summary>Batterie (0x180F) et version du micrologiciel (0x180A), lues une fois par connexion, au mieux.</summary>
     private async Task ReadBatteryAsync()
     {
         try
         {
             var connection = _connection;
             if (connection is null) return;
-            var found = await connection.DiscoverAsync(uuid => uuid == BatteryService);
-            if (found.Count == 0) return;
-            byte[] b = await connection.ReadAsync(BatteryService, BatteryLevel);
-            if (b.Length > 0) SetBattery(b[0]);
+            var found = await connection.DiscoverAsync(uuid => uuid == BatteryService || uuid == DeviceInfoService);
+            if (found.Any(s => s.Uuid == BatteryService))
+            {
+                try
+                {
+                    byte[] b = await connection.ReadAsync(BatteryService, BatteryLevel);
+                    if (b.Length > 0) SetBattery(b[0]);
+                }
+                catch { /* la batterie n'est pas critique */ }
+            }
+            if (found.Any(s => s.Uuid == DeviceInfoService))
+            {
+                try
+                {
+                    byte[] v = await connection.ReadAsync(DeviceInfoService, FirmwareRevision);
+                    string text = System.Text.Encoding.UTF8.GetString(v).Trim('\0', ' ');
+                    if (text.Length > 0 && text.All(ch => !char.IsControl(ch))) { FirmwareVersion = text; InfoChanged?.Invoke(); }
+                }
+                catch { /* la version n'est pas critique */ }
+            }
         }
-        catch { /* la batterie n'est pas critique */ }
+        catch { /* ni l'une ni l'autre n'est critique */ }
     }
 
     private void OnValueChanged(Guid service, Guid characteristic, byte[] data)

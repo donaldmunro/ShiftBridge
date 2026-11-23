@@ -323,12 +323,20 @@ public sealed class BridgeService : IAsyncDisposable
         var c = CreateController(device);
         if (c is null) { Log?.Invoke($"Modèle de manette non pris en charge : {device.Name}"); return; }
         c.ButtonEvents += ev => InjectEvents(ev, c); // la source sert à ne faire vibrer que la manette appuyée
-        c.StateChanged += _ => { DevicesChanged?.Invoke(); EvaluateScan(); };
+        c.StateChanged += st =>
+        {
+            if (st != ControllerState.Connected) _lowBatteryAlerted.TryRemove(device.Address, out _); // une alerte par connexion
+            DevicesChanged?.Invoke();
+            EvaluateScan();
+        };
+        c.InfoChanged += () => DevicesChanged?.Invoke();
         c.BatteryChanged += pct =>
         {
             // Avec plusieurs manettes, l'appli voit la batterie la plus faible (et non celle de la dernière qui a parlé).
             int lowest = _controllers.Values.Where(x => x.BatteryPercent.HasValue).Select(x => x.BatteryPercent!.Value).DefaultIfEmpty(pct).Min();
             foreach (var t in TransportsSnapshot()) t.SetBattery(lowest);
+            if (pct < LowBatteryPercent && _lowBatteryAlerted.TryAdd(device.Address, 0))
+                Log?.Invoke(Loc.Fmt(Strings.Log_LowBattery, DisplayName(device), pct));
             DevicesChanged?.Invoke();
         };
         c.Frame += m => Log?.Invoke(m);
@@ -408,14 +416,57 @@ public sealed class BridgeService : IAsyncDisposable
 
     public async Task DisconnectAsync(ulong address, bool forget = false)
     {
+        var addressText = BleAddress.ToText(address);
         if (_controllers.TryRemove(address, out var c))
         {
             // Sans cette mémoire, AutoConnectKnown reconnecterait la manette à sa prochaine annonce (moins d'une seconde).
             _manuallyDisconnected[c.Info.AddressText] = 0;
+            if (forget && c is SramAxsAdvancedController axs) axs.ForgetKey(); // la clé d'appairage est indexée par numéro de série
             await c.DisposeAsync();
-            if (forget) lock (Config.SyncRoot) Config.KnownDevices.Remove(c.Info.AddressText);
-            DevicesChanged?.Invoke();
-            EvaluateScan();
+        }
+        else if (forget) _manuallyDisconnected[addressText] = 0;
+        if (forget) ForgetKnown(addressText);
+        DevicesChanged?.Invoke();
+        EvaluateScan();
+    }
+
+    /// <summary>Seuil (en %) sous lequel une manette est signalée en batterie faible.</summary>
+    public const int LowBatteryPercent = 15;
+    private readonly ConcurrentDictionary<ulong, byte> _lowBatteryAlerted = new();
+
+    /// <summary>Nom à afficher : le nom donné par l'utilisateur, sinon celui annoncé en Bluetooth.</summary>
+    public string DisplayName(DiscoveredController device)
+    {
+        lock (Config.SyncRoot) return Config.DeviceNames.TryGetValue(device.AddressText, out var n) ? n : device.Name;
+    }
+
+    /// <summary>Nom personnalisé d'une manette (null si aucun).</summary>
+    public string? CustomName(string addressText)
+    {
+        lock (Config.SyncRoot) return Config.DeviceNames.TryGetValue(addressText, out var n) ? n : null;
+    }
+
+    /// <summary>Donne un nom à une manette ; un nom vide rétablit le nom d'origine.</summary>
+    public void SetDeviceName(string addressText, string? name)
+    {
+        name = name?.Trim();
+        if (name is { Length: > 40 }) name = name[..40];
+        lock (Config.SyncRoot)
+        {
+            if (string.IsNullOrEmpty(name)) Config.DeviceNames.Remove(addressText);
+            else Config.DeviceNames[addressText] = name;
+        }
+        DevicesChanged?.Invoke();
+    }
+
+    /// <summary>Retire une manette de la mémoire (liste connue, modèle, nom personnalisé), qu'elle soit connectée ou non.</summary>
+    private void ForgetKnown(string addressText)
+    {
+        lock (Config.SyncRoot)
+        {
+            Config.KnownDevices.Remove(addressText);
+            Config.KnownControllerKinds.Remove(addressText);
+            Config.DeviceNames.Remove(addressText);
         }
     }
 

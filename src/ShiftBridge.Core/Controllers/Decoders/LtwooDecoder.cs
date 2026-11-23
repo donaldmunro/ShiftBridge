@@ -2,7 +2,7 @@ namespace ShiftBridge.Core.Controllers.Decoders;
 
 /// <summary>
 /// L-TWOO eRX / eR9 (Nordic UART). Le groupe ne signale pas les appuis : on l'interroge (position du pignon arrière toutes les
-/// 500 ms) et un changement de position est traduit en appuis (jusqu'à 3 par changement). Protocole piloté par l'hôte.
+/// 250 ms) et un changement de position est traduit en appuis (jusqu'à 3 par changement). Protocole piloté par l'hôte.
 /// Requête : <c>A5 | code PIN (3 octets ASCII) | 46 46 46 | opcode | XOR de tout ce qui précède</c>.
 /// Réponse : <c>5A | 3 octets | 46 46 46 | opcode (2 octets) | charge utile | XOR</c> (le XOR de la trame entière vaut 0).
 /// Opcodes : 0x20 hello (charge utile : nombre de vitesses), 0x09 pignon arrière (brut), 0x11 plateau avant (brut), 0x0A batterie (%).

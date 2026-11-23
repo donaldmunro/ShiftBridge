@@ -79,6 +79,9 @@
                                             Click="MoreButton_Click">
                                         <Button.ContextMenu>
                                             <ContextMenu>
+                                                <MenuItem Header="{x:Static loc:Strings.Dev_Rename}"
+                                                          Command="{Binding PlacementTarget.Tag.RenameDeviceCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                          CommandParameter="{Binding}" />
                                                 <MenuItem Header="{x:Static loc:Strings.Devices_Vibrate}" IsEnabled="{Binding CanVibrate}"
                                                           Command="{Binding PlacementTarget.Tag.VibrateDeviceCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                           CommandParameter="{Binding}" />

@@ -86,11 +86,11 @@ public sealed class BleInspector(BleAdvertisementHub hub, IBleCentral central) :
     private static string Describe(Seen s)
     {
         List<string> parts = [];
-        if (s.Services.Count > 0) parts.Add("services " + string.Join(", ", s.Services.Select(ShortUuid).OrderBy(x => x, StringComparer.Ordinal)));
+        if (s.Services.Count > 0) parts.Add(Strings.Insp_Services + " " + string.Join(", ", s.Services.Select(ShortUuid).OrderBy(x => x, StringComparer.Ordinal)));
         foreach (var (company, data) in s.Manufacturer.OrderBy(k => k.Key))
-            parts.Add($"fab {company:X4}:{Convert.ToHexString(data)}");
+            parts.Add($"{Strings.Insp_Manufacturer} {company:X4}:{Convert.ToHexString(data)}");
         foreach (var (u, data) in s.ServiceData.OrderBy(k => k.Key))
-            parts.Add($"données {ShortUuid(u)}:{Convert.ToHexString(data)}");
+            parts.Add($"{Strings.Insp_ServiceData} {ShortUuid(u)}:{Convert.ToHexString(data)}");
         return string.Join(" · ", parts);
     }
 

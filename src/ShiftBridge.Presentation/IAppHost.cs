@@ -37,6 +37,12 @@ public interface IAppHost
     /// <summary>Pose une question oui/non à l'utilisateur. Vrai par défaut là où l'hôte n'a pas de boîte de dialogue.</summary>
     bool Confirm(string message) => true;
 
+    /// <summary>Question oui/non asynchrone (la boîte de dialogue mobile ne bloque pas le thread). Par défaut : <see cref="Confirm"/>.</summary>
+    Task<bool> ConfirmAsync(string message) => Task.FromResult(Confirm(message));
+
+    /// <summary>Demande une ligne de texte (valeur initiale proposée). Null si l'utilisateur annule ou si l'hôte n'a pas de saisie.</summary>
+    Task<string?> PromptTextAsync(string message, string initial) => Task.FromResult<string?>(null);
+
     /// <summary>Mise à jour intégrée ; null là où l'application est mise à jour par une boutique (Android).</summary>
     IAppUpdater? Updater => null;
 

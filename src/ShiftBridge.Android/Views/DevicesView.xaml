@@ -45,6 +45,7 @@
                                     </HorizontalStackLayout>
                                 </VerticalStackLayout>
                                 <HorizontalStackLayout Grid.Column="2" Spacing="6" VerticalOptions="Center">
+                                    <Button Text="{x:Static loc:Strings.Dev_Pair}" Clicked="OnPairClicked" Padding="12,0" IsVisible="{Binding CanPair}" />
                                     <Button Text="{Binding ActionText}" Clicked="OnToggleClicked" Padding="12,0" />
                                     <Button Text="⋮" Clicked="OnMoreClicked" Style="{StaticResource GhostButton}" Padding="8,0"
                                             SemanticProperties.Description="{x:Static loc:Strings.Devices_MoreActions}" />

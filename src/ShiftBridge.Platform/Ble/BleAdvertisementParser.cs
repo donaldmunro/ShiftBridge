@@ -54,14 +54,8 @@ public static class BleAdvertisementParser
                     for (int o = 0; o + 16 <= data.Length; o += 16) uuids.Add(FromLittleEndian128(data.Slice(o, 16)));
                     break;
 
-                case ServiceData16 when data.Length >= 2:
-                    serviceData[FtmsCodec.BaseUuid(ReadU16(data))] = data[2..].ToArray();
-                    break;
-                case ServiceData32 when data.Length >= 4:
-                    serviceData[FromU32(ReadU32(data))] = data[4..].ToArray();
-                    break;
-                case ServiceData128 when data.Length >= 16:
-                    serviceData[FromLittleEndian128(data[..16])] = data[16..].ToArray();
+                case ServiceData16 or ServiceData32 or ServiceData128:
+                    AddServiceData(type, data, serviceData);
                     break;
 
                 case Manufacturer when data.Length >= 2:
@@ -71,6 +65,27 @@ public static class BleAdvertisementParser
         }
 
         return new Result(fullName ?? shortName, manufacturer, uuids, serviceData);
+    }
+
+    /// <summary>
+    /// Ajoute une structure « données de service » (type AD 0x16, 0x20 ou 0x21 : UUID de 16, 32 ou 128 bits, puis les données).
+    /// Partagé avec les plateformes qui livrent déjà les structures AD découpées (Windows). Un autre type ou une structure trop
+    /// courte est ignoré.
+    /// </summary>
+    public static void AddServiceData(byte type, ReadOnlySpan<byte> data, IDictionary<Guid, byte[]> target)
+    {
+        switch (type)
+        {
+            case ServiceData16 when data.Length >= 2:
+                target[FtmsCodec.BaseUuid(ReadU16(data))] = data[2..].ToArray();
+                break;
+            case ServiceData32 when data.Length >= 4:
+                target[FromU32(ReadU32(data))] = data[4..].ToArray();
+                break;
+            case ServiceData128 when data.Length >= 16:
+                target[FromLittleEndian128(data[..16])] = data[16..].ToArray();
+                break;
+        }
     }
 
     private static string? DecodeName(ReadOnlySpan<byte> data)

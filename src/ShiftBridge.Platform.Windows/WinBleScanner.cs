@@ -51,13 +51,12 @@ internal sealed class WinBleScanner : IBleScanner
             manufacturer.Add((md.CompanyId, data));
         }
 
-        // Données de service (type AD 0x16) : 2 octets d'UUID 16 bits, puis les données.
+        // Données de service (types AD 0x16, 0x20 et 0x21 : UUID de 16, 32 ou 128 bits, puis les données), comme sur Android.
         var serviceData = new Dictionary<Guid, byte[]>();
-        foreach (var section in adv.DataSections.Where(s => s.DataType == 0x16))
+        foreach (var section in adv.DataSections.Where(s => s.DataType is 0x16 or 0x20 or 0x21))
         {
             CryptographicBuffer.CopyToByteArray(section.Data, out byte[] bytes);
-            if (bytes.Length < 2) continue;
-            serviceData[FtmsCodec.BaseUuid((ushort)(bytes[0] | (bytes[1] << 8)))] = bytes[2..];
+            BleAdvertisementParser.AddServiceData(section.DataType, bytes, serviceData);
         }
 
         Received?.Invoke(new BleAdvertisement(

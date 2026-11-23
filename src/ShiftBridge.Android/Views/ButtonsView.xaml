@@ -72,7 +72,7 @@
                                             <!-- Seulement pour « vitesse + » et « vitesse − » -->
                                             <HorizontalStackLayout Spacing="6" Margin="22,0,0,4" IsVisible="{Binding CanRepeat}">
                                                 <Switch IsToggled="{Binding RepeatOnHold}" VerticalOptions="Center" Scale="0.8"
-                                                        SemanticProperties.Description="Répéter la vitesse tant que la touche est tenue" />
+                                                        SemanticProperties.Description="{x:Static loc:Strings.Buttons_RepeatHold}" />
                                                 <Label Text="{x:Static loc:Strings.Buttons_RepeatHold}" Style="{StaticResource Caption}" VerticalOptions="Center" />
                                             </HorizontalStackLayout>
                                             <!-- Seulement pour « Aller au rapport » : rapport visé -->

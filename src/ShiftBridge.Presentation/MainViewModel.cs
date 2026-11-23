@@ -255,8 +255,11 @@ public sealed partial class MainViewModel : ObservableObject
             _ => Loc.Plural(connected.Count, Strings.Ctrl_Connected_One, Strings.Ctrl_Connected_Many),
         };
         var batteries = connected.Where(c => c.BatteryPercent.HasValue).Select(c => c.BatteryPercent!.Value).ToList();
-        ControllersDetail = batteries.Count > 0 ? Loc.Fmt(Strings.Ctrl_Battery, batteries.Min()) : (connected.Count == 0 ? Strings.Ctrl_AddHint : "");
-        ControllersState = connected.Count > 0 ? UiState.Ok : locked ? UiState.Warning : _bridge.IsScanning ? UiState.Waiting : UiState.Off;
+        bool lowBattery = batteries.Count > 0 && batteries.Min() < BridgeService.LowBatteryPercent;
+        ControllersDetail = batteries.Count > 0
+            ? Loc.Fmt(Strings.Ctrl_Battery, batteries.Min()) + (lowBattery ? " · " + Strings.Home_LowBattery : "")
+            : (connected.Count == 0 ? Strings.Ctrl_AddHint : "");
+        ControllersState = connected.Count > 0 ? (lowBattery ? UiState.Warning : UiState.Ok) : locked ? UiState.Warning : _bridge.IsScanning ? UiState.Waiting : UiState.Off;
 
         // Touches : nombre de touches auxquelles une action est affectée
         int assigned = _bridge.Profile.Bindings.Count;
@@ -552,7 +555,18 @@ public sealed partial class MainViewModel : ObservableObject
     private async Task ForgetDeviceAsync(DeviceRowViewModel? row)
     {
         if (row is null) return;
+        if (!await _host.ConfirmAsync(Loc.Fmt(Strings.Dev_ConfirmForget, row.Title))) return;
         await _bridge.DisconnectAsync(row.Device.Address, forget: true);
+        SaveConfig();
+    }
+
+    [RelayCommand]
+    private async Task RenameDeviceAsync(DeviceRowViewModel? row)
+    {
+        if (row is null) return;
+        string? name = await _host.PromptTextAsync(Strings.Dev_RenamePrompt, row.CustomName ?? "");
+        if (name is null) return; // annulé
+        _bridge.SetDeviceName(row.Device.AddressText, name);
         SaveConfig();
     }
 
@@ -561,7 +575,7 @@ public sealed partial class MainViewModel : ObservableObject
         var controllers = _bridge.Controllers.ToDictionary(c => c.Info.Address);
         var rows = _bridge.SeenDevices
             .OrderBy(d => d.Name).ThenBy(d => d.Address)
-            .Select(d => new DeviceRowViewModel(d, controllers.GetValueOrDefault(d.Address)))
+            .Select(d => new DeviceRowViewModel(d, controllers.GetValueOrDefault(d.Address), _bridge.CustomName(d.AddressText)))
             .ToList();
         Devices.Clear();
         foreach (var r in rows) Devices.Add(r);
@@ -708,8 +722,9 @@ public sealed partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ResetProfile()
+    private async Task ResetProfileAsync()
     {
+        if (!await _host.ConfirmAsync(Strings.Profile_ConfirmReset)) return;
         _bridge.ResetProfile(_editKey); // un profil neuf remplace l'ancien d'un bloc : le mapping ne voit jamais un état à moitié vidé
         _editProfile = _bridge.GetProfile(_editKey);
         ReloadRows(); // les touches clavier/manette ajoutées disparaissent avec leurs assignations
@@ -797,9 +812,10 @@ public sealed partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void DeleteProfile()
+    private async Task DeleteProfileAsync()
     {
         if (_editKey.Length == 0) return;
+        if (!await _host.ConfirmAsync(Strings.Profile_ConfirmDelete)) return;
         string key = _editKey;
         _editKey = "";
         _editProfile = _bridge.DefaultProfile;

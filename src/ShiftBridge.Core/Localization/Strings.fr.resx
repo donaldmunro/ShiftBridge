@@ -631,4 +631,16 @@
   <data name="Update_UpToDate" xml:space="preserve"><value>ShiftBridge est à jour (v{0}).</value></data>
   <data name="Update_CheckFailed" xml:space="preserve"><value>Impossible de rechercher les mises à jour.</value></data>
   <data name="Settings_UpdatesHelp" xml:space="preserve"><value>Contacte github.com de façon anonyme (seulement votre adresse IP et la version de l'application) au lancement, puis une fois par jour.</value></data>
+  <data name="Dev_DetailSignal" xml:space="preserve"><value>{0} · signal {1} dBm</value></data>
+  <data name="Dev_DetailFirmware" xml:space="preserve"><value>{0} · firmware {1}</value></data>
+  <data name="Dev_Rename" xml:space="preserve"><value>Renommer…</value></data>
+  <data name="Dev_RenamePrompt" xml:space="preserve"><value>Nom de cette manette (laisser vide pour retrouver le nom d'origine) :</value></data>
+  <data name="Dev_ConfirmForget" xml:space="preserve"><value>Oublier « {0} » ? Elle ne se reconnectera plus toute seule.</value></data>
+  <data name="Profile_ConfirmReset" xml:space="preserve"><value>Remettre ce profil aux assignations par défaut ?</value></data>
+  <data name="Profile_ConfirmDelete" xml:space="preserve"><value>Supprimer ce profil ?</value></data>
+  <data name="Log_LowBattery" xml:space="preserve"><value>Batterie faible : {0} ({1} %)</value></data>
+  <data name="Home_LowBattery" xml:space="preserve"><value>Batterie faible</value></data>
+  <data name="Insp_Services" xml:space="preserve"><value>services</value></data>
+  <data name="Insp_Manufacturer" xml:space="preserve"><value>fab</value></data>
+  <data name="Insp_ServiceData" xml:space="preserve"><value>données</value></data>
 </root>

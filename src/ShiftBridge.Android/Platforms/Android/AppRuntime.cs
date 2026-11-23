@@ -60,6 +60,19 @@ internal sealed class MauiAppHost : IAppHost
 {
     public string AppVersion => AppInfo.Current.VersionString;
 
+    private static Page? CurrentPage => Microsoft.Maui.Controls.Application.Current?.Windows.FirstOrDefault()?.Page;
+
+    public Task<bool> ConfirmAsync(string message) =>
+        MainThread.InvokeOnMainThreadAsync(async () =>
+            CurrentPage is { } page && await page.DisplayAlertAsync("ShiftBridge", message, ShiftBridge.Core.Localization.Strings.State_Ok, ShiftBridge.Core.Localization.Strings.Buttons_Cancel));
+
+    public Task<string?> PromptTextAsync(string message, string initial) =>
+        MainThread.InvokeOnMainThreadAsync(async () =>
+            CurrentPage is { } page
+                ? await page.DisplayPromptAsync("ShiftBridge", message, ShiftBridge.Core.Localization.Strings.State_Ok,
+                    ShiftBridge.Core.Localization.Strings.Buttons_Cancel, initialValue: initial, maxLength: 40)
+                : null);
+
     public void CopyText(string text)
     {
         try { MainThread.BeginInvokeOnMainThread(async () => { try { await Clipboard.Default.SetTextAsync(text); } catch { } }); }

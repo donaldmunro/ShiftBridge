@@ -631,4 +631,16 @@
   <data name="Update_UpToDate" xml:space="preserve"><value>ShiftBridge is up to date (v{0}).</value></data>
   <data name="Update_CheckFailed" xml:space="preserve"><value>Could not check for updates.</value></data>
   <data name="Settings_UpdatesHelp" xml:space="preserve"><value>Contacts github.com anonymously (no data other than your IP address and the app version) when the app starts, then once a day.</value></data>
+  <data name="Dev_DetailSignal" xml:space="preserve"><value>{0} · signal {1} dBm</value></data>
+  <data name="Dev_DetailFirmware" xml:space="preserve"><value>{0} · firmware {1}</value></data>
+  <data name="Dev_Rename" xml:space="preserve"><value>Rename…</value></data>
+  <data name="Dev_RenamePrompt" xml:space="preserve"><value>Name for this controller (leave empty to restore the default name):</value></data>
+  <data name="Dev_ConfirmForget" xml:space="preserve"><value>Forget "{0}"? It will no longer reconnect by itself.</value></data>
+  <data name="Profile_ConfirmReset" xml:space="preserve"><value>Reset this profile to the default button assignments?</value></data>
+  <data name="Profile_ConfirmDelete" xml:space="preserve"><value>Delete this profile?</value></data>
+  <data name="Log_LowBattery" xml:space="preserve"><value>Low battery: {0} ({1} %)</value></data>
+  <data name="Home_LowBattery" xml:space="preserve"><value>Low battery</value></data>
+  <data name="Insp_Services" xml:space="preserve"><value>services</value></data>
+  <data name="Insp_Manufacturer" xml:space="preserve"><value>mfr</value></data>
+  <data name="Insp_ServiceData" xml:space="preserve"><value>data</value></data>
 </root>

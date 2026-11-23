@@ -64,6 +64,7 @@ public sealed class SramAxsAdvancedController : IController
 
     public ControllerState State { get; private set; } = ControllerState.Disconnected;
     public int? BatteryPercent => null;
+    public string? FirmwareVersion => null;
     public bool CanVibrate => false;
     /// <summary>Connecté mais sans clé valable : l'appairage manuel est possible (<see cref="PairAsync"/>).</summary>
     public bool CanPair => State == ControllerState.Locked && _connection is not null;
@@ -71,6 +72,7 @@ public sealed class SramAxsAdvancedController : IController
     public event Action<ControllerState>? StateChanged;
     public event Action<IReadOnlyList<ButtonEvent>>? ButtonEvents;
     public event Action<int>? BatteryChanged { add { } remove { } }
+    public event Action? InfoChanged { add { } remove { } }
     public event Action<string>? Frame;
     public event Action<string>? Log;
 

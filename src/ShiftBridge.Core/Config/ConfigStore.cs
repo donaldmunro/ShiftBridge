@@ -35,6 +35,9 @@ public sealed class AppConfig
     /// <summary>Modèle de chaque manette BLE non Zwift déjà connectée (adresse → modèle) : sert à afficher ses touches dans l'onglet Touches même hors ligne.</summary>
     public Dictionary<string, ControllerKind> KnownControllerKinds { get; set; } = [];
 
+    /// <summary>Nom personnalisé donné à une manette (adresse → nom), affiché à la place du nom Bluetooth.</summary>
+    public Dictionary<string, string> DeviceNames { get; set; } = [];
+
     /// <summary>Code PIN à trois caractères du groupe L-TWOO (appliqué à la prochaine connexion).</summary>
     public string LtwooPin { get; set; } = "";
 
@@ -141,6 +144,8 @@ public sealed class AppConfig
         KnownDevices ??= [];
         KnownControllerKinds ??= [];
         SramAxsKeys ??= [];
+        DeviceNames = (DeviceNames ?? []).Where(p => !string.IsNullOrWhiteSpace(p.Value))
+            .ToDictionary(p => p.Key, p => p.Value.Trim().Length > 40 ? p.Value.Trim()[..40] : p.Value.Trim());
         GearCount = Math.Clamp(GearCount, 8, 24); // plage proposée par l'interface ; la table (VirtualShiftingModel) en compte 24 au plus
         if (TrainerPort is < 1 or > 65535) TrainerPort = 36866;
         if (TrainerTransport is not ("wifi" or "ble")) TrainerTransport = "wifi";

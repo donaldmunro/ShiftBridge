@@ -164,20 +164,33 @@ public sealed class InspectedDeviceRowViewModel(ShiftBridge.Platform.Ble.Inspect
 /// <summary>Une manette détectée dans l'onglet « Appareils ».</summary>
 public sealed partial class DeviceRowViewModel : ObservableObject
 {
-    public DeviceRowViewModel(DiscoveredController device, IController? controller)
+    public DeviceRowViewModel(DiscoveredController device, IController? controller, string? customName = null)
     {
         Device = device;
         Controller = controller;
+        CustomName = string.IsNullOrWhiteSpace(customName) ? null : customName.Trim();
     }
 
     public DiscoveredController Device { get; }
     public IController? Controller { get; }
+    /// <summary>Nom donné par l'utilisateur (null = nom du modèle).</summary>
+    public string? CustomName { get; }
 
-    public string Title => Device is DiscoveredZwiftDevice z
+    /// <summary>Nom du modèle, sans personnalisation.</summary>
+    public string ModelTitle => Device is DiscoveredZwiftDevice z
         ? $"{ModelName(z.Type.Model)}{SideText(z)}"
         : $"{Loc.Get("Model_" + Device.Kind)} ({Strings.Dev_Beta})";
-    /// <summary>Détail technique (adresse, signal) : infobulle de la ligne sous Windows, titre du menu « ⋮ » sous Android.</summary>
-    public string Detail => $"{Device.AddressText} · signal {Device.Rssi} dBm";
+    public string Title => CustomName ?? ModelTitle;
+    /// <summary>Détail technique (modèle si renommée, adresse, signal, micrologiciel) : infobulle de la ligne sous Windows, titre du menu « ⋮ » sous Android.</summary>
+    public string Detail
+    {
+        get
+        {
+            string text = Loc.Fmt(Strings.Dev_DetailSignal, Device.AddressText, Device.Rssi);
+            if (Controller?.FirmwareVersion is { Length: > 0 } fw) text = Loc.Fmt(Strings.Dev_DetailFirmware, text, fw);
+            return CustomName is null ? text : $"{ModelTitle} · {text}";
+        }
+    }
     public int? BatteryPercent => Controller?.BatteryPercent;
     public bool HasBattery => BatteryPercent.HasValue;
 
