@@ -269,6 +269,87 @@
   <data name="Err_ControllerNotFound" xml:space="preserve"><value>Manette introuvable (éteinte ou déjà connectée ailleurs ?)</value></data>
   <data name="Err_ZwiftCharsMissing" xml:space="preserve"><value>Caractéristiques Zwift manquantes</value></data>
   <data name="Err_ControllerServiceMissing" xml:space="preserve"><value>Service attendu absent : cet appareil n'est pas reconnu comme ce modèle</value></data>
+  <data name="Model_ShimanoDi2" xml:space="preserve"><value>Shimano Di2</value></data>
+  <data name="Model_SramAxs" xml:space="preserve"><value>SRAM AXS / eTap</value></data>
+  <data name="Model_WahooKickrBike" xml:space="preserve"><value>Wahoo KICKR Bike</value></data>
+  <data name="Model_EliteSquare" xml:space="preserve"><value>Elite Square</value></data>
+  <data name="Model_StagesSb20" xml:space="preserve"><value>Stages SB20</value></data>
+  <data name="Model_CycplusT7h" xml:space="preserve"><value>CYCPLUS T7H</value></data>
+  <data name="Model_WheeltopEds" xml:space="preserve"><value>Wheeltop EDS</value></data>
+  <data name="Model_Ltwoo" xml:space="preserve"><value>L-TWOO eRX / eR9</value></data>
+  <data name="Ctl_di2_Ch1" xml:space="preserve"><value>Canal D-Fly 1</value></data>
+  <data name="Ctl_di2_Ch2" xml:space="preserve"><value>Canal D-Fly 2</value></data>
+  <data name="Ctl_di2_Ch3" xml:space="preserve"><value>Canal D-Fly 3</value></data>
+  <data name="Ctl_di2_Ch4" xml:space="preserve"><value>Canal D-Fly 4</value></data>
+  <data name="Ctl_axs_Single" xml:space="preserve"><value>Levier : appui simple</value></data>
+  <data name="Ctl_axs_Double" xml:space="preserve"><value>Levier : double appui</value></data>
+  <data name="Ctl_kickr_RightUp" xml:space="preserve"><value>Droite : haut</value></data>
+  <data name="Ctl_kickr_RightDown" xml:space="preserve"><value>Droite : bas</value></data>
+  <data name="Ctl_kickr_RightSteer" xml:space="preserve"><value>Droite : direction</value></data>
+  <data name="Ctl_kickr_LeftUp" xml:space="preserve"><value>Gauche : haut</value></data>
+  <data name="Ctl_kickr_LeftDown" xml:space="preserve"><value>Gauche : bas</value></data>
+  <data name="Ctl_kickr_LeftSteer" xml:space="preserve"><value>Gauche : direction</value></data>
+  <data name="Ctl_kickr_ShiftUpRight" xml:space="preserve"><value>Droite : vitesse +</value></data>
+  <data name="Ctl_kickr_ShiftDownRight" xml:space="preserve"><value>Droite : vitesse −</value></data>
+  <data name="Ctl_kickr_ShiftUpLeft" xml:space="preserve"><value>Gauche : vitesse +</value></data>
+  <data name="Ctl_kickr_ShiftDownLeft" xml:space="preserve"><value>Gauche : vitesse −</value></data>
+  <data name="Ctl_kickr_RightBrake" xml:space="preserve"><value>Frein droit</value></data>
+  <data name="Ctl_kickr_LeftBrake" xml:space="preserve"><value>Frein gauche</value></data>
+  <data name="Ctl_square_Up" xml:space="preserve"><value>Haut</value></data>
+  <data name="Ctl_square_Down" xml:space="preserve"><value>Bas</value></data>
+  <data name="Ctl_square_Left" xml:space="preserve"><value>Gauche</value></data>
+  <data name="Ctl_square_Right" xml:space="preserve"><value>Droite</value></data>
+  <data name="Ctl_square_X" xml:space="preserve"><value>X</value></data>
+  <data name="Ctl_square_Square" xml:space="preserve"><value>Carré</value></data>
+  <data name="Ctl_square_LeftShift1" xml:space="preserve"><value>Gauche : vitesse +</value></data>
+  <data name="Ctl_square_LeftShift2" xml:space="preserve"><value>Gauche : vitesse −</value></data>
+  <data name="Ctl_square_LeftBrake" xml:space="preserve"><value>Frein gauche</value></data>
+  <data name="Ctl_square_CampyLeft" xml:space="preserve"><value>Gauche : Campagnolo</value></data>
+  <data name="Ctl_square_Y" xml:space="preserve"><value>Y</value></data>
+  <data name="Ctl_square_A" xml:space="preserve"><value>A</value></data>
+  <data name="Ctl_square_B" xml:space="preserve"><value>B</value></data>
+  <data name="Ctl_square_Z" xml:space="preserve"><value>Z</value></data>
+  <data name="Ctl_square_Circle" xml:space="preserve"><value>Rond</value></data>
+  <data name="Ctl_square_Triangle" xml:space="preserve"><value>Triangle</value></data>
+  <data name="Ctl_square_RightShift1" xml:space="preserve"><value>Droite : vitesse +</value></data>
+  <data name="Ctl_square_RightShift2" xml:space="preserve"><value>Droite : vitesse −</value></data>
+  <data name="Ctl_square_RightBrake" xml:space="preserve"><value>Frein droit</value></data>
+  <data name="Ctl_square_CampyRight" xml:space="preserve"><value>Droite : Campagnolo</value></data>
+  <data name="Ctl_sb20_LeftUp" xml:space="preserve"><value>Gauche : haut</value></data>
+  <data name="Ctl_sb20_LeftDown" xml:space="preserve"><value>Gauche : bas</value></data>
+  <data name="Ctl_sb20_LeftThird" xml:space="preserve"><value>Gauche : 3e bouton</value></data>
+  <data name="Ctl_sb20_RightUp" xml:space="preserve"><value>Droite : haut</value></data>
+  <data name="Ctl_sb20_RightDown" xml:space="preserve"><value>Droite : bas</value></data>
+  <data name="Ctl_sb20_RightThird" xml:space="preserve"><value>Droite : 3e bouton</value></data>
+  <data name="Ctl_t7h_LShiftUp" xml:space="preserve"><value>Levier gauche : vitesse +</value></data>
+  <data name="Ctl_t7h_LShiftDown" xml:space="preserve"><value>Levier gauche : vitesse −</value></data>
+  <data name="Ctl_t7h_LRearArrow" xml:space="preserve"><value>Levier gauche : flèche arrière</value></data>
+  <data name="Ctl_t7h_LFrontArrow" xml:space="preserve"><value>Levier gauche : flèche avant</value></data>
+  <data name="Ctl_t7h_RShiftUp" xml:space="preserve"><value>Levier droit : vitesse +</value></data>
+  <data name="Ctl_t7h_RShiftDown" xml:space="preserve"><value>Levier droit : vitesse −</value></data>
+  <data name="Ctl_t7h_RRearArrow" xml:space="preserve"><value>Levier droit : flèche arrière</value></data>
+  <data name="Ctl_t7h_RFrontArrow" xml:space="preserve"><value>Levier droit : flèche avant</value></data>
+  <data name="Ctl_wheeltop_Up" xml:space="preserve"><value>Haut</value></data>
+  <data name="Ctl_wheeltop_Down" xml:space="preserve"><value>Bas</value></data>
+  <data name="Ctl_wheeltop_FineUp" xml:space="preserve"><value>Haut (réglage fin)</value></data>
+  <data name="Ctl_wheeltop_FineDown" xml:space="preserve"><value>Bas (réglage fin)</value></data>
+  <data name="Ctl_wheeltop_LUp" xml:space="preserve"><value>Gauche : haut</value></data>
+  <data name="Ctl_wheeltop_LDown" xml:space="preserve"><value>Gauche : bas</value></data>
+  <data name="Ctl_wheeltop_LFineUp" xml:space="preserve"><value>Gauche : haut (réglage fin)</value></data>
+  <data name="Ctl_wheeltop_LFineDown" xml:space="preserve"><value>Gauche : bas (réglage fin)</value></data>
+  <data name="Ctl_wheeltop_RUp" xml:space="preserve"><value>Droite : haut</value></data>
+  <data name="Ctl_wheeltop_RDown" xml:space="preserve"><value>Droite : bas</value></data>
+  <data name="Ctl_wheeltop_RFineUp" xml:space="preserve"><value>Droite : haut (réglage fin)</value></data>
+  <data name="Ctl_wheeltop_RFineDown" xml:space="preserve"><value>Droite : bas (réglage fin)</value></data>
+  <data name="Ctl_wheeltop_FUp" xml:space="preserve"><value>Avant : haut</value></data>
+  <data name="Ctl_wheeltop_FDown" xml:space="preserve"><value>Avant : bas</value></data>
+  <data name="Ctl_wheeltop_FFineUp" xml:space="preserve"><value>Avant : haut (réglage fin)</value></data>
+  <data name="Ctl_wheeltop_FFineDown" xml:space="preserve"><value>Avant : bas (réglage fin)</value></data>
+  <data name="Ctl_ltwoo_Up" xml:space="preserve"><value>Pignon arrière : vitesse +</value></data>
+  <data name="Ctl_ltwoo_Down" xml:space="preserve"><value>Pignon arrière : vitesse −</value></data>
+  <data name="Ctl_ltwoo_Front" xml:space="preserve"><value>Plateau avant : changement</value></data>
+  <data name="Ltwoo_PinLabel" xml:space="preserve"><value>Code PIN du groupe L-TWOO (3 caractères)</value></data>
+  <data name="Ltwoo_PinHint" xml:space="preserve"><value>Appliqué à la prochaine connexion du groupe. Un code faux est signalé dans le journal Diagnostic.</value></data>
   <data name="Inspect_NoName" xml:space="preserve"><value>(sans nom)</value></data>
   <data name="Inspect_Connecting" xml:space="preserve"><value>Inspecteur : connexion à {0}…</value></data>
   <data name="Inspect_Tree" xml:space="preserve"><value>Inspecteur : {0}, {1} service(s) GATT</value></data>

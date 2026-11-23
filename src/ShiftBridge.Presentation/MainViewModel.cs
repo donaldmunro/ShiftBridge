@@ -72,6 +72,7 @@ public sealed partial class MainViewModel : ObservableObject
         _nativeZwiftMode = _config.NativeZwiftMode;
         _reportGearToApp = _config.ReportGearToApp;
         _controllerVibration = _config.ControllerVibration;
+        _ltwooPin = _config.LtwooPin ?? "";
         _autoStartVirtualShifting = _config.AutoStartVirtualShifting;
         _showOverlay = _config.ShowOverlay;
         _overlayLocked = _config.OverlayLocked;
@@ -148,6 +149,15 @@ public sealed partial class MainViewModel : ObservableObject
     [ObservableProperty] private string _dirConStatus = "";
     [ObservableProperty] private bool _autoReconnect;
     [ObservableProperty] private bool _controllerVibration = true;
+    /// <summary>Code PIN (3 caractères) du groupe L-TWOO, lu à la prochaine connexion.</summary>
+    [ObservableProperty] private string _ltwooPin = "";
+
+    partial void OnLtwooPinChanged(string value)
+    {
+        if (_loading) return;
+        _config.LtwooPin = value ?? "";
+        SaveConfig();
+    }
 
     partial void OnControllerVibrationChanged(bool value)
     {

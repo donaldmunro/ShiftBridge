@@ -128,7 +128,7 @@ public class ControllerCatalogTests
     [InlineData("THINK X1")]        // home-trainer Thinkrider
     [InlineData("THINK-X7")]
     [InlineData("Think")]
-    [InlineData("CYCPLUS T7H-L")]   // pas un BC2
+    [InlineData("CYCPLUS BC1")]     // pas un BC2
     [InlineData("Onelap D100")]     // trainer Onelap
     [InlineData("")]
     [InlineData(null)]

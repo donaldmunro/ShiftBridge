@@ -52,6 +52,40 @@ public sealed class Profile
             [("Up", ObcButtonId.ShiftUp), ("Down", ObcButtonId.ShiftDown)],
         ControllerKind.OnelapKey =>
             [("Up", ObcButtonId.ShiftUp), ("Down", ObcButtonId.ShiftDown), ("Left", ObcButtonId.Left), ("Right", ObcButtonId.Right), ("Center", ObcButtonId.Select)],
+        ControllerKind.ShimanoDi2 => [("Ch1", ObcButtonId.ShiftUp), ("Ch2", ObcButtonId.ShiftDown)],
+        ControllerKind.SramAxs => [("Single", ObcButtonId.ShiftUp), ("Double", ObcButtonId.ShiftDown)],
+        ControllerKind.WahooKickrBike =>
+        [
+            ("RightUp", ObcButtonId.ShiftUp), ("RightDown", ObcButtonId.ShiftUp), ("RightSteer", ObcButtonId.Right),
+            ("LeftUp", ObcButtonId.ShiftDown), ("LeftDown", ObcButtonId.ShiftDown), ("LeftSteer", ObcButtonId.Left),
+            ("ShiftUpRight", ObcButtonId.ShiftUp), ("ShiftDownRight", ObcButtonId.ShiftDown),
+            ("ShiftUpLeft", ObcButtonId.ShiftUp), ("ShiftDownLeft", ObcButtonId.ShiftDown),
+            ("RightBrake", ObcButtonId.ShiftUp), ("LeftBrake", ObcButtonId.ShiftDown),
+        ],
+        ControllerKind.EliteSquare =>
+        [
+            ("Up", ObcButtonId.Up), ("Down", ObcButtonId.Down), ("Left", ObcButtonId.Left), ("Right", ObcButtonId.Right),
+            ("LeftShift1", ObcButtonId.ShiftUp), ("LeftShift2", ObcButtonId.ShiftDown),
+            ("RightShift1", ObcButtonId.ShiftUp), ("RightShift2", ObcButtonId.ShiftDown),
+            ("A", ObcButtonId.Select), ("B", ObcButtonId.Back), ("Y", ObcButtonId.Emote), ("Z", ObcButtonId.CameraView),
+        ],
+        ControllerKind.StagesSb20 =>
+        [
+            ("LeftUp", ObcButtonId.ShiftUp), ("LeftDown", ObcButtonId.ShiftDown), ("LeftThird", ObcButtonId.Left),
+            ("RightUp", ObcButtonId.ShiftUp), ("RightDown", ObcButtonId.ShiftDown), ("RightThird", ObcButtonId.Right),
+        ],
+        ControllerKind.CycplusT7h =>
+        [
+            ("L.ShiftUp", ObcButtonId.ShiftUp), ("L.ShiftDown", ObcButtonId.ShiftDown), ("L.RearArrow", ObcButtonId.Left), ("L.FrontArrow", ObcButtonId.Left),
+            ("R.ShiftUp", ObcButtonId.ShiftUp), ("R.ShiftDown", ObcButtonId.ShiftDown), ("R.RearArrow", ObcButtonId.Right), ("R.FrontArrow", ObcButtonId.Right),
+        ],
+        ControllerKind.WheeltopEds =>
+        [
+            ("Up", ObcButtonId.ShiftUp), ("Down", ObcButtonId.ShiftDown),
+            ("L.Up", ObcButtonId.ShiftUp), ("L.Down", ObcButtonId.ShiftDown),
+            ("R.Up", ObcButtonId.ShiftUp), ("R.Down", ObcButtonId.ShiftDown),
+        ],
+        ControllerKind.Ltwoo => [("Up", ObcButtonId.ShiftUp), ("Down", ObcButtonId.ShiftDown)],
         _ => [],
     };
 

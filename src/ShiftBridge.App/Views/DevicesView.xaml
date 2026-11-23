@@ -157,6 +157,9 @@
                     <StackPanel>
                         <CheckBox Content="{x:Static loc:Strings.Devices_AutoReconnect}" IsChecked="{Binding AutoReconnect}" />
                         <CheckBox Content="{x:Static loc:Strings.Devices_Vibration}" IsChecked="{Binding ControllerVibration}" Margin="0,8,0,0" />
+                        <TextBlock Text="{x:Static loc:Strings.Ltwoo_PinLabel}" Margin="0,14,0,4" />
+                        <TextBox Text="{Binding LtwooPin, UpdateSourceTrigger=LostFocus}" MaxLength="3" Width="90" HorizontalAlignment="Left" ToolTip="{x:Static loc:Strings.Ltwoo_PinHint}" />
+                        <TextBlock Text="{x:Static loc:Strings.Ltwoo_PinHint}" Style="{StaticResource Caption}" TextWrapping="Wrap" Margin="0,4,0,0" />
                     </StackPanel>
                 </Border>
             </Expander>

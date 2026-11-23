@@ -8,20 +8,45 @@ using ShiftBridge.Platform.Ble;
 namespace ShiftBridge.Platform.Controllers;
 
 /// <summary>Ce qui distingue une manette BLE d'une autre : où elle notifie et comment lire ses trames.</summary>
+/// <param name="Characteristics">Caractéristiques de notification du service (on s'abonne à celles qui existent).</param>
 public sealed record ControllerSpec(
-    ControllerKind Kind, Guid Service, Guid Characteristic, BleNotifyMode Mode, Func<IButtonDecoder> CreateDecoder)
+    ControllerKind Kind, Guid Service, IReadOnlyList<Guid> Characteristics, BleNotifyMode Mode, Func<IButtonDecoder> CreateDecoder)
 {
-    public static ControllerSpec? For(ControllerKind kind) => kind switch
+    /// <summary>Caractéristique d'écriture (manettes interrogées, comme L-TWOO).</summary>
+    public Guid? WriteCharacteristic { get; init; }
+    /// <summary>Services supplémentaires à découvrir (pour le maintien de liaison).</summary>
+    public Func<Guid, bool>? ExtraServiceFilter { get; init; }
+    /// <summary>Caractéristique lue à intervalle régulier pour que l'appareil ne coupe pas une liaison inactive.</summary>
+    public Guid? KeepAliveCharacteristic { get; init; }
+    public TimeSpan KeepAliveInterval { get; init; } = TimeSpan.FromSeconds(60);
+
+    /// <summary>Spécification d'un modèle ; <paramref name="pin"/> ne sert qu'au L-TWOO (code à trois caractères du groupe).</summary>
+    public static ControllerSpec? For(ControllerKind kind, string? pin = null) => kind switch
     {
-        ControllerKind.ThinkriderVs200 => new(kind, ThinkriderVs200Decoder.Service, ThinkriderVs200Decoder.Notify, BleNotifyMode.Notify, () => new ThinkriderVs200Decoder()),
-        ControllerKind.CycplusBc2 => new(kind, BleUuids.NordicUartService, BleUuids.NordicUartTx, BleNotifyMode.Notify, () => new CycplusBc2Decoder()),
-        ControllerKind.OnelapKey => new(kind, OnelapKeyDecoder.Service, OnelapKeyDecoder.Notify, BleNotifyMode.Notify, () => new OnelapKeyDecoder()),
+        ControllerKind.ThinkriderVs200 => new(kind, ThinkriderVs200Decoder.Service, [ThinkriderVs200Decoder.Notify], BleNotifyMode.Notify, () => new ThinkriderVs200Decoder()),
+        ControllerKind.CycplusBc2 => new(kind, BleUuids.NordicUartService, [BleUuids.NordicUartTx], BleNotifyMode.Notify, () => new CycplusBc2Decoder()),
+        ControllerKind.OnelapKey => new(kind, OnelapKeyDecoder.Service, [OnelapKeyDecoder.Notify], BleNotifyMode.Notify, () => new OnelapKeyDecoder()),
+        ControllerKind.ShimanoDi2 => new(kind, ShimanoDi2Decoder.Service, [ShimanoDi2Decoder.Channels], BleNotifyMode.Indicate, () => new ShimanoDi2Decoder()),
+        ControllerKind.SramAxs => new(kind, SramAxsDecoder.Service, [SramAxsDecoder.Trigger], BleNotifyMode.Notify, () => new SramAxsDecoder())
+        {
+            ExtraServiceFilter = SramAxsDecoder.IsAxsService,
+            KeepAliveCharacteristic = SramAxsDecoder.LiveState,
+        },
+        ControllerKind.WahooKickrBike => new(kind, WahooKickrDecoder.Service, [WahooKickrDecoder.Notify], BleNotifyMode.Notify, () => new WahooKickrDecoder()),
+        ControllerKind.EliteSquare => new(kind, EliteSquareDecoder.Service, [EliteSquareDecoder.Notify43, EliteSquareDecoder.Notify45], BleNotifyMode.Notify, () => new EliteSquareDecoder()),
+        ControllerKind.StagesSb20 => new(kind, StagesSb20Decoder.Service, [StagesSb20Decoder.Notify], BleNotifyMode.Notify, () => new StagesSb20Decoder()),
+        ControllerKind.CycplusT7h => new(kind, BleUuids.NordicUartService, [BleUuids.NordicUartTx], BleNotifyMode.Notify, () => new CycplusT7hDecoder()),
+        ControllerKind.WheeltopEds => new(kind, BleUuids.NordicUartService, [BleUuids.NordicUartTx], BleNotifyMode.Notify, () => new WheeltopEdsDecoder()),
+        ControllerKind.Ltwoo => new(kind, BleUuids.NordicUartService, [BleUuids.NordicUartTx], BleNotifyMode.Notify, () => new LtwooDecoder(pin))
+        {
+            WriteCharacteristic = BleUuids.NordicUartRx,
+        },
         _ => null,
     };
 }
 
 /// <summary>
-/// Manette BLE à une seule caractéristique de notification (VS200, BC2, Onelap Key…), sans handshake ni vibration.
+/// Manette BLE décrite par un <see cref="ControllerSpec"/> (VS200, BC2, Onelap Key, Di2, AXS, KICKR Bike…), sans vibration.
 /// Même cycle de vie que <see cref="ZwiftController"/> : reconnexion progressive (1 → 15 s), notifications abonnées après la pose
 /// du gestionnaire, touches relâchées à chaque coupure. Les appuis « instantanés » (sans trame de relâchement) sont émis en
 /// appui puis relâchement différé, sérialisés pour que deux appuis rapprochés ne se confondent pas côté appli.
@@ -36,12 +61,16 @@ public sealed class BleButtonController : IController
     private readonly ButtonStateTracker _tracker = new();
     private readonly object _trackerLock = new();
     private readonly SemaphoreSlim _tapGate = new(1, 1);
+    private readonly SemaphoreSlim _writeGate = new(1, 1);
     private IButtonDecoder _decoder;
     private CancellationTokenSource? _cts;
+    private CancellationTokenSource? _linkCts; // boucles d'interrogation et de maintien : une par liaison
     private Task? _runTask;
     private IBleConnection? _connection;
+    private IReadOnlyList<BleServiceInfo> _services = [];
     private TaskCompletionSource? _disconnected;
     private long _frameCount;
+    private string _lastDecodeError = "";
 
     public BleButtonController(IBleCentral central, DiscoveredController info, ControllerSpec spec, bool autoReconnect = true)
     {
@@ -120,25 +149,92 @@ public sealed class BleButtonController : IController
     private async Task ConnectOnceAsync(CancellationToken ct)
     {
         _disconnected = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        _decoder = _spec.CreateDecoder(); // état de trame remis à zéro à chaque liaison
+        AttachDecoder(_spec.CreateDecoder()); // état de trame remis à zéro à chaque liaison
+        _lastDecodeError = "";
 
-        try { _connection = await _central.ConnectAsync(Info.Address, new BleConnectOptions(), ct); }
+        try { _connection = await _central.ConnectAsync(Info.Address, new BleConnectOptions(HighPriority: _spec.KeepAliveCharacteristic is not null), ct); }
         catch (BleDeviceNotFoundException) { throw new IOException(Strings.Err_ControllerNotFound); }
         _connection.Disconnected += OnDisconnected;
         _connection.ValueChanged += OnValueChanged;
         _connection.Log += m => Log?.Invoke(m);
 
-        var services = await _connection.DiscoverAsync(uuid => uuid == _spec.Service, strict: true, ct: ct);
-        var service = services.FirstOrDefault(s => s.Uuid == _spec.Service);
-        if (service is null || service.Characteristics.All(c => c.Uuid != _spec.Characteristic))
+        _services = await _connection.DiscoverAsync(
+            uuid => uuid == _spec.Service || (_spec.ExtraServiceFilter?.Invoke(uuid) ?? false), strict: true, ct: ct);
+        var service = _services.FirstOrDefault(s => s.Uuid == _spec.Service);
+        var present = service is null ? [] : _spec.Characteristics.Where(c => service.Characteristics.Any(x => x.Uuid == c)).ToList();
+        if (service is null || present.Count == 0)
+            throw new IOException(Strings.Err_ControllerServiceMissing);
+        if (_spec.WriteCharacteristic is { } w && service.Characteristics.All(x => x.Uuid != w))
             throw new IOException(Strings.Err_ControllerServiceMissing);
 
         // Le gestionnaire ValueChanged est posé AVANT d'activer les notifications pour ne perdre aucune trame.
-        await _connection.SetNotifyAsync(_spec.Service, _spec.Characteristic, _spec.Mode);
+        foreach (var c in present) await _connection.SetNotifyAsync(_spec.Service, c, _spec.Mode);
         Log?.Invoke($"{Info.Name} : notifications activées");
+
+        _linkCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        if (_decoder is IPollingDecoder polling) await StartPollingAsync(polling, _linkCts.Token);
+        if (_spec.KeepAliveCharacteristic is not null) _ = KeepAliveLoopAsync(_linkCts.Token);
 
         _ = ReadBatteryAsync(); // best-effort
         SetState(ControllerState.Connected);
+    }
+
+    private void AttachDecoder(IButtonDecoder decoder)
+    {
+        (_decoder as IDeferredDecoder)?.Dispose();
+        _decoder = decoder;
+        if (decoder is IDeferredDecoder deferred) deferred.Deferred += frame => Process(frame, null);
+    }
+
+    // ---------- Interrogation (L-TWOO) et maintien de liaison (AXS) ----------
+
+    private async Task StartPollingAsync(IPollingDecoder polling, CancellationToken ct)
+    {
+        foreach (var f in polling.InitFrames) await WriteAsync(f);
+        _ = Task.Run(async () =>
+        {
+            int i = 0;
+            try
+            {
+                while (!ct.IsCancellationRequested && polling.PollFrames.Count > 0)
+                {
+                    await Task.Delay(polling.PollInterval, ct);
+                    await WriteAsync(polling.PollFrames[i++ % polling.PollFrames.Count]);
+                }
+            }
+            catch (OperationCanceledException) { /* liaison fermée */ }
+            catch (Exception ex) { Log?.Invoke($"{Info.Name} : interrogation interrompue ({ex.Message})"); }
+        }, ct);
+    }
+
+    private async Task WriteAsync(byte[] data)
+    {
+        var connection = _connection;
+        if (connection is null || _spec.WriteCharacteristic is not { } chr) return;
+        await _writeGate.WaitAsync();
+        try
+        {
+            await connection.WriteAsync(_spec.Service, chr, data, withResponse: false);
+            if (VerboseFrames) Frame?.Invoke($"{Info.Name} > {Convert.ToHexString(data)}");
+        }
+        finally { _writeGate.Release(); }
+    }
+
+    private async Task KeepAliveLoopAsync(CancellationToken ct)
+    {
+        try
+        {
+            while (!ct.IsCancellationRequested)
+            {
+                await Task.Delay(_spec.KeepAliveInterval, ct);
+                var connection = _connection;
+                var svc = _services.FirstOrDefault(s => s.Characteristics.Any(c => c.Uuid == _spec.KeepAliveCharacteristic));
+                if (connection is null || svc is null) continue;
+                // Lecture seule : la valeur est chiffrée et ne nous sert pas, seul le trafic compte. Un échec est sans conséquence.
+                try { await connection.ReadAsync(svc.Uuid, _spec.KeepAliveCharacteristic!.Value); } catch { /* best-effort */ }
+            }
+        }
+        catch (OperationCanceledException) { /* liaison fermée */ }
     }
 
     private async Task ReadBatteryAsync()
@@ -155,21 +251,32 @@ public sealed class BleButtonController : IController
         catch { /* la batterie n'est pas critique */ }
     }
 
+    // ---------- Trames ----------
+
     private void OnValueChanged(Guid service, Guid characteristic, byte[] data)
     {
-        if (characteristic != _spec.Characteristic) return;
+        if (!_spec.Characteristics.Contains(characteristic)) return;
         _frameCount++;
         string hex = Convert.ToHexString(data);
         DecodedFrame? frame;
         try { frame = _decoder.Decode(characteristic, data); }
-        catch (Exception ex) { Log?.Invoke($"{Info.Name} : trame illisible ({ex.Message}) {hex}"); return; }
+        catch (Exception ex)
+        {
+            // Une même erreur (p. ex. mauvais code PIN, répétée à chaque interrogation) n'est journalisée qu'une fois.
+            if (_lastDecodeError != ex.Message) { _lastDecodeError = ex.Message; Log?.Invoke($"{Info.Name} : {ex.Message} ({hex})"); }
+            return;
+        }
 
         if (frame is null)
         {
             Frame?.Invoke($"{Info.Name} < {hex} (non reconnue)");
             return;
         }
+        Process(frame, hex);
+    }
 
+    private void Process(DecodedFrame frame, string? hex)
+    {
         List<ButtonEvent> events = [];
         if (frame.Held is { } held)
         {
@@ -178,8 +285,10 @@ public sealed class BleButtonController : IController
         }
         var taps = frame.Taps.Select(n => ButtonKey.Controller(Info.Kind, n)).ToList();
 
-        if (VerboseFrames || events.Count > 0 || taps.Count > 0 || _frameCount == 1)
+        if (hex is not null && (VerboseFrames || events.Count > 0 || taps.Count > 0 || _frameCount == 1))
             Frame?.Invoke($"{Info.Name} < {hex}");
+        else if (hex is null && taps.Count > 0)
+            Frame?.Invoke($"{Info.Name} : {string.Join(", ", frame.Taps)}");
 
         if (frame.BatteryPercent is { } pct) { BatteryPercent = pct; BatteryChanged?.Invoke(pct); }
         if (events.Count > 0) ButtonEvents?.Invoke(events);
@@ -225,6 +334,9 @@ public sealed class BleButtonController : IController
 
     private async Task CleanupAsync()
     {
+        try { _linkCts?.Cancel(); } catch { /* déjà libéré */ }
+        _linkCts = null;
+        (_decoder as IDeferredDecoder)?.Dispose();
         var c = _connection;
         _connection = null;
         if (c is null) return;

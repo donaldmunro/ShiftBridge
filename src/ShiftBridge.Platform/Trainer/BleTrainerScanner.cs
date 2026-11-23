@@ -62,7 +62,7 @@ public sealed class BleTrainerScanner(BleAdvertisementHub hub) : IDisposable
         }
         if (localName.StartsWith("ShiftBridge", StringComparison.OrdinalIgnoreCase)) excluded = true;
         // Télécommandes de guidon (Thinkrider VS200, CYCPLUS BC2, Onelap Key…) : leurs noms ressemblent à ceux de home-trainers de la même marque.
-        if (ShiftBridge.Platform.Controllers.ControllerCatalog.Identify(adv) is not null) excluded = true;
+        if (ShiftBridge.Platform.Controllers.ControllerCatalog.Identify(adv) is { } remote && ShiftBridge.Core.Controllers.ControllerKinds.IsPureRemote(remote)) excluded = true;
 
         var protocols = TrainerAdvertisementRules.FromServiceUuids(adv.ServiceUuids);
 

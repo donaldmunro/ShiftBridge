@@ -43,7 +43,8 @@ public sealed record BleServiceInfo(Guid Uuid, IReadOnlyList<BleCharacteristicIn
 public sealed class BleDeviceNotFoundException(string message) : IOException(message);
 
 /// <param name="OperationTimeout">Délai maximal de chaque opération GATT (null = aucun, comportement historique des manettes).</param>
-public sealed record BleConnectOptions(TimeSpan? OperationTimeout = null);
+/// <param name="HighPriority">Demande un intervalle de connexion court (Android) : pour les groupes qui coupent une liaison peu active.</param>
+public sealed record BleConnectOptions(TimeSpan? OperationTimeout = null, bool HighPriority = false);
 
 /// <summary>
 /// Une liaison GATT sortante (rôle central). L'implémentation garde en vie tout ce que sa plateforme exige (sous Windows, les

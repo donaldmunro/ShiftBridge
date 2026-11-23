@@ -348,7 +348,7 @@ public sealed class BridgeService : IAsyncDisposable
     {
         if (device is DiscoveredZwiftDevice zwift)
             return new ZwiftController(_platform.Central, zwift, Config.AutoReconnect) { VerboseFrames = _verboseFrames };
-        return ControllerSpec.For(device.Kind) is { } spec
+        return ControllerSpec.For(device.Kind, Config.LtwooPin) is { } spec
             ? new BleButtonController(_platform.Central, device, spec, Config.AutoReconnect) { VerboseFrames = _verboseFrames }
             : null;
     }

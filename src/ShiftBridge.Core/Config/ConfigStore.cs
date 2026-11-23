@@ -35,6 +35,9 @@ public sealed class AppConfig
     /// <summary>Modèle de chaque manette BLE non Zwift déjà connectée (adresse → modèle) : sert à afficher ses touches dans l'onglet Touches même hors ligne.</summary>
     public Dictionary<string, ControllerKind> KnownControllerKinds { get; set; } = [];
 
+    /// <summary>Code PIN à trois caractères du groupe L-TWOO (appliqué à la prochaine connexion).</summary>
+    public string LtwooPin { get; set; } = "";
+
     /// <summary>Écoute le clavier (et les télécommandes HID) comme source de touches.</summary>
     public bool KeyboardInputEnabled { get; set; }
     /// <summary>Écoute les manettes de jeu (Xbox/XInput et joysticks génériques) comme source de touches.</summary>
